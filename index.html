@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KierunekKariera — odkryj, w czym się odnajdziesz</title>
+  <meta name="description" content="Darmowy quiz doradztwa zawodowego oparty na modelu RIASEC. 30 pytań, ~5 minut, bez rejestracji. Odkryj swój profil zawodowy i pasujące zawody." />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <main id="app">
+
+    <!-- EKRAN 1: Landing -->
+    <section id="screen-landing" class="screen">
+      <div class="landing">
+        <div class="logo">🧭 KierunekKariera</div>
+        <h1>Nie wiesz, w czym się odnajdziesz zawodowo?</h1>
+        <p class="lead">
+          Odpowiedz na 30 prostych pytań i odkryj swój profil zawodowy oraz konkretne
+          zawody, które mogą do Ciebie pasować — także takie bez studiów, z krótką ścieżką wejścia.
+        </p>
+        <button id="start-btn" class="btn btn-primary btn-lg">Rozpocznij test</button>
+        <p class="meta">~5 minut · 30 pytań · bez rejestracji · za darmo</p>
+      </div>
+    </section>
+
+    <!-- EKRAN 2: Quiz -->
+    <section id="screen-quiz" class="screen hidden">
+      <div class="quiz">
+        <div class="progress">
+          <div class="progress-track">
+            <div id="progress-bar" class="progress-bar"></div>
+          </div>
+          <span id="progress-text" class="progress-text"></span>
+        </div>
+
+        <div id="quiz-stage" class="quiz-stage">
+          <h2 id="question-text" class="question"></h2>
+          <div id="answers" class="answers"></div>
+        </div>
+
+        <button id="back-btn" class="btn btn-ghost hidden">← Wstecz</button>
+        <p class="kbd-hint">Możesz też użyć klawiszy <kbd>1</kbd>–<kbd>5</kbd>, a <kbd>←</kbd> cofa pytanie.</p>
+      </div>
+    </section>
+
+    <!-- EKRAN 3: Wynik -->
+    <section id="screen-result" class="screen hidden">
+      <div id="result-content" class="result"></div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>KierunekKariera · quiz oparty na modelu RIASEC (Holland Codes) · wynik ma charakter orientacyjny</p>
+  </footer>
+
+  <!-- Skrypty: kolejność ma znaczenie (dane → logika → kontroler) -->
+  <script src="js/quiz-data.js"></script>
+  <script src="js/results-data.js"></script>
+  <script src="js/scoring.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
