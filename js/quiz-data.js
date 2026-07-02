@@ -6,12 +6,12 @@
 // Metadane kategorii: etykieta + kolor (używane na wykresie wyniku).
 // Kolejność kluczy = kolejność RIASEC (ważne dla normalizacji kodu wyniku).
 const CATEGORIES = {
-  R: { label: "Realistyczny", short: "Praktyk", color: "#e07a5f" },
-  I: { label: "Badawczy", short: "Analityk", color: "#3d84a8" },
-  A: { label: "Artystyczny", short: "Twórca", color: "#c05299" },
-  S: { label: "Społeczny", short: "Pomocnik", color: "#2a9d8f" },
-  E: { label: "Przedsiębiorczy", short: "Lider", color: "#e9a621" },
-  C: { label: "Konwencjonalny", short: "Organizator", color: "#6c63ff" },
+  R: { label: "Realistyczny", short: "Praktyk", color: "#f97066" },
+  I: { label: "Badawczy", short: "Analityk", color: "#60a5fa" },
+  A: { label: "Artystyczny", short: "Twórca", color: "#e879a8" },
+  S: { label: "Społeczny", short: "Pomocnik", color: "#6ee7b7" },
+  E: { label: "Przedsiębiorczy", short: "Lider", color: "#fbbf24" },
+  C: { label: "Konwencjonalny", short: "Organizator", color: "#a78bfa" },
 };
 
 const QUESTIONS = [

@@ -51,6 +51,7 @@ function startQuiz() {
 }
 
 function restart() {
+  document.body.classList.remove("show-result-bg");
   showScreen("landing");
 }
 
@@ -63,6 +64,7 @@ function renderQuestion(animate = true) {
   // Pasek postępu
   const pct = Math.round((answered / total) * 100);
   el.progressBar.style.width = pct + "%";
+  el.progressBar.setAttribute("aria-valuenow", pct);
   el.progressText.textContent = `Pytanie ${state.index + 1} z ${total}`;
 
   // Treść pytania
@@ -75,6 +77,7 @@ function renderQuestion(animate = true) {
     btn.type = "button";
     btn.className = "answer-btn";
     btn.dataset.value = String(value);
+    btn.setAttribute("aria-pressed", state.answers[state.index] === value ? "true" : "false");
     btn.innerHTML = `<span class="answer-dot">${value}</span><span class="answer-label">${SCALE_LABELS[value]}</span>`;
     if (state.answers[state.index] === value) btn.classList.add("selected");
     btn.addEventListener("click", () => selectAnswer(value));
@@ -97,15 +100,55 @@ function selectAnswer(value) {
   // krótka pauza na feedback wizualny, potem dalej
   const isLast = state.index === QUESTIONS.length - 1;
   renderQuestion(false); // pokaż zaznaczenie bez ponownej animacji
+  
+  // Opóźnienie na pokazanie zaznaczenia, następnie wyjazd ekranu
+  setTimeout(() => {
+    if (!isLast) {
+      replayAnim(el.quizStage, "stage-out");
+    }
+  }, 80);
+
   setTimeout(() => {
     if (isLast) {
       finishQuiz();
     } else {
       state.index += 1;
-      renderQuestion();
+      // Pakiet WOW UX - Motywacyjny checkpoint w połowie quizu
+      if (state.index === 15) {
+        showCheckpointToast();
+      }
+      renderQuestion(true);
     }
     state.locked = false;
-  }, 180);
+  }, 280);
+}
+
+// Gamifikacja: Checkpoint motywacyjny (Toast)
+function showCheckpointToast() {
+  const toast = document.createElement("div");
+  toast.className = "toast pop-in";
+  toast.innerHTML = "🎉 Świetnie Ci idzie! Jesteś za półmetkiem.";
+  Object.assign(toast.style, {
+    position: "fixed",
+    bottom: "30px",
+    left: "50%",
+    transform: "translateX(-50%)",
+    background: "var(--primary)",
+    color: "#fff",
+    padding: "12px 24px",
+    borderRadius: "var(--radius-pill)",
+    fontWeight: "600",
+    boxShadow: "0 10px 25px rgba(99, 102, 241, 0.4)",
+    zIndex: "9999",
+    pointerEvents: "none",
+    transition: "opacity 0.4s ease"
+  });
+  document.body.appendChild(toast);
+  
+  setTimeout(() => {
+    toast.style.opacity = "0";
+    setTimeout(() => toast.remove(), 400);
+  }, 3000);
 }
 
 function goBack() {
@@ -129,6 +172,7 @@ function onKeydown(e) {
 
 // --- Zakończenie i wynik ---
 function finishQuiz() {
+  document.body.classList.add("show-result-bg");
   const answers = QUESTIONS.map((q, i) => ({
     category: q.category,
     value: state.answers[i],
@@ -183,10 +227,23 @@ function renderResult(analysis) {
   const zawody = profile.zawody
     .map(
       (z) => `
-      <li class="job">
-        <span class="job-name">${z.nazwa}</span>
-        ${z.bezStudiow ? '<span class="badge badge-green">bez studiów</span>' : '<span class="badge">wymaga studiów</span>'}
-        <span class="job-path">${z.sciezka}</span>
+      <li class="job ${z.bezStudiow ? 'bez-studiow' : 'wymaga-studiow'}">
+        <details class="job-details">
+          <summary class="job-summary">
+            <div class="job-summary-header">
+              <span class="job-name">${z.nazwa}</span>
+              ${z.bezStudiow ? '<span class="badge badge-green">bez studiów</span>' : '<span class="badge">wymaga studiów</span>'}
+            </div>
+            <span class="job-chevron">▼</span>
+          </summary>
+          <div class="job-expanded">
+            <p class="job-desc">${z.opis}</p>
+            <div class="job-path-box">
+              <span class="path-label">Typowa ścieżka:</span>
+              <span class="job-path">${z.sciezka}</span>
+            </div>
+          </div>
+        </details>
       </li>`
     )
     .join("");
@@ -208,20 +265,22 @@ function renderResult(analysis) {
       : "";
 
   el.resultContent.innerHTML = `
-    <div class="result-header">
-      <div class="result-code" style="--c: ${CATEGORIES[analysis.code[0]].color}">${analysis.code}</div>
-      <div>
-        <p class="result-eyebrow">Twój profil zawodowy</p>
-        <h1 class="result-name">${profile.nazwa}</h1>
+    <div id="export-target" style="padding: 0 16px; margin-bottom: 24px;">
+      <div class="result-header" style="flex-direction: column; text-align: center; gap: 12px;">
+        ${profile.avatar 
+          ? `<img src="${profile.avatar}" alt="Awatar ${profile.nazwa}" class="profile-avatar" style="width: 140px; height: 140px; border-radius: 50%; object-fit: cover; border: 2px solid var(--glass-border); box-shadow: 0 4px 15px rgba(0,0,0,0.3);">` 
+          : `<div class="result-code" style="--c: ${CATEGORIES[analysis.code[0]].color}; margin: 0 auto;">${profile.ikona || analysis.code}</div>`
+        }
+        <div>
+          <p class="result-eyebrow">Twój profil zawodowy</p>
+          <h1 class="result-name">${profile.nazwa}</h1>
+          <div class="result-code-badge" style="display: inline-block; padding: 4px 10px; background: rgba(255,255,255,0.05); border-radius: 12px; margin-top: 8px; font-weight: 700; color: var(--text-muted); font-size: 0.85rem;">Kod RIASEC: ${analysis.code}</div>
+        </div>
       </div>
-    </div>
-
-    ${borderlineNote}
-    ${versatileNote}
-
-    <div class="card">
-      <h2>Twoje kategorie</h2>
-      ${chart}
+      <div class="card" style="margin-bottom: 0;">
+        <h2>Twoje kategorie</h2>
+        ${chart}
+      </div>
     </div>
 
     <div class="card">
@@ -231,8 +290,15 @@ function renderResult(analysis) {
     </div>
 
     <div class="card">
-      <h2>Zawody, w których się odnajdziesz</h2>
-      <ul class="jobs">${zawody}</ul>
+      <div class="card-header-flex">
+        <h2>Zawody, w których się odnajdziesz</h2>
+        <label class="toggle-switch">
+          <input type="checkbox" id="filter-no-degree">
+          <span class="slider"></span>
+          <span class="label-text">Tylko bez studiów</span>
+        </label>
+      </div>
+      <ul class="jobs" id="jobs-list">${zawody}</ul>
     </div>
 
     <div class="card">
@@ -265,14 +331,60 @@ function renderResult(analysis) {
       </div>
     </div>
 
-    <div class="result-actions">
+    <div class="result-actions" style="flex-wrap: wrap;">
       <button class="btn btn-primary" onclick="restart()">Zrób test ponownie</button>
       <button class="btn btn-secondary" id="share-btn">Udostępnij wynik</button>
+      <button class="btn btn-secondary" id="export-btn" style="width: 100%;">📸 Zapisz na Instagram</button>
     </div>
   `;
 
   const shareBtn = document.getElementById("share-btn");
   if (shareBtn) shareBtn.addEventListener("click", () => shareResult(analysis, profile));
+
+  // Eksport Canvas (Instagram)
+  const exportBtn = document.getElementById("export-btn");
+  if (exportBtn) {
+    exportBtn.addEventListener("click", () => {
+      exportBtn.textContent = "⏳ Generowanie...";
+      exportBtn.disabled = true;
+      const target = document.getElementById("export-target");
+      if (window.html2canvas) {
+        window.html2canvas(target, {
+          scale: 2,
+          useCORS: true,
+          backgroundColor: '#1E1B29'
+        }).then((canvas) => {
+          const link = document.createElement("a");
+          link.download = `Moj_Kierunek_${analysis.code}.png`;
+          link.href = canvas.toDataURL("image/png");
+          link.click();
+          exportBtn.textContent = "📸 Zapisz na Instagram";
+          exportBtn.disabled = false;
+        }).catch(err => {
+          console.error("Błąd generowania:", err);
+          exportBtn.textContent = "❌ Błąd";
+          setTimeout(() => { exportBtn.textContent = "📸 Zapisz na Instagram"; exportBtn.disabled = false; }, 2000);
+        });
+      } else {
+        alert("Funkcja niedostępna. Upewnij się, że masz połączenie z internetem (wymagana biblioteka zewnętrzna).");
+        exportBtn.textContent = "📸 Zapisz na Instagram";
+        exportBtn.disabled = false;
+      }
+    });
+  }
+
+  // Filtr zawodów bez studiów
+  const filterBtn = document.getElementById("filter-no-degree");
+  if (filterBtn) {
+    filterBtn.addEventListener("change", (e) => {
+      const jobsList = document.getElementById("jobs-list");
+      if (e.target.checked) {
+        jobsList.classList.add("filter-active");
+      } else {
+        jobsList.classList.remove("filter-active");
+      }
+    });
+  }
 
   // Prompt do AI: pokaż + skopiuj do schowka
   const promptStr = buildAiPrompt(analysis, profile);
@@ -412,7 +524,17 @@ function init() {
   el.startBtn.addEventListener("click", startQuiz);
   el.backBtn.addEventListener("click", goBack);
   document.addEventListener("keydown", onKeydown);
-  showScreen("landing");
+  
+  // Wznowienie postępu, jeśli użytkownik odświeżył stronę w trakcie
+  const saved = Storage.loadProgress();
+  if (saved && saved.index > 0 && saved.index < QUESTIONS.length) {
+    state.index = saved.index;
+    state.answers = saved.answers;
+    showScreen("quiz");
+    renderQuestion(false);
+  } else {
+    showScreen("landing");
+  }
 }
 
 document.addEventListener("DOMContentLoaded", init);

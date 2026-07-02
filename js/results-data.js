@@ -80,20 +80,22 @@ const UNIVERSAL_RESOURCES = [
 
 const PROFILES = {
   RI: {
+    ikona: "👨‍🔧",
+    avatar: "img/avatars/avatar_techniczny_analityk_RI.png",
     nazwa: "Techniczny Analityk",
     opis: [
       "Masz rzadkie połączenie: ręce do konkretnej roboty i głowę, która chce wiedzieć, jak coś działa od środka. Nie wystarcza Ci, że urządzenie działa — chcesz rozumieć dlaczego, i potrafisz rozłożyć problem na części.",
       "Najlepiej czujesz się tam, gdzie technika spotyka logikę: diagnozujesz usterkę, znajdujesz przyczynę, widzisz efekt swojej pracy. Siedzenie przy biurku od rana do wieczora Cię męczy — wolisz działać i sprawdzać w praktyce.",
       "To jedna z najbardziej poszukiwanych kombinacji na rynku pracy. Fachowców łączących praktykę z myśleniem technicznym wszędzie brakuje, a wejście do zawodu często nie wymaga studiów — wystarczy kurs i uprawnienia.",
     ],
-    mocneStrony: ["myślenie techniczne", "rozwiązywanie problemów", "samodzielność", "logika"],
+    mocneStrony: ["Myślenie techniczne", "Rozwiązywanie problemów", "Samodzielność", "Logika"],
     zawody: [
-      { nazwa: "Serwisant / technik IT", bezStudiow: true, sciezka: "kurs 2–4 mies. + certyfikaty" },
-      { nazwa: "Elektryk", bezStudiow: true, sciezka: "kurs + uprawnienia SEP" },
-      { nazwa: "Mechatronik", bezStudiow: true, sciezka: "szkoła branżowa / kurs" },
-      { nazwa: "Operator CNC", bezStudiow: true, sciezka: "kurs 1–3 mies." },
-      { nazwa: "Technik OZE (fotowoltaika)", bezStudiow: true, sciezka: "kurs + certyfikat UDT" },
-      { nazwa: "Diagnosta samochodowy", bezStudiow: true, sciezka: "kurs + uprawnienia" },
+      { nazwa: "Serwisant / technik IT", bezStudiow: true, sciezka: "Kurs 2–4 mies. + certyfikaty", opis: "Instalujesz oprogramowanie, konfigurujesz sprzęt i na bieżąco rozwiązujesz problemy użytkowników." },
+      { nazwa: "Elektryk", bezStudiow: true, sciezka: "Kurs + uprawnienia SEP", opis: "Zajmujesz się montażem, naprawą i konserwacją instalacji elektrycznych, gdzie precyzja to bezpieczeństwo." },
+      { nazwa: "Mechatronik", bezStudiow: true, sciezka: "Szkoła branżowa / kurs", opis: "Projektujesz i naprawiasz nowoczesne urządzenia łączące mechanikę, elektronikę i informatykę." },
+      { nazwa: "Operator CNC", bezStudiow: true, sciezka: "Kurs 1–3 mies.", opis: "Programujesz i obsługujesz zaawansowane obrabiarki sterowane numerycznie, by tworzyć precyzyjne detale." },
+      { nazwa: "Technik OZE (fotowoltaika)", bezStudiow: true, sciezka: "Kurs + certyfikat UDT", opis: "Instalujesz systemy odnawialnych źródeł energii (np. panele słoneczne czy pompy ciepła)." },
+      { nazwa: "Diagnosta samochodowy", bezStudiow: true, sciezka: "Kurs + uprawnienia", opis: "Oceniasz stan techniczny pojazdów, korzystając z nowoczesnych urządzeń pomiarowych." },
     ],
     pierwszeKroki: [
       "Sprawdź bony i kursy zawodowe w swoim Urzędzie Pracy (często finansują kursy SEP / CNC).",
@@ -104,20 +106,22 @@ const PROFILES = {
   },
 
   RA: {
+    ikona: "🎨",
+    avatar: "img/avatars/avatar_kreatywny_rzemieslnik_RA.png",
     nazwa: "Kreatywny Rzemieślnik",
     opis: [
       "Tworzysz rzeczy rękami, ale z pomysłem i wyczuciem estetyki. Nie wystarcza Ci, że coś działa — ma też dobrze wyglądać i być Twoje, z Twoim podpisem.",
       "Dobrze czujesz się, gdy widzisz namacalny efekt swojej pracy i możesz się nim pochwalić. Rutyna i sztywne procedury Cię nudzą — potrzebujesz swobody i miejsca na własny styl.",
       "To ścieżka, gdzie rękodzieło spotyka sztukę. Większość tych zawodów wchodzi się przez kurs i praktykę, a nie przez studia — najważniejsze jest portfolio i to, co potrafisz zrobić.",
     ],
-    mocneStrony: ["zmysł estetyczny", "precyzja manualna", "kreatywność", "cierpliwość"],
+    mocneStrony: ["Zmysł estetyczny", "Precyzja manualna", "Kreatywność", "Cierpliwość"],
     zawody: [
-      { nazwa: "Stolarz meblowy", bezStudiow: true, sciezka: "kurs / praktyka w warsztacie" },
-      { nazwa: "Tatuażysta", bezStudiow: true, sciezka: "kurs + portfolio + praktyka" },
-      { nazwa: "Florysta", bezStudiow: true, sciezka: "kurs 1–3 mies." },
-      { nazwa: "Barber / fryzjer", bezStudiow: true, sciezka: "kurs + praktyka" },
-      { nazwa: "Modelarz / druk 3D", bezStudiow: true, sciezka: "samodzielna nauka + portfolio" },
-      { nazwa: "Kucharz", bezStudiow: true, sciezka: "szkoła branżowa / praktyka" },
+      { nazwa: "Stolarz meblowy", bezStudiow: true, sciezka: "Kurs / praktyka w warsztacie", opis: "Tworzysz wysokiej jakości meble, łącząc sprawność manualną z dobrym wyczuciem materiału." },
+      { nazwa: "Tatuażysta", bezStudiow: true, sciezka: "Kurs + portfolio + praktyka", opis: "Tworzysz unikalne wzory na skórze klientów, zachowując najwyższe standardy higieny." },
+      { nazwa: "Florysta", bezStudiow: true, sciezka: "Kurs 1–3 mies.", opis: "Tworzysz kompozycje z kwiatów i roślin, dopasowując je do okazji i nastroju." },
+      { nazwa: "Barber / fryzjer", bezStudiow: true, sciezka: "Kurs + praktyka", opis: "Dbasz o wizerunek klientów, łącząc rzemiosło z umiejętnością słuchania i doradzania." },
+      { nazwa: "Modelarz / druk 3D", bezStudiow: true, sciezka: "Samodzielna nauka + portfolio", opis: "Przenosisz projekty komputerowe w fizyczną rzeczywistość za pomocą nowoczesnych technologii." },
+      { nazwa: "Kucharz", bezStudiow: true, sciezka: "Szkoła branżowa / praktyka", opis: "Przygotowujesz potrawy, dbając o ich smak, estetykę podania i tempo wydawania w kuchni." },
     ],
     pierwszeKroki: [
       "Wybierz jedno rzemiosło, które Cię ciekawi, i zrób pierwszy prosty projekt w domu.",
@@ -128,20 +132,22 @@ const PROFILES = {
   },
 
   RS: {
+    ikona: "🚒",
+    avatar: "img/avatars/avatar_praktyczny_opiekun_RS.png",
     nazwa: "Praktyczny Opiekun",
     opis: [
       "Działasz konkretnie i lubisz, gdy Twoja praca komuś realnie pomaga. Łączysz sprawność i opanowanie z troską o drugiego człowieka — nie boisz się fizycznego wysiłku ani trudnych sytuacji.",
       "Najlepiej czujesz się w ruchu i w bezpośrednim kontakcie z ludźmi, a nie za biurkiem. Dajesz radę tam, gdzie inni się gubią, bo potrafisz zachować spokój.",
       "To zawody „pierwszej linii”, w których ludzi zawsze brakuje. Część wymaga szkoły policealnej, ale do wielu wejdziesz przez krótki kurs — a satysfakcja z pomagania jest tu codziennością.",
     ],
-    mocneStrony: ["opanowanie w stresie", "empatia w działaniu", "kondycja", "odpowiedzialność"],
+    mocneStrony: ["Opanowanie w stresie", "Empatia w działaniu", "Kondycja", "Odpowiedzialność"],
     zawody: [
-      { nazwa: "Ratownik medyczny", bezStudiow: false, sciezka: "studia / szkoła policealna" },
-      { nazwa: "Opiekun medyczny", bezStudiow: true, sciezka: "szkoła policealna 1 rok" },
-      { nazwa: "Trener personalny", bezStudiow: true, sciezka: "kurs + certyfikat" },
-      { nazwa: "Fizjoterapeuta", bezStudiow: false, sciezka: "studia" },
-      { nazwa: "Instruktor (np. nauki jazdy)", bezStudiow: true, sciezka: "kurs + uprawnienia" },
-      { nazwa: "Strażak", bezStudiow: true, sciezka: "rekrutacja + szkolenie" },
+      { nazwa: "Ratownik medyczny", bezStudiow: false, sciezka: "Studia / szkoła policealna", opis: "Udzielasz pierwszej pomocy w nagłych sytuacjach, ratując życie pod ogromną presją czasu." },
+      { nazwa: "Opiekun medyczny", bezStudiow: true, sciezka: "Szkoła policealna 1 rok", opis: "Pomagasz osobom chorym i starszym w codziennym funkcjonowaniu z empatią i zrozumieniem." },
+      { nazwa: "Trener personalny", bezStudiow: true, sciezka: "Kurs + certyfikat", opis: "Układasz plany treningowe i dbasz o poprawną technikę ćwiczeń swoich podopiecznych." },
+      { nazwa: "Fizjoterapeuta", bezStudiow: false, sciezka: "Studia", opis: "Przywracasz sprawność pacjentom po urazach, wykorzystując wiedzę z zakresu anatomii." },
+      { nazwa: "Instruktor (np. nauki jazdy)", bezStudiow: true, sciezka: "Kurs + uprawnienia", opis: "Cierpliwie i konsekwentnie uczysz innych nowych, praktycznych umiejętności." },
+      { nazwa: "Strażak", bezStudiow: true, sciezka: "Rekrutacja + szkolenie", opis: "Niesiesz pomoc w sytuacjach zagrożenia życia, zdrowia i mienia." },
     ],
     pierwszeKroki: [
       "Zdecyduj, czy wolisz ratownictwo, opiekę czy sport — to trzy różne ścieżki wejścia.",
@@ -152,19 +158,21 @@ const PROFILES = {
   },
 
   RE: {
-    nazwa: "Przedsiębiorca Praktyk",
+    ikona: "🏗️",
+    avatar: "img/avatars/avatar_przedsiebiorczy_praktyk_RE.png",
+    nazwa: "Przedsiębiorczy Praktyk",
     opis: [
       "Masz smykałkę do konkretnej roboty i głowę do interesów. Wolisz decydować sam i widzieć efekt swojej pracy, niż czekać, aż ktoś powie Ci, co masz robić.",
       "Nie boisz się odpowiedzialności ani ryzyka — a przy tym trzymasz się ziemi i liczysz koszty. Ludzie chętnie idą za kimś, kto zna się na rzeczy i sam potrafi „to zrobić”.",
       "To ścieżka „od fachowca do własnej firmy”. Najpierw zdobywasz konkretną umiejętność, a potem — jeśli chcesz — budujesz wokół niej biznes. Urzędy pracy dają na to jednorazowe dotacje.",
     ],
-    mocneStrony: ["zaradność", "organizacja pracy", "decyzyjność", "praktyczność"],
+    mocneStrony: ["Zaradność", "Organizacja pracy", "Decyzyjność", "Praktyczność"],
     zawody: [
-      { nazwa: "Właściciel firmy usługowej / remontowej", bezStudiow: true, sciezka: "fach + własna działalność" },
-      { nazwa: "Kierownik budowy", bezStudiow: false, sciezka: "uprawnienia budowlane" },
-      { nazwa: "Brygadzista", bezStudiow: true, sciezka: "awans z doświadczenia" },
-      { nazwa: "Handlowiec techniczny", bezStudiow: true, sciezka: "doświadczenie w branży" },
-      { nazwa: "Właściciel warsztatu", bezStudiow: true, sciezka: "fach + działalność" },
+      { nazwa: "Właściciel firmy usługowej / remontowej", bezStudiow: true, sciezka: "Fach + własna działalność", opis: "Samodzielnie organizujesz i realizujesz prace remontowo-wykończeniowe." },
+      { nazwa: "Kierownik budowy", bezStudiow: false, sciezka: "Uprawnienia budowlane", opis: "Nadzorujesz proces budowlany, dbając o terminy, budżet i zgodność z projektem." },
+      { nazwa: "Brygadzista", bezStudiow: true, sciezka: "Awans z doświadczenia", opis: "Koordynujesz pracę zespołu na zmianie, dbając o jakość, tempo i bezpieczeństwo." },
+      { nazwa: "Handlowiec techniczny", bezStudiow: true, sciezka: "Doświadczenie w branży", opis: "Sprzedajesz skomplikowane rozwiązania technologiczne, łącząc wiedzę o produkcie z darem przekonywania." },
+      { nazwa: "Właściciel warsztatu", bezStudiow: true, sciezka: "Fach + działalność", opis: "Zarządzasz biznesem, dbasz o klientów i organizujesz pracę mechanikom lub fachowcom." },
     ],
     pierwszeKroki: [
       "Wybierz fach, w którym chcesz być dobry — najpierw umiejętność, potem firma.",
@@ -175,20 +183,22 @@ const PROFILES = {
   },
 
   RC: {
+    ikona: "📋",
+    avatar: "img/avatars/avatar_precyzyjny_wykonawca_RC.png",
     nazwa: "Precyzyjny Wykonawca",
     opis: [
       "Jesteś konkretny, uporządkowany i lubisz, gdy wszystko ma swoje miejsce. Robisz rzeczy dokładnie i do końca, bez chodzenia na skróty.",
       "Dobrze wykonujesz zadania wymagające skupienia, rytmu i trzymania procedur — a to, co innych nudzi, Tobie daje poczucie panowania nad sytuacją.",
       "Świetnie sprawdzisz się tam, gdzie liczy się rzetelność i logistyka. Wiele z tych zawodów ma szybkie wejście: wystarczą uprawnienia (np. wózki, prawo jazdy kat. C), a firmy często szkolą od podstaw.",
     ],
-    mocneStrony: ["dokładność", "systematyczność", "odpowiedzialność", "praca według procedur"],
+    mocneStrony: ["Dokładność", "Systematyczność", "Odpowiedzialność", "Praca według procedur"],
     zawody: [
-      { nazwa: "Logistyk", bezStudiow: true, sciezka: "kurs / doświadczenie" },
-      { nazwa: "Magazynier-specjalista", bezStudiow: true, sciezka: "kurs + uprawnienia na wózki" },
-      { nazwa: "Operator maszyn", bezStudiow: true, sciezka: "kurs + praktyka" },
-      { nazwa: "Kontroler jakości", bezStudiow: true, sciezka: "doświadczenie + szkolenia" },
-      { nazwa: "Kierowca zawodowy", bezStudiow: true, sciezka: "kurs + kwalifikacja wstępna" },
-      { nazwa: "Geodeta (pomiarowy)", bezStudiow: false, sciezka: "technikum / studia" },
+      { nazwa: "Logistyk", bezStudiow: true, sciezka: "Kurs / doświadczenie", opis: "Planujesz i optymalizujesz trasy dostaw oraz zarządzasz magazynowaniem towarów." },
+      { nazwa: "Magazynier-specjalista", bezStudiow: true, sciezka: "Kurs + uprawnienia na wózki", opis: "Zarządzasz przepływem towarów w magazynie i obsługujesz systemy inwentaryzacyjne." },
+      { nazwa: "Operator maszyn", bezStudiow: true, sciezka: "Kurs + praktyka", opis: "Kontrolujesz pracę maszyn przemysłowych i dbasz o ciągłość procesu produkcyjnego." },
+      { nazwa: "Kontroler jakości", bezStudiow: true, sciezka: "Doświadczenie + szkolenia", opis: "Pilnujesz, by produkty schodzące z linii produkcyjnej spełniały wszystkie wyśrubowane normy." },
+      { nazwa: "Kierowca zawodowy", bezStudiow: true, sciezka: "Kurs + kwalifikacja wstępna", opis: "Odpowiadasz za bezpieczny i terminowy transport ludzi lub towarów." },
+      { nazwa: "Geodeta (pomiarowy)", bezStudiow: false, sciezka: "Technikum / studia", opis: "Wykonujesz precyzyjne pomiary terenowe, stanowiące podstawę dla map i nowych inwestycji." },
     ],
     pierwszeKroki: [
       "Zrób uprawnienia, które szybko zwiększają szanse pracy (wózki widłowe, kat. C+E).",
@@ -199,19 +209,21 @@ const PROFILES = {
   },
 
   IA: {
+    ikona: "💡",
+    avatar: "img/avatars/avatar_tworczy_badacz_IA.png",
     nazwa: "Twórczy Badacz",
     opis: [
       "Łączysz analityczne myślenie z wyobraźnią. Lubisz najpierw zrozumieć problem do końca, a potem wymyślić rozwiązanie, na które inni nie wpadli.",
       "Nudzą Cię gotowe schematy — wolisz badać, testować i tworzyć coś nowego. Zadajesz pytania „a co, gdyby…?” i szukasz odpowiedzi po swojemu.",
       "Dobrze odnajdziesz się tam, gdzie trzeba łączyć logikę z kreatywnością: projektowanie, badania, tworzenie produktów. Do wielu z tych ról wchodzi się przez kurs i portfolio, nie przez dyplom.",
     ],
-    mocneStrony: ["myślenie koncepcyjne", "kreatywność", "analiza", "ciekawość"],
+    mocneStrony: ["Myślenie koncepcyjne", "Kreatywność", "Analiza", "Ciekawość"],
     zawody: [
-      { nazwa: "UX researcher", bezStudiow: true, sciezka: "kurs 3–6 mies. + portfolio" },
-      { nazwa: "Projektant produktu", bezStudiow: true, sciezka: "kurs + portfolio" },
-      { nazwa: "Game designer", bezStudiow: true, sciezka: "nauka własna + projekty" },
-      { nazwa: "Architekt", bezStudiow: false, sciezka: "studia" },
-      { nazwa: "Twórca treści edukacyjnych", bezStudiow: true, sciezka: "portfolio + praktyka" },
+      { nazwa: "UX researcher", bezStudiow: true, sciezka: "Kurs 3–6 mies. + portfolio", opis: "Badacz zachowań użytkowników – sprawdzasz, co sprawia im trudność i jak można ulepszyć aplikację." },
+      { nazwa: "Projektant produktu", bezStudiow: true, sciezka: "Kurs + portfolio", opis: "Projektujesz fizyczne lub cyfrowe produkty, by rozwiązywały realne problemy i dobrze wyglądały." },
+      { nazwa: "Game designer", bezStudiow: true, sciezka: "Nauka własna + projekty", opis: "Projektujesz zasady, mechanikę i poziomy w grach, by wciągały graczy na długie godziny." },
+      { nazwa: "Architekt", bezStudiow: false, sciezka: "Studia", opis: "Projektujesz budynki i przestrzenie publiczne, dbając o ich bezpieczeństwo i formę." },
+      { nazwa: "Twórca treści edukacyjnych", bezStudiow: true, sciezka: "Portfolio + praktyka", opis: "Tłumaczysz skomplikowane zagadnienia poprzez angażujące e-booki, kursy i prezentacje." },
     ],
     pierwszeKroki: [
       "Wybierz obszar (UX, produkt, gry) i zrób jeden mały projekt do portfolio.",
@@ -222,20 +234,22 @@ const PROFILES = {
   },
 
   IS: {
-    nazwa: "Badacz Ludzi",
+    ikona: "🩺",
+    avatar: "img/avatars/avatar_strategiczny_analityk_IS.png",
+    nazwa: "Analityczny Doradca",
     opis: [
       "Interesują Cię ludzie — jak myślą, co czują, dlaczego robią to, co robią — i chcesz tę wiedzę wykorzystać, żeby im pomagać. Łączysz analityczne podejście z autentyczną troską.",
       "Umiesz słuchać i tłumaczyć trudne rzeczy prostym językiem. Ludzie czują się przy Tobie zrozumiani, a Ty lubisz dochodzić do sedna ich problemów.",
       "To ścieżka, gdzie nauka spotyka pomaganie. Część zawodów wymaga studiów, ale do wielu ról wspierających (np. doradztwo, asysta) wejdziesz przez kurs i praktykę.",
     ],
-    mocneStrony: ["empatia", "analiza", "cierpliwość", "komunikacja"],
+    mocneStrony: ["Empatia", "Analiza", "Cierpliwość", "Komunikacja"],
     zawody: [
-      { nazwa: "Psycholog", bezStudiow: false, sciezka: "studia" },
-      { nazwa: "Pielęgniarz / pielęgniarka", bezStudiow: false, sciezka: "studia" },
-      { nazwa: "Dietetyk", bezStudiow: true, sciezka: "kurs / studia" },
-      { nazwa: "Doradca zawodowy", bezStudiow: true, sciezka: "kurs + praktyka" },
-      { nazwa: "Nauczyciel przedmiotów ścisłych", bezStudiow: false, sciezka: "studia + przygotowanie pedagogiczne" },
-      { nazwa: "Laborant medyczny", bezStudiow: true, sciezka: "szkoła policealna" },
+      { nazwa: "Psycholog", bezStudiow: false, sciezka: "Studia", opis: "Wspierasz ludzi w radzeniu sobie z problemami natury psychicznej, oferując profesjonalną terapię i pomoc." },
+      { nazwa: "Pielęgniarz / pielęgniarka", bezStudiow: false, sciezka: "Studia", opis: "Sprawujesz bezpośrednią opiekę nad pacjentami, dbając o ich zdrowie i realizację zaleceń lekarskich." },
+      { nazwa: "Dietetyk", bezStudiow: true, sciezka: "Kurs / studia", opis: "Pomagasz ludziom poprawić zdrowie i samopoczucie poprzez odpowiednio dobrany plan żywienia." },
+      { nazwa: "Doradca zawodowy", bezStudiow: true, sciezka: "Kurs + praktyka", opis: "Wspierasz ludzi w odkrywaniu ich talentów i planowaniu ścieżki kariery." },
+      { nazwa: "Nauczyciel przedmiotów ścisłych", bezStudiow: false, sciezka: "Studia + przygotowanie pedagogiczne", opis: "Tłumaczysz zawiłe prawa natury i uczysz logicznego rozwiązywania problemów." },
+      { nazwa: "Laborant medyczny", bezStudiow: true, sciezka: "Szkoła policealna", opis: "Wykonujesz specjalistyczne badania diagnostyczne, których wyniki ratują zdrowie i życie." },
     ],
     pierwszeKroki: [
       "Zdecyduj, czy ciągnie Cię bardziej opieka, edukacja czy poradnictwo.",
@@ -246,19 +260,21 @@ const PROFILES = {
   },
 
   IE: {
+    ikona: "📈",
+    avatar: "img/avatars/avatar_analityczny_doradca_IE.png",
     nazwa: "Strategiczny Analityk",
     opis: [
       "Widzisz zależności, które innym umykają, i lubisz przekładać dane na konkretne decyzje. Dla Ciebie liczby to nie cel, tylko narzędzie, żeby coś zmienić.",
       "Łączysz chłodną analizę z myśleniem o wyniku — nie zatrzymujesz się na „ciekawe”, tylko pytasz „to co z tym zrobimy?”. Potrafisz też przekonać innych do swoich wniosków.",
       "To ścieżka na styku analizy i biznesu, jedna z najlepiej opłacanych. Do wielu z tych ról wchodzi się przez kurs i praktykę, jeśli pokażesz, że umiesz myśleć danymi.",
     ],
-    mocneStrony: ["analiza", "myślenie strategiczne", "decyzyjność", "komunikacja"],
+    mocneStrony: ["Analiza", "Myślenie strategiczne", "Decyzyjność", "Komunikacja"],
     zawody: [
-      { nazwa: "Analityk biznesowy", bezStudiow: true, sciezka: "kurs 3–6 mies." },
-      { nazwa: "Product manager", bezStudiow: true, sciezka: "doświadczenie + kurs" },
-      { nazwa: "Specjalista e-commerce", bezStudiow: true, sciezka: "kurs + praktyka" },
-      { nazwa: "Konsultant", bezStudiow: false, sciezka: "studia / doświadczenie" },
-      { nazwa: "Analityk finansowy", bezStudiow: false, sciezka: "studia + certyfikaty" },
+      { nazwa: "Analityk biznesowy", bezStudiow: true, sciezka: "Kurs 3–6 mies.", opis: "Optymalizujesz procesy w firmie i łączysz świat IT z potrzebami biznesu." },
+      { nazwa: "Product manager", bezStudiow: true, sciezka: "Doświadczenie + kurs", opis: "Odpowiadasz za rozwój produktu od wizji po wdrożenie, decydując o tym, jak ma on działać." },
+      { nazwa: "Specjalista e-commerce", bezStudiow: true, sciezka: "Kurs + praktyka", opis: "Zarządzasz sprzedażą w sklepach internetowych, optymalizując asortyment i proces zakupowy." },
+      { nazwa: "Konsultant", bezStudiow: false, sciezka: "Studia / doświadczenie", opis: "Doradzasz firmom w specyficznych obszarach (IT, zarządzanie), rozwiązując ich największe problemy." },
+      { nazwa: "Analityk finansowy", bezStudiow: false, sciezka: "Studia + certyfikaty", opis: "Oceniasz ryzyko i zyskowność projektów oraz dbasz o zdrowie finansowe firmy." },
     ],
     pierwszeKroki: [
       "Naucz się podstaw Excela / arkuszy i analizy danych — to fundament tych zawodów.",
@@ -269,19 +285,21 @@ const PROFILES = {
   },
 
   IC: {
-    nazwa: "Systematyczny Umysł",
+    ikona: "💻",
+    avatar: "img/avatars/avatar_analityk_systemowy_IC.png",
+    nazwa: "Analityk Systemowy",
     opis: [
       "Łączysz ciekawość badacza z zamiłowaniem do porządku. Lubisz logiczne, precyzyjne zadania, w których liczy się dokładność i konsekwencja — i potrafisz godzinami rozgryzać problem, aż zadziała.",
       "Nie potrzebujesz ciągłego kontaktu z ludźmi, żeby dobrze pracować; dajesz radę samodzielnie i systematycznie. Błąd, który inni przeoczą, Ty wyłapiesz.",
       "To jedna z najbardziej przyszłościowych kombinacji na rynku pracy. Programowanie, testowanie czy analiza danych są dziś w dużej mierze dostępne bez studiów — liczy się portfolio i realne umiejętności.",
     ],
-    mocneStrony: ["logiczne myślenie", "dokładność", "samodzielność", "cierpliwość"],
+    mocneStrony: ["Logiczne myślenie", "Dokładność", "Samodzielność", "Cierpliwość"],
     zawody: [
-      { nazwa: "Tester oprogramowania (QA)", bezStudiow: true, sciezka: "kurs 2–3 mies." },
-      { nazwa: "Programista", bezStudiow: true, sciezka: "kurs 6–12 mies. + projekty" },
-      { nazwa: "Analityk danych", bezStudiow: true, sciezka: "kurs 6 mies. + portfolio" },
-      { nazwa: "Administrator sieci", bezStudiow: true, sciezka: "kurs + certyfikaty" },
-      { nazwa: "Księgowy", bezStudiow: true, sciezka: "kurs / studia" },
+      { nazwa: "Tester oprogramowania (QA)", bezStudiow: true, sciezka: "Kurs 2–3 mies.", opis: "Szukasz błędów w aplikacjach przed ich wypuszczeniem na rynek, dbając o ich jakość." },
+      { nazwa: "Programista", bezStudiow: true, sciezka: "Kurs 6–12 mies. + projekty", opis: "Piszesz kod tworzący aplikacje, systemy i strony internetowe." },
+      { nazwa: "Analityk danych", bezStudiow: true, sciezka: "Kurs 6 mies. + portfolio", opis: "Wydobywasz wartość z surowych danych i pomagasz podejmować trafne decyzje na ich podstawie." },
+      { nazwa: "Administrator sieci", bezStudiow: true, sciezka: "Kurs + certyfikaty", opis: "Rozwijasz umiejętności w tej dziedzinie i budujesz ścieżkę kariery." },
+      { nazwa: "Księgowy", bezStudiow: true, sciezka: "Kurs / studia", opis: "Dbasz o porządek w dokumentach finansowych firmy i jej rozliczenia podatkowe." },
     ],
     pierwszeKroki: [
       "Sprawdź darmowe bony szkoleniowe w swoim Urzędzie Pracy.",
@@ -292,19 +310,21 @@ const PROFILES = {
   },
 
   AS: {
-    nazwa: "Twórca dla Ludzi",
+    ikona: "🎭",
+    avatar: "img/avatars/avatar_inspirujacy_przewodnik_AS.png",
+    nazwa: "Inspirujący Przewodnik",
     opis: [
       "Tworzysz nie dla samego tworzenia, ale żeby coś dać innym — poruszyć, nauczyć, zbudować wspólnotę. Twoja wrażliwość to Twoja siła.",
       "Masz kontakt z ludźmi i potrafisz zarazić ich emocją albo pomysłem. Dobrze czujesz się przed grupą, kamerą albo tam, gdzie trzeba coś zorganizować z sercem.",
       "To ścieżka, gdzie twórczość spotyka ludzi. Wiele z tych ról buduje się przez praktykę i obecność w sieci — liczy się to, co pokażesz, a nie dyplom.",
     ],
-    mocneStrony: ["kreatywność", "komunikacja", "empatia", "energia"],
+    mocneStrony: ["Kreatywność", "Komunikacja", "Empatia", "Energia"],
     zawody: [
-      { nazwa: "Twórca contentu (TikTok / YT)", bezStudiow: true, sciezka: "praktyka + portfolio" },
-      { nazwa: "Fotograf eventowy", bezStudiow: true, sciezka: "sprzęt + portfolio + praktyka" },
-      { nazwa: "Animator kultury", bezStudiow: true, sciezka: "kurs / dom kultury" },
-      { nazwa: "Nauczyciel plastyki / muzyki", bezStudiow: false, sciezka: "studia" },
-      { nazwa: "Arteterapeuta", bezStudiow: true, sciezka: "kurs podyplomowy / szkolenie" },
+      { nazwa: "Twórca contentu (TikTok / YT)", bezStudiow: true, sciezka: "Praktyka + portfolio", opis: "Tworzysz angażujące filmy, podcasty lub grafiki do sieci, zarabiając na własnej marce." },
+      { nazwa: "Fotograf eventowy", bezStudiow: true, sciezka: "Sprzęt + portfolio + praktyka", opis: "Dokumentujesz najważniejsze momenty z wydarzeń, chwytając unikalne emocje i kadry." },
+      { nazwa: "Animator kultury", bezStudiow: true, sciezka: "Kurs / dom kultury", opis: "Inicjujesz wydarzenia artystyczne i budujesz zaangażowanie społeczności wokół sztuki." },
+      { nazwa: "Nauczyciel plastyki / muzyki", bezStudiow: false, sciezka: "Studia", opis: "Rozbudzasz wrażliwość artystyczną uczniów i pomagasz im wyrażać siebie." },
+      { nazwa: "Arteterapeuta", bezStudiow: true, sciezka: "Kurs podyplomowy / szkolenie", opis: "Wykorzystujesz proces tworzenia sztuki, by pomagać ludziom radzić sobie z trudnościami emocjonalnymi." },
     ],
     pierwszeKroki: [
       "Wybierz jeden kanał wyrazu (wideo, foto, zajęcia) i zacznij tworzyć regularnie.",
@@ -315,19 +335,21 @@ const PROFILES = {
   },
 
   AE: {
+    ikona: "🚀",
+    avatar: "img/avatars/avatar_kreatywny_przedsiebiorca_AE.png",
     nazwa: "Kreatywny Przedsiębiorca",
     opis: [
       "Masz pomysły i energię, żeby je sprzedać. Łączysz twórcze podejście z instynktem marketingowym — potrafisz nie tylko coś stworzyć, ale też przekonać do tego ludzi.",
       "Szybko wyczuwasz, co „chwyci”, i nie boisz się wyjść na scenę ze swoim pomysłem. Rutyna Cię dusi — potrzebujesz działania, tempa i widocznego efektu.",
       "To ścieżka marketingu i budowania marki, w której najlepiej uczyć się przez robienie. Własny kanał, pierwsze zlecenia i portfolio otwierają drzwi bardziej niż dyplom.",
     ],
-    mocneStrony: ["kreatywność", "komunikacja", "inicjatywa", "wyczucie odbiorcy"],
+    mocneStrony: ["Kreatywność", "Komunikacja", "Inicjatywa", "Wyczucie odbiorcy"],
     zawody: [
-      { nazwa: "Specjalista marketingu", bezStudiow: true, sciezka: "kurs 3–6 mies." },
-      { nazwa: "Copywriter", bezStudiow: true, sciezka: "portfolio + praktyka" },
-      { nazwa: "Social media manager", bezStudiow: true, sciezka: "kurs + własne kanały" },
-      { nazwa: "Brand designer", bezStudiow: true, sciezka: "kurs + portfolio" },
-      { nazwa: "Event manager", bezStudiow: true, sciezka: "doświadczenie + praktyka" },
+      { nazwa: "Specjalista marketingu", bezStudiow: true, sciezka: "Kurs 3–6 mies.", opis: "Projektujesz kampanie reklamowe, by produkt lub usługa dotarła do odpowiedniej grupy docelowej." },
+      { nazwa: "Copywriter", bezStudiow: true, sciezka: "Portfolio + praktyka", opis: "Piszesz teksty sprzedażowe, reklamowe i edukacyjne, które przyciągają uwagę i zachęcają do działania." },
+      { nazwa: "Social media manager", bezStudiow: true, sciezka: "Kurs + własne kanały", opis: "Budujesz społeczności wokół marek w mediach społecznościowych i tworzysz angażujące treści." },
+      { nazwa: "Brand designer", bezStudiow: true, sciezka: "Kurs + portfolio", opis: "Projektujesz tożsamość wizualną marek, by były spójne, rozpoznawalne i budziły zaufanie." },
+      { nazwa: "Event manager", bezStudiow: true, sciezka: "Doświadczenie + praktyka", opis: "Planujesz i realizujesz wydarzenia od A do Z, rozwiązując setki problemów po drodze." },
     ],
     pierwszeKroki: [
       "Wybierz niszę (social media, copy, marka) i zrób pierwszy projekt „na próbę”.",
@@ -338,19 +360,21 @@ const PROFILES = {
   },
 
   AC: {
-    nazwa: "Projektant Perfekcjonista",
+    ikona: "📐",
+    avatar: "img/avatars/avatar_projektant_formy_AC.png",
+    nazwa: "Projektant Formy",
     opis: [
       "Łączysz artystyczne oko z dokładnością i dbałością o detal. Lubisz, gdy coś jest ładne, ale też poukładane i dopracowane co do piksela.",
       "Potrafisz godzinami cyzelować projekt, aż będzie idealny — i to widać w efekcie. Estetyka i porządek nie są dla Ciebie w sprzeczności, tylko idą w parze.",
       "To świat projektowania graficznego i wizualnego, do którego wchodzi się przez naukę narzędzi i portfolio. Studia bywają plusem, ale liczy się przede wszystkim to, co potrafisz zaprojektować.",
     ],
-    mocneStrony: ["zmysł estetyczny", "dokładność", "cierpliwość", "wyczucie detalu"],
+    mocneStrony: ["Zmysł estetyczny", "Dokładność", "Cierpliwość", "Wyczucie detalu"],
     zawody: [
-      { nazwa: "Grafik komputerowy", bezStudiow: true, sciezka: "kurs + portfolio" },
-      { nazwa: "Projektant UI", bezStudiow: true, sciezka: "kurs 3–6 mies. + portfolio" },
-      { nazwa: "Projektant stron www", bezStudiow: true, sciezka: "kurs + projekty" },
-      { nazwa: "Montażysta wideo", bezStudiow: true, sciezka: "nauka własna + praktyka" },
-      { nazwa: "Architekt wnętrz", bezStudiow: false, sciezka: "studia / kurs" },
+      { nazwa: "Grafik komputerowy", bezStudiow: true, sciezka: "Kurs + portfolio", opis: "Tworzysz materiały wizualne (np. ulotki, banery, grafiki do sieci), dbając o spójność i estetykę." },
+      { nazwa: "Projektant UI", bezStudiow: true, sciezka: "Kurs 3–6 mies. + portfolio", opis: "Projektujesz, jak wygląda aplikacja – dobierasz kolory, typografię i układ elementów na ekranie." },
+      { nazwa: "Projektant stron www", bezStudiow: true, sciezka: "Kurs + projekty", opis: "Budujesz estetyczne i funkcjonalne strony internetowe od pomysłu po wdrożenie." },
+      { nazwa: "Montażysta wideo", bezStudiow: true, sciezka: "Nauka własna + praktyka", opis: "Z surowych nagrań tworzysz wciągające filmy, dobierając odpowiednie ujęcia i dźwięki." },
+      { nazwa: "Architekt wnętrz", bezStudiow: false, sciezka: "Studia / kurs", opis: "Projektujesz przestrzenie tak, by łączyły funkcjonalność z estetyką i komfortem użytkowników." },
     ],
     pierwszeKroki: [
       "Naucz się jednego narzędzia (np. Figma / Canva / edytor wideo) na dobrym poziomie.",
@@ -361,19 +385,21 @@ const PROFILES = {
   },
 
   SE: {
-    nazwa: "Lider Społeczny",
+    ikona: "🤝",
+    avatar: "img/avatars/avatar_lider_spolecznosci_SE.png",
+    nazwa: "Lider Społeczności",
     opis: [
       "Ludzie za Tobą idą — potrafisz zarazić energią, zorganizować grupę i doprowadzić sprawę do końca. Naturalnie bierzesz sprawy w swoje ręce.",
       "Łączysz łatwość w kontaktach z umiejętnością przewodzenia. Rozmowa, negocjacje i budowanie relacji to Twój żywioł, a nie stres.",
       "To ścieżka pracy z zespołem i klientem, w której doświadczenie i charakter często ważą więcej niż dyplom. Wiele firm rekrutuje „juniorów” i szkoli od zera.",
     ],
-    mocneStrony: ["przywództwo", "komunikacja", "energia", "budowanie relacji"],
+    mocneStrony: ["Przywództwo", "Komunikacja", "Energia", "Budowanie relacji"],
     zawody: [
-      { nazwa: "HR / rekruter", bezStudiow: true, sciezka: "kurs + praktyka" },
-      { nazwa: "Przedstawiciel handlowy", bezStudiow: true, sciezka: "doświadczenie + szkolenia" },
-      { nazwa: "Menedżer zespołu", bezStudiow: true, sciezka: "awans z doświadczenia" },
-      { nazwa: "Organizator eventów", bezStudiow: true, sciezka: "praktyka + portfolio" },
-      { nazwa: "Agent nieruchomości", bezStudiow: true, sciezka: "kurs + licencja" },
+      { nazwa: "HR / rekruter", bezStudiow: true, sciezka: "Kurs + praktyka", opis: "Szukasz najlepszych talentów na rynku i dbasz o przyjazne środowisko pracy w firmie." },
+      { nazwa: "Przedstawiciel handlowy", bezStudiow: true, sciezka: "Doświadczenie + szkolenia", opis: "Nawiązujesz relacje biznesowe i aktywnie sprzedajesz produkty lub usługi firmy w terenie." },
+      { nazwa: "Menedżer zespołu", bezStudiow: true, sciezka: "Awans z doświadczenia", opis: "Kierujesz grupą ludzi, wspierając ich rozwój i dbając o realizację wspólnych celów." },
+      { nazwa: "Organizator eventów", bezStudiow: true, sciezka: "Praktyka + portfolio", opis: "Spinujesz szczegóły wydarzeń tak, by wszystko przebiegało płynnie i zaskoczyło gości." },
+      { nazwa: "Agent nieruchomości", bezStudiow: true, sciezka: "Kurs + licencja", opis: "Pomagasz klientom w kupnie, sprzedaży i wynajmie nieruchomości, doradzając najlepsze rozwiązania." },
     ],
     pierwszeKroki: [
       "Wybierz obszar (sprzedaż, HR, eventy) i poszukaj oferty „junior” — często szkolą od zera.",
@@ -390,13 +416,13 @@ const PROFILES = {
       "Dobrze czujesz się tam, gdzie trzeba ogarnąć sprawy i pomóc innym się w nich odnaleźć. Cenisz jasne zasady i spokojną, stabilną pracę.",
       "To zawody biurowo-usługowe „z ludzką twarzą”. Do większości wejdziesz przez krótki kurs lub szkolenie w firmie — pracodawcy cenią tu głównie rzetelność i kontakt z ludźmi.",
     ],
-    mocneStrony: ["rzetelność", "organizacja", "kontakt z ludźmi", "dokładność"],
+    mocneStrony: ["Rzetelność", "Organizacja", "Kontakt z ludźmi", "Dokładność"],
     zawody: [
-      { nazwa: "Pracownik administracji biurowej", bezStudiow: true, sciezka: "kurs / doświadczenie" },
-      { nazwa: "Specjalista obsługi klienta (BOK)", bezStudiow: true, sciezka: "szkolenie w firmie" },
-      { nazwa: "Rejestratorka medyczna", bezStudiow: true, sciezka: "kurs krótki / praktyka" },
-      { nazwa: "Asystent biurowy", bezStudiow: true, sciezka: "kurs + praktyka" },
-      { nazwa: "Pracownik banku", bezStudiow: true, sciezka: "szkolenie w firmie" },
+      { nazwa: "Pracownik administracji biurowej", bezStudiow: true, sciezka: "Kurs / doświadczenie", opis: "Dbasz o obieg informacji, rejestry i podstawową papierologię w firmie." },
+      { nazwa: "Specjalista obsługi klienta (BOK)", bezStudiow: true, sciezka: "Szkolenie w firmie", opis: "Szybko i cierpliwie pomagasz klientom rozwiązywać ich codzienne problemy." },
+      { nazwa: "Rejestratorka medyczna", bezStudiow: true, sciezka: "Kurs krótki / praktyka", opis: "Zarządzasz grafikiem przyjęć w przychodni i dbasz o pierwszy kontakt pacjenta z placówką." },
+      { nazwa: "Asystent biurowy", bezStudiow: true, sciezka: "Kurs + praktyka", opis: "Dbasz o płynny obieg dokumentów i wspierasz codzienną pracę całego biura." },
+      { nazwa: "Pracownik banku", bezStudiow: true, sciezka: "Szkolenie w firmie", opis: "Doradzasz klientom w sprawach produktów finansowych, kredytów i oszczędności." },
     ],
     pierwszeKroki: [
       "Podszkol obsługę komputera i pakietu biurowego (Word, Excel, poczta).",
@@ -413,13 +439,13 @@ const PROFILES = {
       "Łączysz zmysł organizacyjny z myśleniem o wyniku i konsekwencją w działaniu. Umiesz podejmować decyzje i brać za nie odpowiedzialność.",
       "To ścieżka zarządzania i finansów. Część ról wymaga studiów, ale do wielu (koordynacja, zarządzanie projektami) wchodzi się przez kurs i doświadczenie zdobyte na niższym stanowisku.",
     ],
-    mocneStrony: ["organizacja", "planowanie", "decyzyjność", "dokładność"],
+    mocneStrony: ["Organizacja", "Planowanie", "Decyzyjność", "Dokładność"],
     zawody: [
-      { nazwa: "Kierownik projektu", bezStudiow: true, sciezka: "kurs + doświadczenie" },
-      { nazwa: "Office manager", bezStudiow: true, sciezka: "doświadczenie biurowe" },
-      { nazwa: "Specjalista ds. finansów", bezStudiow: false, sciezka: "studia / kursy" },
-      { nazwa: "Specjalista ds. przetargów", bezStudiow: true, sciezka: "kurs + praktyka" },
-      { nazwa: "Urzędnik (wyższego szczebla)", bezStudiow: false, sciezka: "studia + konkurs" },
+      { nazwa: "Kierownik projektu", bezStudiow: true, sciezka: "Kurs + doświadczenie", opis: "Spinujesz w całość ludzi, budżety i zadania, dowożąc projekty na czas." },
+      { nazwa: "Office manager", bezStudiow: true, sciezka: "Doświadczenie biurowe", opis: "Jesteś sercem biura – organizujesz przestrzeń, spotkania i dbasz o to, by wszystkim pracowało się dobrze." },
+      { nazwa: "Specjalista ds. finansów", bezStudiow: false, sciezka: "Studia / kursy", opis: "Analizujesz przepływy pieniężne i pomagasz zarządowi w planowaniu budżetu." },
+      { nazwa: "Specjalista ds. przetargów", bezStudiow: true, sciezka: "Kurs + praktyka", opis: "Analizujesz wymogi postępowań i przygotowujesz skomplikowane oferty przetargowe." },
+      { nazwa: "Urzędnik (wyższego szczebla)", bezStudiow: false, sciezka: "Studia + konkurs", opis: "Koordynujesz prace nad regulacjami prawnymi i optymalizujesz funkcjonowanie instytucji." },
     ],
     pierwszeKroki: [
       "Naucz się podstaw zarządzania projektami (darmowe kursy online).",
