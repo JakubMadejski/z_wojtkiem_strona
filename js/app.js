@@ -43,6 +43,7 @@ function showScreen(name) {
 
 // --- Start / restart ---
 function startQuiz() {
+  document.body.classList.remove("show-premium-bg");
   state.index = 0;
   state.answers = [];
   Storage.clearProgress();
@@ -51,7 +52,7 @@ function startQuiz() {
 }
 
 function restart() {
-  document.body.classList.remove("show-result-bg");
+  document.body.classList.add("show-premium-bg");
   showScreen("landing");
 }
 
@@ -88,7 +89,10 @@ function renderQuestion(animate = true) {
   el.backBtn.classList.toggle("hidden", state.index === 0);
 
   // Animacja wejścia tylko przy zmianie pytania (nie przy samym zaznaczeniu)
-  if (animate) replayAnim(el.quizStage, "stage-in");
+  if (animate) {
+    el.quizStage.classList.remove("stage-out");
+    replayAnim(el.quizStage, "stage-in");
+  }
 }
 
 function selectAnswer(value) {
@@ -104,6 +108,7 @@ function selectAnswer(value) {
   // Opóźnienie na pokazanie zaznaczenia, następnie wyjazd ekranu
   setTimeout(() => {
     if (!isLast) {
+      el.quizStage.classList.remove("stage-in");
       replayAnim(el.quizStage, "stage-out");
     }
   }, 80);
@@ -172,7 +177,7 @@ function onKeydown(e) {
 
 // --- Zakończenie i wynik ---
 function finishQuiz() {
-  document.body.classList.add("show-result-bg");
+  document.body.classList.add("show-premium-bg");
   const answers = QUESTIONS.map((q, i) => ({
     category: q.category,
     value: state.answers[i],
@@ -186,7 +191,7 @@ function finishQuiz() {
   showScreen("result");
 }
 
-// --- Render ekranu wyniku (paywall "na honor" — pełny wynik od razu) ---
+// --- Render ekranu wyniku (paywall "na honor" - pełny wynik od razu) ---
 function renderResult(analysis) {
   // Walidacja: zbyt neutralne odpowiedzi
   if (analysis.neutralWarning) {
@@ -194,7 +199,7 @@ function renderResult(analysis) {
       <div class="notice">
         <h2>Twoje odpowiedzi były bardzo neutralne 🤔</h2>
         <p>Prawie na wszystko odpowiedziałeś/aś „nie wiem". Spróbuj jeszcze raz,
-        odpowiadając bardziej zdecydowanie — dzięki temu wynik będzie trafniejszy.</p>
+        odpowiadając bardziej zdecydowanie - dzięki temu wynik będzie trafniejszy.</p>
         <button class="btn btn-primary" onclick="restart()">Zrób test ponownie</button>
       </div>`;
     return;
@@ -254,13 +259,13 @@ function renderResult(analysis) {
 
   const borderlineNote =
     alt !== null
-      ? `<p class="borderline">Jesteś na pograniczu dwóch typów — warto zerknąć też na profil
+      ? `<p class="borderline">Jesteś na pograniczu dwóch typów - warto zerknąć też na profil
          <strong>${alt.nazwa}</strong> (${analysis.altCode}).</p>`
       : "";
 
   const versatileNote =
     analysis.versatile && !analysis.neutralWarning
-      ? `<p class="versatile">Twoje wyniki są dość wyrównane — jesteś osobą wszechstronną.
+      ? `<p class="versatile">Twoje wyniki są dość wyrównane - jesteś osobą wszechstronną.
          Traktuj profil jako wskazówkę, a nie sztywną ramkę.</p>`
       : "";
 
@@ -319,7 +324,7 @@ function renderResult(analysis) {
     <div class="card ai-card">
       <h2>Chcesz drążyć temat dalej? 🔎</h2>
       <p>Wygeneruj gotowy prompt do AI (ChatGPT / Claude / Gemini). Wklej go do czatu
-      i uzupełnij pola w [nawiasach] — AI podpowie Ci konkretne oferty pracy, szkoły
+      i uzupełnij pola w [nawiasach] - AI podpowie Ci konkretne oferty pracy, szkoły
       i kursy w Twojej okolicy (z dojazdami), orientacyjne zarobki i plan pierwszych kroków.</p>
       <button class="btn btn-primary" id="ai-prompt-btn">📋 Wygeneruj i skopiuj prompt</button>
       <div id="ai-prompt-box" class="ai-prompt-box hidden">
@@ -398,10 +403,10 @@ function renderResult(analysis) {
     aiBtn.addEventListener("click", () => {
       aiText.value = promptStr;
       aiBox.classList.remove("hidden");
-      aiBtn.textContent = "Prompt gotowy — zobacz niżej ↓";
+      aiBtn.textContent = "Prompt gotowy - zobacz niżej ↓";
       copyText(promptStr).then((ok) => {
         aiStatus.textContent = ok
-          ? "Skopiowano do schowka ✓ — wklej w ChatGPT / Claude"
+          ? "Skopiowano do schowka ✓ - wklej w ChatGPT / Claude"
           : "Zaznacz tekst poniżej i skopiuj ręcznie (Ctrl/Cmd+C).";
       });
       aiText.scrollIntoView({ behavior: "smooth", block: "nearest" });
@@ -425,7 +430,7 @@ function buildAiPrompt(analysis, profile) {
   return `Jestem na etapie wybierania ścieżki zawodowej i chcę to z Tobą przedyskutować krok po kroku.
 
 MÓJ PROFIL (z testu predyspozycji zawodowych RIASEC):
-- Kod profilu: ${analysis.code} — ${profile.nazwa}
+- Kod profilu: ${analysis.code} - ${profile.nazwa}
 - Moje mocne strony: ${mocne}
 - Zawody dopasowane do mnie: ${zawody}
 
@@ -441,13 +446,13 @@ MOJE DANE (uzupełnij pola w nawiasach):
 
 CZEGO OD CIEBIE POTRZEBUJĘ:
 1. Wybierz z powyższych 2–3 zawody, które najlepiej pasują do mojej sytuacji, i krótko uzasadnij dlaczego.
-2. Znajdź konkretne szkoły, kursy lub studia w mojej okolicy (albo online) przygotowujące do tych zawodów — podaj nazwy, orientacyjny czas trwania i przybliżony dojazd z mojej miejscowości.
+2. Znajdź konkretne szkoły, kursy lub studia w mojej okolicy (albo online) przygotowujące do tych zawodów - podaj nazwy, orientacyjny czas trwania i przybliżony dojazd z mojej miejscowości.
 3. Sprawdź zapotrzebowanie na te zawody w moim regionie i orientacyjne zarobki na start.
 4. Rozpisz plan pierwszych 30 dni: co robić krok po kroku, żeby ruszyć.
 5. Podaj darmowe źródła nauki (kursy online, materiały) do tych zawodów.
 6. Na koniec zadaj mi 3 pytania, które pomogą Ci lepiej doprecyzować rekomendacje.
 
-Odpowiadaj konkretnie, po polsku, prostym językiem. Jeśli masz dostęp do internetu, sprawdzaj aktualne oferty i ceny. Jeśli czegoś o mnie nie wiesz — dopytaj, zanim odpowiesz.`;
+Odpowiadaj konkretnie, po polsku, prostym językiem. Jeśli masz dostęp do internetu, sprawdzaj aktualne oferty i ceny. Jeśli czegoś o mnie nie wiesz - dopytaj, zanim odpowiesz.`;
 }
 
 // Kopiowanie do schowka z fallbackiem (starsze przeglądarki / brak uprawnień).
@@ -504,7 +509,7 @@ function buildChart(analysis) {
 
 // --- Udostępnianie (Web Share API + fallback: kopiuj do schowka) ---
 function shareResult(analysis, profile) {
-  const text = `Mój profil zawodowy to ${analysis.code} — ${profile.nazwa}. Sprawdź swój na KierunekKariera!`;
+  const text = `Mój profil zawodowy to ${analysis.code} - ${profile.nazwa}. Sprawdź swój na KierunekKariera!`;
   const url = window.location.href;
 
   if (navigator.share) {
@@ -530,9 +535,11 @@ function init() {
   if (saved && saved.index > 0 && saved.index < QUESTIONS.length) {
     state.index = saved.index;
     state.answers = saved.answers;
+    document.body.classList.remove("show-premium-bg");
     showScreen("quiz");
     renderQuestion(false);
   } else {
+    document.body.classList.add("show-premium-bg");
     showScreen("landing");
   }
 }

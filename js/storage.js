@@ -1,6 +1,6 @@
 // storage.js
 // Prosty zapis/odczyt do localStorage: postęp quizu + historia wyników.
-// Wszystko lokalnie w przeglądarce — brak backendu, brak kont.
+// Wszystko lokalnie w przeglądarce - brak backendu, brak kont.
 
 const STORAGE_KEYS = {
   progress: "kk_progress", // bieżące odpowiedzi (na wypadek odświeżenia)
@@ -13,7 +13,7 @@ const Storage = {
     try {
       localStorage.setItem(STORAGE_KEYS.progress, JSON.stringify(state));
     } catch (e) {
-      /* localStorage niedostępny (np. tryb prywatny) — ignorujemy */
+      /* localStorage niedostępny (np. tryb prywatny) - ignorujemy */
     }
   },
 

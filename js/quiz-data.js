@@ -16,17 +16,17 @@ const CATEGORIES = {
 
 const QUESTIONS = [
   // Runda 1
-  { id: "R1", category: "R", text: "Lubię pracować rękami — składać, naprawiać albo budować rzeczy." },
+  { id: "R1", category: "R", text: "Lubię pracować rękami - składać, naprawiać albo budować rzeczy." },
   { id: "I1", category: "I", text: "Lubię rozwiązywać zagadki, łamigłówki i problemy logiczne." },
-  { id: "A1", category: "A", text: "Lubię tworzyć rzeczy od zera — grafiki, muzykę, teksty, filmy, cokolwiek własnego." },
+  { id: "A1", category: "A", text: "Lubię tworzyć rzeczy od zera - grafiki, muzykę, teksty, filmy, cokolwiek własnego." },
   { id: "S1", category: "S", text: "Sprawia mi satysfakcję, gdy mogę komuś realnie pomóc." },
   { id: "E1", category: "E", text: "Lubię przekonywać innych do swoich pomysłów." },
-  { id: "C1", category: "C", text: "Lubię porządek — w rzeczach, plikach, planach dnia." },
+  { id: "C1", category: "C", text: "Lubię porządek - w rzeczach, plikach, planach dnia." },
 
   // Runda 2
   { id: "R2", category: "R", text: "Wolę zadania z konkretnym, namacalnym efektem niż pracę czysto koncepcyjną." },
-  { id: "I2", category: "I", text: "Ciekawi mnie, dlaczego rzeczy działają tak, a nie inaczej — lubię dochodzić do sedna." },
-  { id: "A2", category: "A", text: "Sztywne procedury i schematy mnie ograniczają — wolę mieć swobodę działania." },
+  { id: "I2", category: "I", text: "Ciekawi mnie, dlaczego rzeczy działają tak, a nie inaczej - lubię dochodzić do sedna." },
+  { id: "A2", category: "A", text: "Sztywne procedury i schematy mnie ograniczają - wolę mieć swobodę działania." },
   { id: "S2", category: "S", text: "Lubię tłumaczyć innym rzeczy, których nie rozumieją." },
   { id: "E2", category: "E", text: "Chętnie biorę na siebie rolę lidera w grupie." },
   { id: "C2", category: "C", text: "Dobrze się czuję, pracując według jasnych zasad i procedur." },
@@ -37,7 +37,7 @@ const QUESTIONS = [
   { id: "A3", category: "A", text: "Zwracam uwagę na estetykę: wygląd, kolory, kompozycję, design." },
   { id: "S3", category: "S", text: "Dobrze się czuję w pracy zespołowej i kontakcie z ludźmi." },
   { id: "E3", category: "E", text: "Pociąga mnie pomysł prowadzenia własnego biznesu." },
-  { id: "C3", category: "C", text: "Praca z dokumentami, tabelami albo bazami danych mi nie przeszkadza — wręcz mi leży." },
+  { id: "C3", category: "C", text: "Praca z dokumentami, tabelami albo bazami danych mi nie przeszkadza - wręcz mi leży." },
 
   // Runda 4
   { id: "R4", category: "R", text: "Interesuje mnie, jak działają maszyny, silniki albo sprzęt elektroniczny." },
@@ -45,7 +45,7 @@ const QUESTIONS = [
   { id: "A4", category: "A", text: "Mam dużo pomysłów i lubię je realizować po swojemu." },
   { id: "S4", category: "S", text: "Ludzie często zwracają się do mnie po radę albo wsparcie." },
   { id: "E4", category: "E", text: "Rywalizacja mnie motywuje, a nie stresuje." },
-  { id: "C4", category: "C", text: "Jestem dokładny/a — zauważam błędy i literówki, które inni pomijają." },
+  { id: "C4", category: "C", text: "Jestem dokładny/a - zauważam błędy i literówki, które inni pomijają." },
 
   // Runda 5
   { id: "R5", category: "R", text: "Gdy coś się psuje w domu, wolę spróbować naprawić to samodzielnie niż wzywać fachowca." },

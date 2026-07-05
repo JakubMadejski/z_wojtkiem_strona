@@ -1,4 +1,4 @@
-/* style.css — Liquid Glass Design · Dark Purple · Mobile-first */
+/* style.css - Liquid Glass Design · Dark Purple · Mobile-first */
 
 /* ============================================================= */
 /* 0. Design Tokens                                               */
@@ -23,7 +23,7 @@
   --text-secondary: rgba(255, 255, 255, 0.55);
   --text-muted: rgba(255, 255, 255, 0.38);
 
-  /* Primary (teal — zachowany z RIASEC) */
+  /* Primary (teal - zachowany z RIASEC) */
   --primary: #6ee7b7;
   --primary-glow: rgba(110, 231, 183, 0.25);
   --primary-soft: rgba(110, 231, 183, 0.10);
@@ -34,7 +34,7 @@
   --accent-glow: rgba(167, 139, 250, 0.30);
   --accent-soft: rgba(167, 139, 250, 0.10);
 
-  /* RIASEC colors (dostosowane do dark mode — jaśniejsze, świecące) */
+  /* RIASEC colors (dostosowane do dark mode - jaśniejsze, świecące) */
   --riasec-r: #f97066;
   --riasec-i: #60a5fa;
   --riasec-a: #e879a8;
@@ -130,7 +130,7 @@ html, body {
   animation: float4 25s ease-in-out infinite;
 }
 
-/* Tło premium dla desktopu (CSS Mesh) na ekranie wyników */
+/* Wygenerowane graficzne tło premium dla desktopu na ekranie wyników */
 .desktop-bg-layer {
   position: fixed;
   inset: 0;
@@ -138,18 +138,18 @@ html, body {
   opacity: 0;
   pointer-events: none;
   transition: opacity 2s ease-in-out;
-  background: 
-    radial-gradient(at 10% 20%, rgba(100, 20, 200, 0.2) 0px, transparent 50%),
-    radial-gradient(at 90% 10%, rgba(40, 40, 200, 0.15) 0px, transparent 50%),
-    radial-gradient(at 50% 90%, rgba(140, 20, 100, 0.15) 0px, transparent 50%),
-    radial-gradient(at 80% 60%, rgba(20, 100, 255, 0.1) 0px, transparent 50%);
-  filter: blur(40px);
+  background-image: url('../img/bg_desktop.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  /* Dodajemy lekkie rozmycie i przyciemnienie, by wyniki były w pełni czytelne */
+  filter: blur(5px) brightness(0.7);
 }
 @media (min-width: 768px) {
-  body.show-result-bg .desktop-bg-layer {
+  body.show-premium-bg .desktop-bg-layer {
     opacity: 1;
   }
-  body.show-result-bg .bg-blobs .blob {
+  body.show-premium-bg .bg-blobs .blob {
     /* Wzmacniamy bloby na desktopie po wyniku */
     transform: scale(1.5);
     opacity: 0.8;
@@ -195,8 +195,8 @@ html, body {
 /* 4. Animations                                                  */
 /* ============================================================= */
 @keyframes screenIn {
-  from { opacity: 0; transform: translateY(16px); filter: blur(4px); }
-  to   { opacity: 1; transform: translateY(0);    filter: blur(0); }
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 @keyframes stageIn {
   from { opacity: 0; transform: translateX(18px); }

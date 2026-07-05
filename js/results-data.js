@@ -1,7 +1,7 @@
 // results-data.js
 // 15 profili wynikowych (kombinacje 2 najwyższych kategorii RIASEC).
 //
-// ⚠️ UWAGA — PAYWALL "NA HONOR": ten plik jest po stronie KLIENTA, więc
+// ⚠️ UWAGA - PAYWALL "NA HONOR": ten plik jest po stronie KLIENTA, więc
 // pełne wyniki są widoczne w przeglądarce bez płacenia. To celowe na tym etapie.
 // Żeby płatność cokolwiek wymuszała, ten plik trzeba przenieść na serwer
 // (api/_profiles.js) i wydawać wynik dopiero po weryfikacji płatności.
@@ -23,12 +23,12 @@ const RESOURCES = {
     opis: "Darmowa, kompletna ścieżka nauki tworzenia stron internetowych od zera.",
   },
   googleCert: {
-    nazwa: "Grow with Google — certyfikaty zawodowe",
+    nazwa: "Grow with Google - certyfikaty zawodowe",
     url: "https://grow.google/intl/pl/google-career-certificates/",
-    opis: "Kursy IT, analizy danych, UX, marketingu i zarządzania projektami — po polsku, z certyfikatem.",
+    opis: "Kursy IT, analizy danych, UX, marketingu i zarządzania projektami - po polsku, z certyfikatem.",
   },
   googleMarketing: {
-    nazwa: "Grow with Google — marketing i e-commerce",
+    nazwa: "Grow with Google - marketing i e-commerce",
     url: "https://grow.google/intl/pl/courses-and-tools/",
     opis: "Darmowe kursy marketingu internetowego i sprzedaży online po polsku.",
   },
@@ -40,29 +40,29 @@ const RESOURCES = {
   khan: {
     nazwa: "Khan Academy (po polsku)",
     url: "https://pl.khanacademy.org/",
-    opis: "Darmowe lekcje z matematyki i przedmiotów ścisłych — dobre na odświeżenie podstaw.",
+    opis: "Darmowe lekcje z matematyki i przedmiotów ścisłych - dobre na odświeżenie podstaw.",
   },
   coursera: {
     nazwa: "Coursera (tryb audytu)",
     url: "https://www.coursera.org/",
-    opis: "Kursy uczelni i firm — wiele przejdziesz za darmo w trybie audytu (bez płatnego certyfikatu).",
+    opis: "Kursy uczelni i firm - wiele przejdziesz za darmo w trybie audytu (bez płatnego certyfikatu).",
   },
   youtube: {
-    nazwa: "YouTube — kursy i poradniki",
+    nazwa: "YouTube - kursy i poradniki",
     url: "https://www.youtube.com/",
-    opis: "Praktyczne tutoriale do niemal każdego zawodu i narzędzia — całkowicie za darmo.",
+    opis: "Praktyczne tutoriale do niemal każdego zawodu i narzędzia - całkowicie za darmo.",
   },
 };
 
 // --- Zasoby uniwersalne (te same dla każdego profilu) ---
 const UNIVERSAL_RESOURCES = [
   {
-    nazwa: "Urząd Pracy — bon i finansowanie szkoleń",
+    nazwa: "Urząd Pracy - bon i finansowanie szkoleń",
     url: "https://psz.praca.gov.pl/",
-    opis: "Osoby bezrobotne mogą dostać finansowanie kursu (bon szkoleniowy — nawet do ~7,4 tys. zł dla osób do 30 r.ż.). Zgłoś się do swojego powiatowego urzędu pracy.",
+    opis: "Osoby bezrobotne mogą dostać finansowanie kursu (bon szkoleniowy - nawet do ~7,4 tys. zł dla osób do 30 r.ż.). Zgłoś się do swojego powiatowego urzędu pracy.",
   },
   {
-    nazwa: "PARP — Baza Usług Rozwojowych",
+    nazwa: "PARP - Baza Usług Rozwojowych",
     url: "https://uslugirozwojowe.parp.gov.pl/",
     opis: "Największa baza szkoleń i kursów z dofinansowaniem UE (często 80–100% ceny).",
   },
@@ -81,12 +81,12 @@ const UNIVERSAL_RESOURCES = [
 const PROFILES = {
   RI: {
     ikona: "👨‍🔧",
-    avatar: "img/avatars/avatar_techniczny_analityk_RI.png",
+    avatar: "img/avatars/wersja_2/avatar_cel_ri.png",
     nazwa: "Techniczny Analityk",
     opis: [
-      "Masz rzadkie połączenie: ręce do konkretnej roboty i głowę, która chce wiedzieć, jak coś działa od środka. Nie wystarcza Ci, że urządzenie działa — chcesz rozumieć dlaczego, i potrafisz rozłożyć problem na części.",
-      "Najlepiej czujesz się tam, gdzie technika spotyka logikę: diagnozujesz usterkę, znajdujesz przyczynę, widzisz efekt swojej pracy. Siedzenie przy biurku od rana do wieczora Cię męczy — wolisz działać i sprawdzać w praktyce.",
-      "To jedna z najbardziej poszukiwanych kombinacji na rynku pracy. Fachowców łączących praktykę z myśleniem technicznym wszędzie brakuje, a wejście do zawodu często nie wymaga studiów — wystarczy kurs i uprawnienia.",
+      "Masz rzadkie połączenie: ręce do konkretnej roboty i głowę, która chce wiedzieć, jak coś działa od środka. Nie wystarcza Ci, że urządzenie działa - chcesz rozumieć dlaczego, i potrafisz rozłożyć problem na części.",
+      "Najlepiej czujesz się tam, gdzie technika spotyka logikę: diagnozujesz usterkę, znajdujesz przyczynę, widzisz efekt swojej pracy. Siedzenie przy biurku od rana do wieczora Cię męczy - wolisz działać i sprawdzać w praktyce.",
+      "To jedna z najbardziej poszukiwanych kombinacji na rynku pracy. Fachowców łączących praktykę z myśleniem technicznym wszędzie brakuje, a wejście do zawodu często nie wymaga studiów - wystarczy kurs i uprawnienia.",
     ],
     mocneStrony: ["Myślenie techniczne", "Rozwiązywanie problemów", "Samodzielność", "Logika"],
     zawody: [
@@ -100,19 +100,19 @@ const PROFILES = {
     pierwszeKroki: [
       "Sprawdź bony i kursy zawodowe w swoim Urzędzie Pracy (często finansują kursy SEP / CNC).",
       "Wybierz jedną konkretną specjalizację techniczną i znajdź krótki kurs z certyfikatem.",
-      "Poszukaj stażu lub praktyk u lokalnego serwisu / firmy — technika najlepiej wchodzi w praktyce.",
+      "Poszukaj stażu lub praktyk u lokalnego serwisu / firmy - technika najlepiej wchodzi w praktyce.",
     ],
     kursyDarmowe: [RESOURCES.googleCert, RESOURCES.youtube, RESOURCES.coursera],
   },
 
   RA: {
     ikona: "🎨",
-    avatar: "img/avatars/avatar_kreatywny_rzemieslnik_RA.png",
+    avatar: "img/avatars/wersja_2/avatar_cel_ra.png",
     nazwa: "Kreatywny Rzemieślnik",
     opis: [
-      "Tworzysz rzeczy rękami, ale z pomysłem i wyczuciem estetyki. Nie wystarcza Ci, że coś działa — ma też dobrze wyglądać i być Twoje, z Twoim podpisem.",
-      "Dobrze czujesz się, gdy widzisz namacalny efekt swojej pracy i możesz się nim pochwalić. Rutyna i sztywne procedury Cię nudzą — potrzebujesz swobody i miejsca na własny styl.",
-      "To ścieżka, gdzie rękodzieło spotyka sztukę. Większość tych zawodów wchodzi się przez kurs i praktykę, a nie przez studia — najważniejsze jest portfolio i to, co potrafisz zrobić.",
+      "Tworzysz rzeczy rękami, ale z pomysłem i wyczuciem estetyki. Nie wystarcza Ci, że coś działa - ma też dobrze wyglądać i być Twoje, z Twoim podpisem.",
+      "Dobrze czujesz się, gdy widzisz namacalny efekt swojej pracy i możesz się nim pochwalić. Rutyna i sztywne procedury Cię nudzą - potrzebujesz swobody i miejsca na własny styl.",
+      "To ścieżka, gdzie rękodzieło spotyka sztukę. Większość tych zawodów wchodzi się przez kurs i praktykę, a nie przez studia - najważniejsze jest portfolio i to, co potrafisz zrobić.",
     ],
     mocneStrony: ["Zmysł estetyczny", "Precyzja manualna", "Kreatywność", "Cierpliwość"],
     zawody: [
@@ -125,7 +125,7 @@ const PROFILES = {
     ],
     pierwszeKroki: [
       "Wybierz jedno rzemiosło, które Cię ciekawi, i zrób pierwszy prosty projekt w domu.",
-      "Zbuduj małe portfolio zdjęć swoich prac (nawet amatorskich) — w tych zawodach liczy się efekt.",
+      "Zbuduj małe portfolio zdjęć swoich prac (nawet amatorskich) - w tych zawodach liczy się efekt.",
       "Poszukaj kursu lub terminowania u lokalnego fachowca / w warsztacie.",
     ],
     kursyDarmowe: [RESOURCES.youtube, RESOURCES.coursera],
@@ -133,12 +133,12 @@ const PROFILES = {
 
   RS: {
     ikona: "🚒",
-    avatar: "img/avatars/avatar_praktyczny_opiekun_RS.png",
+    avatar: "img/avatars/wersja_2/avatar_cel_rs.png",
     nazwa: "Praktyczny Opiekun",
     opis: [
-      "Działasz konkretnie i lubisz, gdy Twoja praca komuś realnie pomaga. Łączysz sprawność i opanowanie z troską o drugiego człowieka — nie boisz się fizycznego wysiłku ani trudnych sytuacji.",
+      "Działasz konkretnie i lubisz, gdy Twoja praca komuś realnie pomaga. Łączysz sprawność i opanowanie z troską o drugiego człowieka - nie boisz się fizycznego wysiłku ani trudnych sytuacji.",
       "Najlepiej czujesz się w ruchu i w bezpośrednim kontakcie z ludźmi, a nie za biurkiem. Dajesz radę tam, gdzie inni się gubią, bo potrafisz zachować spokój.",
-      "To zawody „pierwszej linii”, w których ludzi zawsze brakuje. Część wymaga szkoły policealnej, ale do wielu wejdziesz przez krótki kurs — a satysfakcja z pomagania jest tu codziennością.",
+      "To zawody „pierwszej linii”, w których ludzi zawsze brakuje. Część wymaga szkoły policealnej, ale do wielu wejdziesz przez krótki kurs - a satysfakcja z pomagania jest tu codziennością.",
     ],
     mocneStrony: ["Opanowanie w stresie", "Empatia w działaniu", "Kondycja", "Odpowiedzialność"],
     zawody: [
@@ -150,7 +150,7 @@ const PROFILES = {
       { nazwa: "Strażak", bezStudiow: true, sciezka: "Rekrutacja + szkolenie", opis: "Niesiesz pomoc w sytuacjach zagrożenia życia, zdrowia i mienia." },
     ],
     pierwszeKroki: [
-      "Zdecyduj, czy wolisz ratownictwo, opiekę czy sport — to trzy różne ścieżki wejścia.",
+      "Zdecyduj, czy wolisz ratownictwo, opiekę czy sport - to trzy różne ścieżki wejścia.",
       "Na start rozważ kurs opiekuna medycznego lub pierwszej pomocy (szybkie wejście do zawodu).",
       "Sprawdź nabory do służb (straż, ratownictwo) i wymagania kondycyjne.",
     ],
@@ -158,13 +158,13 @@ const PROFILES = {
   },
 
   RE: {
-    ikona: "🏗️",
-    avatar: "img/avatars/avatar_przedsiebiorczy_praktyk_RE.png",
+    ikona: "👷",
+    avatar: "img/avatars/wersja_2/avatar_cel_re.png",
     nazwa: "Przedsiębiorczy Praktyk",
     opis: [
       "Masz smykałkę do konkretnej roboty i głowę do interesów. Wolisz decydować sam i widzieć efekt swojej pracy, niż czekać, aż ktoś powie Ci, co masz robić.",
-      "Nie boisz się odpowiedzialności ani ryzyka — a przy tym trzymasz się ziemi i liczysz koszty. Ludzie chętnie idą za kimś, kto zna się na rzeczy i sam potrafi „to zrobić”.",
-      "To ścieżka „od fachowca do własnej firmy”. Najpierw zdobywasz konkretną umiejętność, a potem — jeśli chcesz — budujesz wokół niej biznes. Urzędy pracy dają na to jednorazowe dotacje.",
+      "Nie boisz się odpowiedzialności ani ryzyka - a przy tym trzymasz się ziemi i liczysz koszty. Ludzie chętnie idą za kimś, kto zna się na rzeczy i sam potrafi „to zrobić”.",
+      "To ścieżka „od fachowca do własnej firmy”. Najpierw zdobywasz konkretną umiejętność, a potem - jeśli chcesz - budujesz wokół niej biznes. Urzędy pracy dają na to jednorazowe dotacje.",
     ],
     mocneStrony: ["Zaradność", "Organizacja pracy", "Decyzyjność", "Praktyczność"],
     zawody: [
@@ -175,7 +175,7 @@ const PROFILES = {
       { nazwa: "Właściciel warsztatu", bezStudiow: true, sciezka: "Fach + działalność", opis: "Zarządzasz biznesem, dbasz o klientów i organizujesz pracę mechanikom lub fachowcom." },
     ],
     pierwszeKroki: [
-      "Wybierz fach, w którym chcesz być dobry — najpierw umiejętność, potem firma.",
+      "Wybierz fach, w którym chcesz być dobry - najpierw umiejętność, potem firma.",
       "Sprawdź dotacje na rozpoczęcie działalności w Urzędzie Pracy (jednorazowe środki).",
       "Zacznij od zleceń „na boku”, żeby przetestować rynek bez ryzyka.",
     ],
@@ -183,12 +183,12 @@ const PROFILES = {
   },
 
   RC: {
-    ikona: "📋",
-    avatar: "img/avatars/avatar_precyzyjny_wykonawca_RC.png",
+    ikona: "🔬",
+    avatar: "img/avatars/wersja_2/avatar_cel_rc.png",
     nazwa: "Precyzyjny Wykonawca",
     opis: [
       "Jesteś konkretny, uporządkowany i lubisz, gdy wszystko ma swoje miejsce. Robisz rzeczy dokładnie i do końca, bez chodzenia na skróty.",
-      "Dobrze wykonujesz zadania wymagające skupienia, rytmu i trzymania procedur — a to, co innych nudzi, Tobie daje poczucie panowania nad sytuacją.",
+      "Dobrze wykonujesz zadania wymagające skupienia, rytmu i trzymania procedur - a to, co innych nudzi, Tobie daje poczucie panowania nad sytuacją.",
       "Świetnie sprawdzisz się tam, gdzie liczy się rzetelność i logistyka. Wiele z tych zawodów ma szybkie wejście: wystarczą uprawnienia (np. wózki, prawo jazdy kat. C), a firmy często szkolą od podstaw.",
     ],
     mocneStrony: ["Dokładność", "Systematyczność", "Odpowiedzialność", "Praca według procedur"],
@@ -202,19 +202,19 @@ const PROFILES = {
     ],
     pierwszeKroki: [
       "Zrób uprawnienia, które szybko zwiększają szanse pracy (wózki widłowe, kat. C+E).",
-      "Sprawdź oferty w centrach logistycznych — często szkolą od podstaw.",
+      "Sprawdź oferty w centrach logistycznych - często szkolą od podstaw.",
       "Rozważ kurs logistyki finansowany z Urzędu Pracy.",
     ],
     kursyDarmowe: [RESOURCES.googleCert, RESOURCES.coursera, RESOURCES.youtube],
   },
 
   IA: {
-    ikona: "💡",
-    avatar: "img/avatars/avatar_tworczy_badacz_IA.png",
+    ikona: "🔭",
+    avatar: "img/avatars/wersja_2/avatar_cel_ia.png",
     nazwa: "Twórczy Badacz",
     opis: [
       "Łączysz analityczne myślenie z wyobraźnią. Lubisz najpierw zrozumieć problem do końca, a potem wymyślić rozwiązanie, na które inni nie wpadli.",
-      "Nudzą Cię gotowe schematy — wolisz badać, testować i tworzyć coś nowego. Zadajesz pytania „a co, gdyby…?” i szukasz odpowiedzi po swojemu.",
+      "Nudzą Cię gotowe schematy - wolisz badać, testować i tworzyć coś nowego. Zadajesz pytania „a co, gdyby…?” i szukasz odpowiedzi po swojemu.",
       "Dobrze odnajdziesz się tam, gdzie trzeba łączyć logikę z kreatywnością: projektowanie, badania, tworzenie produktów. Do wielu z tych ról wchodzi się przez kurs i portfolio, nie przez dyplom.",
     ],
     mocneStrony: ["Myślenie koncepcyjne", "Kreatywność", "Analiza", "Ciekawość"],
@@ -234,11 +234,11 @@ const PROFILES = {
   },
 
   IS: {
-    ikona: "🩺",
-    avatar: "img/avatars/avatar_strategiczny_analityk_IS.png",
+    ikona: "📊",
+    avatar: "img/avatars/wersja_2/avatar_cel_is.png",
     nazwa: "Analityczny Doradca",
     opis: [
-      "Interesują Cię ludzie — jak myślą, co czują, dlaczego robią to, co robią — i chcesz tę wiedzę wykorzystać, żeby im pomagać. Łączysz analityczne podejście z autentyczną troską.",
+      "Interesują Cię ludzie - jak myślą, co czują, dlaczego robią to, co robią - i chcesz tę wiedzę wykorzystać, żeby im pomagać. Łączysz analityczne podejście z autentyczną troską.",
       "Umiesz słuchać i tłumaczyć trudne rzeczy prostym językiem. Ludzie czują się przy Tobie zrozumiani, a Ty lubisz dochodzić do sedna ich problemów.",
       "To ścieżka, gdzie nauka spotyka pomaganie. Część zawodów wymaga studiów, ale do wielu ról wspierających (np. doradztwo, asysta) wejdziesz przez kurs i praktykę.",
     ],
@@ -261,11 +261,11 @@ const PROFILES = {
 
   IE: {
     ikona: "📈",
-    avatar: "img/avatars/avatar_analityczny_doradca_IE.png",
+    avatar: "img/avatars/wersja_2/avatar_cel_ie.png",
     nazwa: "Strategiczny Analityk",
     opis: [
       "Widzisz zależności, które innym umykają, i lubisz przekładać dane na konkretne decyzje. Dla Ciebie liczby to nie cel, tylko narzędzie, żeby coś zmienić.",
-      "Łączysz chłodną analizę z myśleniem o wyniku — nie zatrzymujesz się na „ciekawe”, tylko pytasz „to co z tym zrobimy?”. Potrafisz też przekonać innych do swoich wniosków.",
+      "Łączysz chłodną analizę z myśleniem o wyniku - nie zatrzymujesz się na „ciekawe”, tylko pytasz „to co z tym zrobimy?”. Potrafisz też przekonać innych do swoich wniosków.",
       "To ścieżka na styku analizy i biznesu, jedna z najlepiej opłacanych. Do wielu z tych ról wchodzi się przez kurs i praktykę, jeśli pokażesz, że umiesz myśleć danymi.",
     ],
     mocneStrony: ["Analiza", "Myślenie strategiczne", "Decyzyjność", "Komunikacja"],
@@ -277,7 +277,7 @@ const PROFILES = {
       { nazwa: "Analityk finansowy", bezStudiow: false, sciezka: "Studia + certyfikaty", opis: "Oceniasz ryzyko i zyskowność projektów oraz dbasz o zdrowie finansowe firmy." },
     ],
     pierwszeKroki: [
-      "Naucz się podstaw Excela / arkuszy i analizy danych — to fundament tych zawodów.",
+      "Naucz się podstaw Excela / arkuszy i analizy danych - to fundament tych zawodów.",
       "Zrób kurs analityki biznesowej lub e-commerce (część finansuje Urząd Pracy).",
       "Poćwicz na realnym przykładzie: przeanalizuj dane i zaproponuj rekomendację.",
     ],
@@ -286,12 +286,12 @@ const PROFILES = {
 
   IC: {
     ikona: "💻",
-    avatar: "img/avatars/avatar_analityk_systemowy_IC.png",
+    avatar: "img/avatars/wersja_2/avatar_cel_ic.png",
     nazwa: "Analityk Systemowy",
     opis: [
-      "Łączysz ciekawość badacza z zamiłowaniem do porządku. Lubisz logiczne, precyzyjne zadania, w których liczy się dokładność i konsekwencja — i potrafisz godzinami rozgryzać problem, aż zadziała.",
+      "Łączysz ciekawość badacza z zamiłowaniem do porządku. Lubisz logiczne, precyzyjne zadania, w których liczy się dokładność i konsekwencja - i potrafisz godzinami rozgryzać problem, aż zadziała.",
       "Nie potrzebujesz ciągłego kontaktu z ludźmi, żeby dobrze pracować; dajesz radę samodzielnie i systematycznie. Błąd, który inni przeoczą, Ty wyłapiesz.",
-      "To jedna z najbardziej przyszłościowych kombinacji na rynku pracy. Programowanie, testowanie czy analiza danych są dziś w dużej mierze dostępne bez studiów — liczy się portfolio i realne umiejętności.",
+      "To jedna z najbardziej przyszłościowych kombinacji na rynku pracy. Programowanie, testowanie czy analiza danych są dziś w dużej mierze dostępne bez studiów - liczy się portfolio i realne umiejętności.",
     ],
     mocneStrony: ["Logiczne myślenie", "Dokładność", "Samodzielność", "Cierpliwość"],
     zawody: [
@@ -310,13 +310,13 @@ const PROFILES = {
   },
 
   AS: {
-    ikona: "🎭",
-    avatar: "img/avatars/avatar_inspirujacy_przewodnik_AS.png",
+    ikona: "💡",
+    avatar: "img/avatars/wersja_2/avatar_cel_as.png",
     nazwa: "Inspirujący Przewodnik",
     opis: [
-      "Tworzysz nie dla samego tworzenia, ale żeby coś dać innym — poruszyć, nauczyć, zbudować wspólnotę. Twoja wrażliwość to Twoja siła.",
+      "Tworzysz nie dla samego tworzenia, ale żeby coś dać innym - poruszyć, nauczyć, zbudować wspólnotę. Twoja wrażliwość to Twoja siła.",
       "Masz kontakt z ludźmi i potrafisz zarazić ich emocją albo pomysłem. Dobrze czujesz się przed grupą, kamerą albo tam, gdzie trzeba coś zorganizować z sercem.",
-      "To ścieżka, gdzie twórczość spotyka ludzi. Wiele z tych ról buduje się przez praktykę i obecność w sieci — liczy się to, co pokażesz, a nie dyplom.",
+      "To ścieżka, gdzie twórczość spotyka ludzi. Wiele z tych ról buduje się przez praktykę i obecność w sieci - liczy się to, co pokażesz, a nie dyplom.",
     ],
     mocneStrony: ["Kreatywność", "Komunikacja", "Empatia", "Energia"],
     zawody: [
@@ -328,19 +328,19 @@ const PROFILES = {
     ],
     pierwszeKroki: [
       "Wybierz jeden kanał wyrazu (wideo, foto, zajęcia) i zacznij tworzyć regularnie.",
-      "Zbuduj portfolio / profil w sieci — w tych zawodach liczy się to, co pokażesz.",
+      "Zbuduj portfolio / profil w sieci - w tych zawodach liczy się to, co pokażesz.",
       "Poszukaj współpracy z domem kultury, szkołą lub lokalną organizacją.",
     ],
     kursyDarmowe: [RESOURCES.youtube, RESOURCES.hubspot, RESOURCES.coursera],
   },
 
   AE: {
-    ikona: "🚀",
-    avatar: "img/avatars/avatar_kreatywny_przedsiebiorca_AE.png",
+    ikona: "🎬",
+    avatar: "img/avatars/wersja_2/avatar_cel_ae.png",
     nazwa: "Kreatywny Przedsiębiorca",
     opis: [
-      "Masz pomysły i energię, żeby je sprzedać. Łączysz twórcze podejście z instynktem marketingowym — potrafisz nie tylko coś stworzyć, ale też przekonać do tego ludzi.",
-      "Szybko wyczuwasz, co „chwyci”, i nie boisz się wyjść na scenę ze swoim pomysłem. Rutyna Cię dusi — potrzebujesz działania, tempa i widocznego efektu.",
+      "Masz pomysły i energię, żeby je sprzedać. Łączysz twórcze podejście z instynktem marketingowym - potrafisz nie tylko coś stworzyć, ale też przekonać do tego ludzi.",
+      "Szybko wyczuwasz, co „chwyci”, i nie boisz się wyjść na scenę ze swoim pomysłem. Rutyna Cię dusi - potrzebujesz działania, tempa i widocznego efektu.",
       "To ścieżka marketingu i budowania marki, w której najlepiej uczyć się przez robienie. Własny kanał, pierwsze zlecenia i portfolio otwierają drzwi bardziej niż dyplom.",
     ],
     mocneStrony: ["Kreatywność", "Komunikacja", "Inicjatywa", "Wyczucie odbiorcy"],
@@ -361,11 +361,11 @@ const PROFILES = {
 
   AC: {
     ikona: "📐",
-    avatar: "img/avatars/avatar_projektant_formy_AC.png",
+    avatar: "img/avatars/wersja_2/avatar_cel_ac.png",
     nazwa: "Projektant Formy",
     opis: [
       "Łączysz artystyczne oko z dokładnością i dbałością o detal. Lubisz, gdy coś jest ładne, ale też poukładane i dopracowane co do piksela.",
-      "Potrafisz godzinami cyzelować projekt, aż będzie idealny — i to widać w efekcie. Estetyka i porządek nie są dla Ciebie w sprzeczności, tylko idą w parze.",
+      "Potrafisz godzinami cyzelować projekt, aż będzie idealny - i to widać w efekcie. Estetyka i porządek nie są dla Ciebie w sprzeczności, tylko idą w parze.",
       "To świat projektowania graficznego i wizualnego, do którego wchodzi się przez naukę narzędzi i portfolio. Studia bywają plusem, ale liczy się przede wszystkim to, co potrafisz zaprojektować.",
     ],
     mocneStrony: ["Zmysł estetyczny", "Dokładność", "Cierpliwość", "Wyczucie detalu"],
@@ -378,7 +378,7 @@ const PROFILES = {
     ],
     pierwszeKroki: [
       "Naucz się jednego narzędzia (np. Figma / Canva / edytor wideo) na dobrym poziomie.",
-      "Zrób 3–5 projektów do portfolio — nawet fikcyjnych, byle dopracowanych.",
+      "Zrób 3–5 projektów do portfolio - nawet fikcyjnych, byle dopracowanych.",
       "Poszukaj pierwszych zleceń (znajomi, lokalne firmy), żeby zebrać doświadczenie.",
     ],
     kursyDarmowe: [RESOURCES.googleCert, RESOURCES.youtube, RESOURCES.coursera],
@@ -386,10 +386,10 @@ const PROFILES = {
 
   SE: {
     ikona: "🤝",
-    avatar: "img/avatars/avatar_lider_spolecznosci_SE.png",
+    avatar: "img/avatars/wersja_2/avatar_cel_se.png",
     nazwa: "Lider Społeczności",
     opis: [
-      "Ludzie za Tobą idą — potrafisz zarazić energią, zorganizować grupę i doprowadzić sprawę do końca. Naturalnie bierzesz sprawy w swoje ręce.",
+      "Ludzie za Tobą idą - potrafisz zarazić energią, zorganizować grupę i doprowadzić sprawę do końca. Naturalnie bierzesz sprawy w swoje ręce.",
       "Łączysz łatwość w kontaktach z umiejętnością przewodzenia. Rozmowa, negocjacje i budowanie relacji to Twój żywioł, a nie stres.",
       "To ścieżka pracy z zespołem i klientem, w której doświadczenie i charakter często ważą więcej niż dyplom. Wiele firm rekrutuje „juniorów” i szkoli od zera.",
     ],
@@ -402,7 +402,7 @@ const PROFILES = {
       { nazwa: "Agent nieruchomości", bezStudiow: true, sciezka: "Kurs + licencja", opis: "Pomagasz klientom w kupnie, sprzedaży i wynajmie nieruchomości, doradzając najlepsze rozwiązania." },
     ],
     pierwszeKroki: [
-      "Wybierz obszar (sprzedaż, HR, eventy) i poszukaj oferty „junior” — często szkolą od zera.",
+      "Wybierz obszar (sprzedaż, HR, eventy) i poszukaj oferty „junior” - często szkolą od zera.",
       "Rozwijaj kompetencje miękkie: prezentacja, negocjacje, obsługa klienta.",
       "Zbierz doświadczenie w organizowaniu czegokolwiek (wydarzenie, akcja, grupa).",
     ],
@@ -410,11 +410,13 @@ const PROFILES = {
   },
 
   SC: {
+    ikona: "📋",
+    avatar: "img/avatars/wersja_2/avatar_cel_sc.png",
     nazwa: "Rzetelny Pomocnik",
     opis: [
       "Jesteś osobą, na której można polegać: uporządkowaną, dokładną i życzliwą wobec ludzi. Robisz swoje solidnie i nie zostawiasz spraw w połowie.",
       "Dobrze czujesz się tam, gdzie trzeba ogarnąć sprawy i pomóc innym się w nich odnaleźć. Cenisz jasne zasady i spokojną, stabilną pracę.",
-      "To zawody biurowo-usługowe „z ludzką twarzą”. Do większości wejdziesz przez krótki kurs lub szkolenie w firmie — pracodawcy cenią tu głównie rzetelność i kontakt z ludźmi.",
+      "To zawody biurowo-usługowe „z ludzką twarzą”. Do większości wejdziesz przez krótki kurs lub szkolenie w firmie - pracodawcy cenią tu głównie rzetelność i kontakt z ludźmi.",
     ],
     mocneStrony: ["Rzetelność", "Organizacja", "Kontakt z ludźmi", "Dokładność"],
     zawody: [
@@ -426,13 +428,15 @@ const PROFILES = {
     ],
     pierwszeKroki: [
       "Podszkol obsługę komputera i pakietu biurowego (Word, Excel, poczta).",
-      "Szukaj ofert „obsługa klienta / administracja” — wiele firm szkoli od podstaw.",
+      "Szukaj ofert „obsługa klienta / administracja” - wiele firm szkoli od podstaw.",
       "Zrób krótki kurs administracji lub obsługi klienta z Urzędu Pracy.",
     ],
     kursyDarmowe: [RESOURCES.googleCert, RESOURCES.coursera, RESOURCES.youtube],
   },
 
   EC: {
+    ikona: "📅",
+    avatar: "img/avatars/wersja_2/avatar_cel_ec.png",
     nazwa: "Menedżer Organizator",
     opis: [
       "Ogarniasz chaos: potrafisz zaplanować, poukładać i doprowadzić projekt do końca, pilnując budżetu i terminów. Tam, gdzie inni widzą bałagan, Ty widzisz plan.",
@@ -449,7 +453,7 @@ const PROFILES = {
     ],
     pierwszeKroki: [
       "Naucz się podstaw zarządzania projektami (darmowe kursy online).",
-      "Podszkol Excela i planowanie — to codzienne narzędzia tej roli.",
+      "Podszkol Excela i planowanie - to codzienne narzędzia tej roli.",
       "Zacznij od roli asystenckiej / koordynatora, żeby wejść w organizację pracy.",
     ],
     kursyDarmowe: [RESOURCES.googleCert, RESOURCES.coursera, RESOURCES.hubspot],

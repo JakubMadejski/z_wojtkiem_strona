@@ -1,8 +1,8 @@
 // scoring.js
 // Logika liczenia wyniku: sumowanie punktów, kod wynikowy, tie-breaking, walidacja.
-// Nie zależy od DOM — czyste funkcje na danych odpowiedzi.
+// Nie zależy od DOM - czyste funkcje na danych odpowiedzi.
 
-// Kolejność RIASEC — używana do normalizacji kodu (np. "CI" -> "IC").
+// Kolejność RIASEC - używana do normalizacji kodu (np. "CI" -> "IC").
 const RIASEC_ORDER = ["R", "I", "A", "S", "E", "C"];
 
 // Sumuje odpowiedzi do wyniku każdej kategorii + zlicza odpowiedzi "5" i "4"
