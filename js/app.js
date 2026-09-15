@@ -356,7 +356,7 @@ function renderResult(analysis) {
       </ul>
       <div class="paywall-cta">
         <div class="paywall-price">
-          <span class="paywall-price-amount">19 zł</span>
+          <span class="paywall-price-amount">5 zł</span>
           <span class="paywall-price-note">jednorazowo · dostęp od razu · bez subskrypcji</span>
         </div>
         <a
@@ -366,7 +366,7 @@ function renderResult(analysis) {
           rel="noopener noreferrer"
           class="btn btn-paywall"
         >
-          🔓 Kup Raport PDF — 19 zł
+          🔓 Kup Raport PDF — 5 zł
         </a>
         <p class="paywall-security">🔒 Bezpieczna płatność przez Stripe · BLIK, karta, Przelewy24</p>
       </div>
