@@ -336,6 +336,42 @@ function renderResult(analysis) {
       </div>
     </div>
 
+    <!-- PAYWALL CARD: Szczegółowy Raport PDF -->
+    <div class="card paywall-card" id="paywall-card">
+      <div class="paywall-badge">PREMIUM</div>
+      <div class="paywall-header">
+        <span class="paywall-icon">📄</span>
+        <div>
+          <h2 class="paywall-title">Szczegółowy Raport PDF</h2>
+          <p class="paywall-subtitle">Spersonalizowany przewodnik po Twojej karierze</p>
+        </div>
+      </div>
+      <ul class="paywall-features">
+        <li>✅ Pełna analiza Twojego profilu <strong>${analysis.code}</strong> — ${profile.nazwa}</li>
+        <li>✅ Plan działania na 90 dni: co robić tydzień po tygodniu</li>
+        <li>✅ Lista 15+ dopasowanych zawodów z wymaganiami i zarobkami</li>
+        <li>✅ Konkretne kursy i szkoły (Polska) z linkami i cenami</li>
+        <li>✅ Mocne strony i jak je opisywać na CV / rozmowie</li>
+        <li>✅ Plik PDF gotowy do druku i zapisania</li>
+      </ul>
+      <div class="paywall-cta">
+        <div class="paywall-price">
+          <span class="paywall-price-amount">19 zł</span>
+          <span class="paywall-price-note">jednorazowo · dostęp od razu · bez subskrypcji</span>
+        </div>
+        <a
+          id="stripe-payment-link"
+          href="https://buy.stripe.com/dRm5kw9Qs3OR2KG48k48000"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn btn-paywall"
+        >
+          🔓 Kup Raport PDF — 19 zł
+        </a>
+        <p class="paywall-security">🔒 Bezpieczna płatność przez Stripe · BLIK, karta, Przelewy24</p>
+      </div>
+    </div>
+
     <div class="result-actions" style="flex-wrap: wrap;">
       <button class="btn btn-primary" onclick="restart()">Zrób test ponownie</button>
       <button class="btn btn-secondary" id="share-btn">Udostępnij wynik</button>

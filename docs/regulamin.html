@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Regulamin — KierunekKariera</title>
+  <meta name="description" content="Regulamin serwisu KierunekKariera. Bezpłatny quiz doradztwa zawodowego, płatny Szczegółowy Raport PDF." />
+  <meta name="robots" content="noindex" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧭</text></svg>" />
+  <style>
+    :root {
+      --bg: #0c0a1a;
+      --surface: #1a1535;
+      --border: rgba(255,255,255,0.08);
+      --text: #f0eef5;
+      --text-sec: rgba(255,255,255,0.6);
+      --primary: #6ee7b7;
+      --accent: #a78bfa;
+      --radius: 16px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, sans-serif;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+    .page-wrap {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-sec);
+      text-decoration: none;
+      font-size: 0.9rem;
+      margin-bottom: 32px;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--text); }
+    .logo {
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+      color: var(--primary);
+    }
+    h1 {
+      font-size: 1.9rem;
+      font-weight: 800;
+      margin: 0 0 8px;
+    }
+    .updated {
+      color: var(--text-sec);
+      font-size: 0.85rem;
+      margin-bottom: 40px;
+    }
+    h2 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin: 36px 0 12px;
+      color: var(--primary);
+    }
+    p, li {
+      color: var(--text-sec);
+      font-size: 0.95rem;
+    }
+    ol, ul { padding-left: 20px; }
+    li { margin-bottom: 8px; }
+    strong { color: var(--text); }
+    footer {
+      text-align: center;
+      color: var(--text-sec);
+      font-size: 0.8rem;
+      margin-top: 60px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+    footer a { color: var(--text-sec); }
+  </style>
+</head>
+<body>
+  <div class="page-wrap">
+    <a href="../index.html" class="back-link">← Wróć do KierunekKariera</a>
+
+    <div class="logo">🧭 KierunekKariera</div>
+    <h1>Regulamin Serwisu</h1>
+    <p class="updated">Data ostatniej aktualizacji: wrzesień 2026</p>
+
+    <h2>§ 1. Postanowienia ogólne</h2>
+    <ol>
+      <li>Niniejszy regulamin określa zasady korzystania z serwisu internetowego KierunekKariera (dalej: „Serwis").</li>
+      <li>Sprzedawcą oraz administratorem Serwisu jest Wojciech Kłos, prowadzący działalność nierejestrową, zamieszkały: ul. Stylowa 7 m. 8, Wawer, 04-650 Warszawa, kontakt e-mail: kontakt@kierunekkariera.pl (dalej: „Sprzedawca").</li>
+      <li>Korzystanie z Serwisu oraz zakup produktów cyfrowych oznacza akceptację niniejszego Regulaminu.</li>
+      <li>Serwis umożliwia użytkownikom bezpłatne rozwiązanie quizu doradztwa zawodowego oraz odpłatne odblokowanie Szczegółowego Raportu PDF (dalej: „Treść Cyfrowa").</li>
+    </ol>
+
+    <h2>§ 2. Wymagania techniczne</h2>
+    <p>Do korzystania z Serwisu niezbędne jest:</p>
+    <ol>
+      <li>Urządzenie z dostępem do Internetu (komputer, tablet, smartfon).</li>
+      <li>Aktualna przeglądarka internetowa z włączoną obsługą JavaScript oraz <code>localStorage</code>.</li>
+    </ol>
+
+    <h2>§ 3. Zasady świadczenia usług</h2>
+    <ol>
+      <li>Klient może bezpłatnie odpowiedzieć na pytania w quizie i zobaczyć swój profil zawodowy RIASEC wraz z podstawowymi wynikami.</li>
+      <li>Po zakończeniu quizu Klient może zakupić dostęp do Szczegółowego Raportu PDF (Treść Cyfrowa).</li>
+      <li>Raport ma charakter wyłącznie edukacyjny i orientacyjny. Nie stanowi profesjonalnej diagnozy psychologicznej ani wiążącej porady zawodowej. Sprzedawca nie ponosi odpowiedzialności za decyzje zawodowe podejmowane na podstawie wyników.</li>
+    </ol>
+
+    <h2>§ 4. Zakup i płatność</h2>
+    <ol>
+      <li>Cena za Szczegółowy Raport PDF wynosi <strong>19 PLN brutto</strong>.</li>
+      <li>Sprzedawca zastrzega prawo do zmian cen i promocji, jednak nie mają one wpływu na zamówienia złożone przed zmianą.</li>
+      <li>Klient nie musi zakładać konta, aby dokonać zakupu.</li>
+      <li>Płatności realizowane są za pośrednictwem operatora Stripe. Dostępne metody: BLIK, karta płatnicza, Przelewy24.</li>
+      <li>Umowa o dostarczenie Treści Cyfrowej zostaje zawarta w momencie pozytywnej autoryzacji płatności.</li>
+      <li>Dostęp do raportu dostarczany jest niezwłocznie po zaksięgowaniu płatności.</li>
+    </ol>
+
+    <h2>§ 5. Brak prawa do odstąpienia od umowy</h2>
+    <ol>
+      <li>Zgodnie z art. 38 ust. 1 pkt 13 Ustawy o prawach konsumenta, Klientowi <strong>nie przysługuje prawo do odstąpienia od umowy</strong>, jeżeli spełnianie świadczenia (dostarczenie Treści Cyfrowej) rozpoczęło się za wyraźną i uprzednią zgodą konsumenta przed upływem terminu do odstąpienia.</li>
+      <li>Klikając przycisk zakupu, Klient wyraża zgodę na natychmiastowe dostarczenie Treści Cyfrowej i przyjmuje do wiadomości utratę prawa do odstąpienia (14-dniowy zwrot).</li>
+    </ol>
+
+    <h2>§ 6. Reklamacje</h2>
+    <ol>
+      <li>Sprzedawca ma obowiązek dostarczyć Treść Cyfrową wolną od wad, zgodną z zawartą umową.</li>
+      <li>W przypadku problemów technicznych (np. płatność pobrana, a raport nie dotarł), Klient może złożyć reklamację.</li>
+      <li>Reklamacje: kontakt@kierunekkariera.pl</li>
+      <li>Zgłoszenie powinno zawierać: datę zakupu, identyfikator transakcji Stripe oraz opis problemu.</li>
+      <li>Sprzedawca ustosunkuje się do reklamacji w terminie 14 dni.</li>
+    </ol>
+
+    <h2>§ 7. Dane osobowe</h2>
+    <ol>
+      <li>Administratorem danych podanych w procesie płatności jest Sprzedawca.</li>
+      <li>Dane przetwarzane są wyłącznie w celu realizacji umowy — na podstawie art. 6 ust. 1 lit. b RODO.</li>
+      <li>Szczegółowe zasady określa <a href="polityka-prywatnosci.html" style="color: var(--primary);">Polityka Prywatności</a>.</li>
+    </ol>
+
+    <h2>§ 8. Postanowienia końcowe</h2>
+    <ol>
+      <li>Sprzedawca zastrzega prawo do zmian w Regulaminie z ważnych przyczyn prawnych lub technicznych. Zmiany nie dotyczą umów zawartych przed wejściem w życie nowego regulaminu.</li>
+      <li>W sprawach nieuregulowanych zastosowanie mają przepisy prawa polskiego (Kodeks cywilny, Ustawa o prawach konsumenta).</li>
+      <li>Spory mogą być rozwiązywane polubownie przez platformę ODR: <a href="http://ec.europa.eu/consumers/odr" target="_blank" rel="noopener" style="color: var(--primary);">ec.europa.eu/consumers/odr</a>.</li>
+    </ol>
+
+    <footer>
+      KierunekKariera &copy; 2026 &nbsp;|&nbsp; <a href="polityka-prywatnosci.html">Polityka Prywatności</a>
+    </footer>
+  </div>
+</body>
+</html>

@@ -926,3 +926,251 @@ html, body {
   .blob-3 { width: 480px; height: 480px; filter: blur(100px); }
   .blob-4 { width: 380px; height: 380px; filter: blur(90px); }
 }
+
+/* ============================================================= */
+/* 14. Cookie Consent Banner                                      */
+/* ============================================================= */
+.cookie-banner {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(120%);
+  width: calc(100% - 32px);
+  max-width: 680px;
+  z-index: 9999;
+  transition: transform 0.45s var(--ease-out), opacity 0.45s ease;
+  opacity: 0;
+}
+
+.cookie-banner.cookie-visible {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+.cookie-banner.cookie-hiding {
+  transform: translateX(-50%) translateY(120%);
+  opacity: 0;
+}
+
+.cookie-banner-inner {
+  background: rgba(22, 18, 50, 0.92);
+  backdrop-filter: blur(var(--glass-blur-strong));
+  -webkit-backdrop-filter: blur(var(--glass-blur-strong));
+  border: 1px solid var(--glass-border-hover);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  box-shadow: var(--shadow-lg), 0 0 40px rgba(110, 231, 183, 0.06);
+}
+
+.cookie-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.cookie-text {
+  flex: 1;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  min-width: 200px;
+}
+
+.cookie-text strong {
+  color: var(--text);
+  display: block;
+  margin-bottom: 3px;
+}
+
+.cookie-text code {
+  background: rgba(255,255,255,0.07);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 0.78rem;
+  color: var(--primary);
+}
+
+.cookie-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.cookie-btn {
+  font-size: 0.85rem;
+  padding: 9px 18px;
+  white-space: nowrap;
+}
+
+.cookie-link {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  text-decoration: underline;
+  white-space: nowrap;
+  transition: color 0.2s;
+}
+
+.cookie-link:hover {
+  color: var(--text-secondary);
+}
+
+/* ============================================================= */
+/* 15. Paywall Card                                               */
+/* ============================================================= */
+.paywall-card {
+  position: relative;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(var(--bg-surface), var(--bg-surface)) padding-box,
+    linear-gradient(135deg, var(--accent), var(--primary)) border-box;
+  overflow: visible;
+}
+
+.paywall-badge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, var(--accent), var(--primary));
+  color: var(--bg-deep);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  padding: 3px 14px;
+  border-radius: var(--radius-pill);
+  white-space: nowrap;
+}
+
+.paywall-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.paywall-icon {
+  font-size: 2.4rem;
+  flex-shrink: 0;
+}
+
+.paywall-title {
+  margin: 0 0 4px !important;
+  font-size: 1.25rem !important;
+}
+
+.paywall-subtitle {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+}
+
+.paywall-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.paywall-features li {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  padding: 8px 12px;
+  background: var(--glass-bg);
+  border-radius: var(--radius-xs);
+  border: 1px solid var(--line);
+  transition: background 0.2s;
+}
+
+.paywall-features li:hover {
+  background: var(--glass-bg-hover);
+}
+
+.paywall-features li strong {
+  color: var(--primary);
+}
+
+.paywall-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.paywall-price {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.paywall-price-amount {
+  font-size: 2.2rem;
+  font-weight: 800;
+  background: linear-gradient(90deg, var(--accent), var(--primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.paywall-price-note {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.btn-paywall {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 360px;
+  padding: 16px 28px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  font-family: inherit;
+  border: none;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  text-decoration: none;
+  color: #fff;
+  background: linear-gradient(135deg, #6c3fc5 0%, var(--accent) 45%, var(--primary) 100%);
+  box-shadow: 0 8px 28px rgba(167, 139, 250, 0.45);
+  transition: transform 0.2s var(--ease-spring), box-shadow 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-paywall::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0);
+  transition: background 0.2s ease;
+}
+
+.btn-paywall:hover {
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 14px 36px rgba(167, 139, 250, 0.6);
+}
+
+.btn-paywall:hover::before {
+  background: rgba(255,255,255,0.07);
+}
+
+.btn-paywall:active {
+  transform: translateY(0) scale(0.99);
+}
+
+.paywall-security {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin: 0;
+  text-align: center;
+}
