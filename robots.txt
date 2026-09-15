@@ -21,4 +21,4 @@ User-agent: Googlebot
 Allow: /
 
 # Wskazanie na mapę strony
-Sitemap: https://[TUTAJ_WPISZ_DOMENE]/sitemap.xml
+Sitemap: https://checkyourself.pl/sitemap.xml

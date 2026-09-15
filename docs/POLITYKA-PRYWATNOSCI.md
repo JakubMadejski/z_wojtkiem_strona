@@ -1,14 +1,14 @@
 # Polityka Prywatności Serwisu „KierunekKariera”
 
-*Data ostatniej aktualizacji: [TUTAJ_DATA_PUBLIKACJI]*
+*Data ostatniej aktualizacji: wrzesień 2026*
 
-Niniejsza Polityka Prywatności określa zasady przetwarzania i ochrony danych osobowych przekazanych przez użytkowników w związku z korzystaniem z serwisu internetowego [TUTAJ_WPISZ_DOMENE] (dalej: „Serwis”).
+Niniejsza Polityka Prywatności określa zasady przetwarzania i ochrony danych osobowych przekazanych przez użytkowników w związku z korzystaniem z serwisu internetowego checkyourself.pl (dalej: „Serwis”).
 
 Naszym priorytetem jest minimalizacja zbieranych danych. **Nie wymagamy zakładania konta użytkownika, a wyniki Twojego quizu są przechowywane wyłącznie na Twoim urządzeniu.**
 
 ## § 1. Kto jest administratorem Twoich danych?
 
-Administratorem Twoich danych osobowych jest Wojciech Kłos, prowadzący działalność nierejestrową, zamieszkały: ul. Stylowa 7 m. 8, Wawer, 04-650 Warszawa, kontakt e-mail: [TUTAJ_WPISZ_EMAIL] (dalej: „Administrator”).
+Administratorem Twoich danych osobowych jest Wojciech Kłos, prowadzący działalność nierejestrową, zamieszkały: ul. Stylowa 7 m. 8, Wawer, 04-650 Warszawa, kontakt e-mail: kontakt@checkyourself.pl (dalej: „Administrator”).
 
 ## § 2. Jakie dane przetwarzamy i w jakim celu?
 
@@ -40,7 +40,7 @@ Przetwarzamy Twoje dane tylko w poniższych przypadkach:
 ## § 4. Komu możemy przekazywać Twoje dane?
 
 Twoje dane osobowe (adres e-mail, dane transakcyjne) przekazujemy podmiotom trzecim wyłącznie w celu realizacji umowy:
-1. **Operatorowi płatności** – [TUTAJ_WPISZ_DOSTAWCE_NP_STRIPE], który przetwarza Twoją płatność.
+1. **Operatorowi płatności** – Stripe, który przetwarza Twoją płatność.
 2. **Dostawcy usług hostingowych / e-mail** – firmom, na których serwerach utrzymywana jest nasza poczta elektroniczna.
 
 Nie sprzedajemy i nie przekazujemy Twoich danych w celach marketingowych żadnym podmiotom trzecim.
@@ -60,7 +60,7 @@ W związku z przetwarzaniem Twoich danych osobowych przysługuje Ci prawo do:
 3. Przenoszenia danych.
 4. Wniesienia skargi do organu nadzorczego (w Polsce: Prezes Urzędu Ochrony Danych Osobowych).
 
-W celu realizacji powyższych praw skontaktuj się z nami pod adresem: [TUTAJ_WPISZ_EMAIL].
+W celu realizacji powyższych praw skontaktuj się z nami pod adresem: kontakt@checkyourself.pl.
 
 ## § 7. Postanowienia końcowe
 
