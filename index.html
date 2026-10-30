@@ -98,22 +98,31 @@
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
-    <!-- Stonowane animowane elementy i odznaki po bokach (Desktop) -->
-    <div class="ambient-side-bg" aria-hidden="true">
-      <div class="ambient-orb ambient-orb-left"></div>
-      <div class="ambient-orb ambient-orb-right"></div>
+    <!-- Architektoniczna mapa nawigacyjna i warstwice topograficzne (KierunekKariera Topography) -->
+    <div class="nav-map-background" aria-hidden="true">
+      <svg class="topo-lines" viewBox="0 0 1440 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M-100 160 C 240 80, 500 320, 720 160 C 940 0, 1180 260, 1540 130" stroke="rgba(124, 58, 237, 0.08)" stroke-width="1.5" stroke-dasharray="6 4" />
+        <path d="M-100 280 C 180 200, 420 460, 720 280 C 1020 100, 1260 380, 1540 250" stroke="rgba(124, 58, 237, 0.07)" stroke-width="1.5" />
+        <path d="M-100 420 C 260 360, 500 580, 720 400 C 940 220, 1160 500, 1540 370" stroke="rgba(124, 58, 237, 0.06)" stroke-width="1.5" stroke-dasharray="8 6" />
+        <path d="M-100 560 C 140 480, 360 700, 720 520 C 1080 340, 1320 620, 1540 490" stroke="rgba(124, 58, 237, 0.06)" stroke-width="1" />
+        <path d="M-100 700 C 280 600, 540 820, 720 640 C 900 460, 1120 740, 1540 610" stroke="rgba(124, 58, 237, 0.05)" stroke-width="1" />
+      </svg>
 
-      <!-- Pływające eleganckie odznaki na bokach ekranu -->
-      <aside class="side-badges side-badges-left">
-        <div class="side-pill pill-1"><span>🧭</span> 6 wymiarów RIASEC</div>
-        <div class="side-pill pill-2"><span>🔒</span> 100% anonimowo</div>
-        <div class="side-pill pill-3"><span>⚡</span> ~5 minut · 30 pytań</div>
+      <!-- Boczne linijki nawigacyjne z 6 osiami RIASEC (widoczne na ekranach desktop) -->
+      <aside class="nav-ruler nav-ruler-left">
+        <div class="ruler-header">RIASEC // AXIS L</div>
+        <div class="ruler-item"><span>01</span> REALISTYCZNY <div class="ruler-tick"></div></div>
+        <div class="ruler-item"><span>02</span> BADAWCZY <div class="ruler-tick"></div></div>
+        <div class="ruler-item"><span>03</span> ARTYSTYCZNY <div class="ruler-tick"></div></div>
+        <div class="ruler-coord">LAT 52°13'N · 30Q</div>
       </aside>
 
-      <aside class="side-badges side-badges-right">
-        <div class="side-pill pill-4"><span>🎓</span> Opcje bez studiów</div>
-        <div class="side-pill pill-5"><span>🇵🇱</span> Rynek pracy 2026</div>
-        <div class="side-pill pill-6"><span>📅</span> Plan na 90 dni</div>
+      <aside class="nav-ruler nav-ruler-right">
+        <div class="ruler-header">RIASEC // AXIS R</div>
+        <div class="ruler-item"><div class="ruler-tick"></div> SPOŁECZNY <span>04</span></div>
+        <div class="ruler-item"><div class="ruler-tick"></div> PRZEDSIĘBIORCZY <span>05</span></div>
+        <div class="ruler-item"><div class="ruler-tick"></div> KONWENCJONALNY <span>06</span></div>
+        <div class="ruler-coord">LON 21°00'E · 2026</div>
       </aside>
     </div>
 
@@ -177,7 +186,7 @@
 
           <div class="comparison-grid">
             <div class="comp-item">
-              <div class="comp-icon">🎯</div>
+              <div class="comp-num">01</div>
               <div class="comp-body">
                 <h3>Naukowa metodologia RIASEC, a nie horoskop</h3>
                 <p>Nasz algorytm bazuje na typologii Johna Hollanda badającej 6 wymiarów osobowości. To uznana na świecie metoda stosowana na uniwersytetach i w doradztwie kariery.</p>
@@ -185,7 +194,7 @@
             </div>
 
             <div class="comp-item">
-              <div class="comp-icon">🎓</div>
+              <div class="comp-num">02</div>
               <div class="comp-body">
                 <h3>Realne ścieżki kariery bez studiów</h3>
                 <p>Nie mówimy każdemu „idź na kolejne 5 lat na studia”. Wyróżniamy konkretne, dobrze płatne zawody i branże, do których wejdziesz dzięki praktycznym kursom i certyfikatom.</p>
@@ -193,7 +202,7 @@
             </div>
 
             <div class="comp-item">
-              <div class="comp-icon">🇵🇱</div>
+              <div class="comp-num">03</div>
               <div class="comp-body">
                 <h3>Dopasowanie do polskiego rynku 2026</h3>
                 <p>Rekomendacje odpowiadają aktualnemu zapotrzebowaniu i realiom zarobkowym w Polsce, a nie przedawnionym tłumaczeniom z zagranicznych portali z lat 90.</p>
@@ -201,7 +210,7 @@
             </div>
 
             <div class="comp-item">
-              <div class="comp-icon">🔒</div>
+              <div class="comp-num">04</div>
               <div class="comp-body">
                 <h3>Zero wymuszania danych i spamu</h3>
                 <p>Nie musisz zakładać konta, podawać e-maila ani telefonu. Nie wysyłamy spamu ani reklam. Wynik widzisz od razu po ukończeniu 30 pytań.</p>
@@ -209,7 +218,7 @@
             </div>
 
             <div class="comp-item">
-              <div class="comp-icon">📋</div>
+              <div class="comp-num">05</div>
               <div class="comp-body">
                 <h3>Praktyczny plan działania na 90 dni</h3>
                 <p>Zamiast pustego hasła „jesteś myślicielem”, otrzymujesz zestaw bezpłatnych certyfikowanych kursów, sprawdzonych linków i listę kroków tydzień po tygodniu.</p>
@@ -217,7 +226,7 @@
             </div>
 
             <div class="comp-item">
-              <div class="comp-icon">⏱️</div>
+              <div class="comp-num">06</div>
               <div class="comp-body">
                 <h3>Precyzja w ~5 minut (30 pytań)</h3>
                 <p>Algorytm jest zoptymalizowany pod kątem trafności: 30 pytań wystarcza, aby dokładnie zmapować dominujący profil bez nudzenia Cię w nieskończoność.</p>
