@@ -3,43 +3,32 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>KierunekKariera - odkryj, w czym się odnajdziesz</title>
+    <title>KierunekKariera - Odkryj swój profil zawodowy i pasujące zawody</title>
     <meta
       name="description"
-      content="Darmowy quiz doradztwa zawodowego oparty na modelu RIASEC. 30 pytań, ~5 minut, bez rejestracji. Odkryj swój profil zawodowy i pasujące zawody."
+      content="Darmowy test predyspozycji zawodowych oparty na modelu RIASEC (Holland Codes). 30 pytań, ~5 minut, bez rejestracji. Poznaj swoje predyspozycje i pasujące zawody."
     />
 
     <!-- SEO / Canonical -->
     <link rel="canonical" href="https://checkyourself.pl/" />
-    <!-- Opcjonalnie w przyszłości: <link rel="alternate" hreflang="en" href="https://checkyourself.pl/en/" /> -->
 
     <!-- Open Graph (Facebook, LinkedIn) -->
-    <meta
-      property="og:title"
-      content="KierunekKariera - odkryj swój profil zawodowy"
-    />
+    <meta property="og:title" content="KierunekKariera - Odkryj swój profil zawodowy" />
     <meta
       property="og:description"
-      content="Darmowy quiz 30 pytań oparty na modelu RIASEC. Odkryj zawody, które do Ciebie pasują - bez rejestracji, w 5 minut."
+      content="Darmowy test 30 pytań oparty na modelu RIASEC. Poznaj zawody, w których nie będziesz się męczyć - bez rejestracji, w 5 minut."
     />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://checkyourself.pl/" />
-    <meta property="og:image" content="https://checkyourself.pl/og-image.jpg" />
+    <meta property="og:image" content="https://checkyourself.pl/img/bg_desktop.png" />
     <meta property="og:locale" content="pl_PL" />
 
     <!-- Twitter Cards -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta
-      name="twitter:title"
-      content="KierunekKariera - odkryj swój profil zawodowy"
-    />
+    <meta name="twitter:title" content="KierunekKariera - Test Predyspozycji Zawodowych" />
     <meta
       name="twitter:description"
-      content="Darmowy quiz 30 pytań oparty na modelu RIASEC. Odkryj zawody, które do Ciebie pasują."
-    />
-    <meta
-      name="twitter:image"
-      content="https://checkyourself.pl/og-image.jpg"
+      content="Darmowy test 30 pytań oparty na modelu RIASEC. Odkryj zawody dopasowane do Twojej osobowości."
     />
 
     <!-- Structured Data: FAQ Schema + Application Schema (JSON-LD) -->
@@ -55,7 +44,7 @@
                 "name": "Czy test predyspozycji zawodowych jest darmowy?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Tak, rozwiązanie testu i poznanie swojego profilu wraz z ogólnymi wynikami jest całkowicie darmowe. Nie musisz zakładać konta."
+                  "text": "Tak, rozwiązanie testu i poznanie swojego profilu z wykresem RIASEC jest darmowe bez konieczności rejestracji. Pełny, szczegółowy raport z bazą 50+ zawodów i planem działania można opcjonalnie odblokować za 5 zł."
                 }
               },
               {
@@ -71,7 +60,7 @@
                 "name": "Na czym opiera się quiz?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Nasz test bazuje na uznanej w doradztwie zawodowym typologii RIASEC (Holland Codes), dzielącej osobowości zawodowe na 6 głównych typów."
+                  "text": "Test bazuje na uznanej w psychologii i doradztwie zawodowym typologii RIASEC (Holland Codes), dzielącej osobowości zawodowe na 6 głównych typów."
                 }
               }
             ]
@@ -81,16 +70,11 @@
             "name": "KierunekKariera - Test Predyspozycji Zawodowych",
             "operatingSystem": "All",
             "applicationCategory": "EducationalApplication",
-            "description": "Darmowy quiz doradztwa zawodowego pomagający w wyborze ścieżki kariery i przebranżowieniu w oparciu o model badawczy RIASEC.",
+            "description": "Profesjonalny quiz doradztwa zawodowego pomagający w wyborze ścieżki kariery i przebranżowieniu w oparciu o model badawczy RIASEC.",
             "offers": {
               "@type": "Offer",
               "price": "0",
               "priceCurrency": "PLN"
-            },
-            "aggregateRating": {
-              "@type": "AggregateRating",
-              "ratingValue": "4.8",
-              "ratingCount": "124"
             }
           }
         ]
@@ -103,7 +87,7 @@
       href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧭</text></svg>"
     />
 
-    <!-- Fonts -->
+    <!-- Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -113,71 +97,90 @@
 
     <link rel="stylesheet" href="css/style.css" />
   </head>
-  <body class="show-premium-bg">
-    <!-- Tło Desktopowe pojawiające się przy wynikach -->
-    <div class="desktop-bg-layer"></div>
-
-    <!-- Animated background blobs -->
-    <div class="bg-blobs" aria-hidden="true">
-      <div class="blob blob-1"></div>
-      <div class="blob blob-2"></div>
-      <div class="blob blob-3"></div>
-      <div class="blob blob-4"></div>
-    </div>
-
+  <body>
     <main id="app">
+      <!-- Top Navigation -->
+      <header class="top-nav">
+        <a href="#" class="nav-brand" onclick="restart(); return false;">
+          <span class="nav-brand-icon">🧭</span>
+          <span>KierunekKariera</span>
+        </a>
+        <span class="nav-tag">Metodologia RIASEC</span>
+      </header>
+
       <!-- EKRAN 1: Landing -->
       <section id="screen-landing" class="screen">
         <div class="landing">
-          <div class="logo">🧭 KierunekKariera</div>
-          <h1>Utknąłeś w martwym punkcie? Znajdziemy Twój kierunek.</h1>
+          <div class="hero-badge">✨ Test Predyspozycji Zawodowych 2026</div>
+          <h1>Nie wiesz, w którą stronę iść? Odkryj swój profil zawodowy.</h1>
           <p class="lead">
-            Szkoła nie mówi Ci wszystkiego. Nasz algorytm przeanalizuje Twoje
-            mocne strony i dobierze zawody, w których odnajdziesz się najlepiej.
-            Podpowiemy Ci, jak zacząć już dziś.
+            Darmowy, 5-minutowy test psychologiczny oparty na uznanym modelu RIASEC. Sprawdź, w jakich rolach naturalnie wykorzystasz swoje mocne strony.
           </p>
-          <button id="start-btn" class="btn btn-primary btn-lg">
-            Zaczynamy!
-          </button>
-          <p class="meta">~5 minut · 30 pytań · bez rejestracji · za darmo</p>
+
+          <!-- Transparentne zasady płatności na samym początku -->
+          <div class="pricing-notice-box">
+            <div class="pricing-notice-header">Przejrzyste zasady testu:</div>
+            <ul class="pricing-notice-list">
+              <li>
+                <span class="pricing-icon-free">✓</span>
+                <div><strong>100% darmowy wynik bazowy:</strong> natychmiast po teście poznasz swój dominujący typ osobowości, kod RIASEC, wykres wszystkich 6 kategorii i kluczowe mocne strony.</div>
+              </li>
+              <li>
+                <span class="pricing-icon-pay">⚡</span>
+                <div><strong>Opcjonalny pełny raport (5 zł):</strong> jeśli zechcesz, na końcu możesz odblokować kompletną bazę 50+ pasujących zawodów, ścieżki bez studiów oraz 90-dniowy plan startu (BLIK / Apple Pay).</div>
+              </li>
+            </ul>
+          </div>
+
+          <div class="landing-cta-wrap">
+            <button id="start-btn" class="btn btn-primary btn-lg">
+              Rozpocznij darmowy test (30 pytań) →
+            </button>
+            <div class="trust-row">
+              <span>⏱ ~5 minut</span>
+              <span>•</span>
+              <span>🔒 Bez rejestracji</span>
+              <span>•</span>
+              <span>🎯 30 pytań</span>
+              <span>•</span>
+              <span>⚡ Natychmiastowy wynik</span>
+            </div>
+          </div>
         </div>
 
         <!-- SEO / AIO Content -->
         <article class="seo-content">
           <header>
-            <h2>Najlepszy darmowy test predyspozycji zawodowych 2026</h2>
+            <h2>O teście predyspozycji zawodowych KierunekKariera</h2>
           </header>
           <section>
             <p>
               Zastanawiasz się, <strong>jaką pracę wybrać</strong> lub planujesz
               <strong>przebranżowienie</strong>? Nasz
-              <strong>darmowy quiz kariery</strong> to punkt startowy. Został
-              stworzony dla osób szukających pracy, maturzystów przed wyborem
-              studiów oraz dorosłych, którzy utknęli w martwym punkcie.
+              <strong>quiz kariery</strong> to solidny punkt wyjścia. Został
+              stworzony z myślą o osobach szukających swojej ścieżki, maturzystach przed wyborem
+              kierunku studiów oraz dorosłych, którzy czują, że utknęli w obecnej pracy.
             </p>
           </section>
           <section>
-            <h3>Oparty na sprawdzonym modelu RIASEC (Kody Hollanda)</h3>
+            <h3>Sprawdzony model badawczy RIASEC (Typologia Hollanda)</h3>
             <p>
-              Algorytm aplikacji KierunekKariera wykorzystuje
-              <strong>model RIASEC</strong>, opracowany przez Johna L. Hollanda.
-              Jest to uznana w psychologii i doradztwie zawodowym typologia,
-              dzieląca ludzi na 6 profili: Realistyczny, Badawczy
+              Aplikacja KierunekKariera wykorzystuje
+              <strong>model RIASEC</strong>, opracowany przez psychologa Johna L. Hollanda.
+              To standard stosowany przez doradców kariery na całym świecie,
+              wyróżniający 6 profili: Realistyczny, Badawczy
               (Investigative), Artystyczny, Społeczny, Przedsiębiorczy
-              (Enterprising) i Konwencjonalny. Odpowiadając na 30 pytań,
-              narzędzie precyzyjnie ustali Twój profil.
+              (Enterprising) i Konwencjonalny. Odpowiedzi na 30 pytań pozwalają
+              precyzyjnie określić Twoją unikalną kombinację talentów.
             </p>
           </section>
           <section>
-            <h3>Praca bez studiów i szybkie przekwalifikowanie</h3>
+            <h3>Ścieżki kariery bez studiów i szybkie wejście na rynek</h3>
             <p>
-              Nasz <strong>test orientacji zawodowej</strong> wyróżnia się tym,
-              że oprócz standardowych ścieżek kariery, rekomenduje też
-              <strong>konkretne zawody bez studiów</strong>. Oferujemy
-              zintegrowane rozwiązania, polecając pożyteczne kursy (m.in.
-              darmowe szkolenia urzędów pracy, Grow with Google, PARP), aby jak
-              najszybciej wejść na rynek IT, marketingu, rzemiosła czy
-              administracji.
+              W odróżnieniu od tradycyjnych poradników, nasz raport rekomenduje również
+              <strong>konkretne zawody niewymagające ukończenia studiów</strong>.
+              Wskazujemy wartościowe certyfikowane szkolenia i materiały, które pomagają
+              zdobyć praktyczne umiejętności w rzemiośle, IT, sprzedaży, opiece czy administracji.
             </p>
           </section>
         </article>
@@ -187,6 +190,10 @@
       <section id="screen-quiz" class="screen hidden">
         <div class="quiz">
           <div class="progress">
+            <div class="progress-header">
+              <span id="progress-text" class="progress-label" aria-live="polite">Pytanie 1 z 30</span>
+              <span id="progress-percent" class="progress-percentage">3%</span>
+            </div>
             <div class="progress-track">
               <div
                 id="progress-bar"
@@ -196,22 +203,17 @@
                 aria-valuemax="100"
               ></div>
             </div>
-            <span
-              id="progress-text"
-              class="progress-text"
-              aria-live="polite"
-            ></span>
           </div>
 
-          <div id="quiz-stage" class="quiz-stage">
+          <div class="quiz-card">
+            <div id="question-eyebrow" class="question-eyebrow">Pytanie</div>
             <h2 id="question-text" class="question"></h2>
             <div id="answers" class="answers"></div>
           </div>
 
-          <button id="back-btn" class="btn btn-ghost hidden">← Wstecz</button>
+          <button id="back-btn" class="btn btn-ghost hidden">← Poprzednie pytanie</button>
           <p class="kbd-hint">
-            Możesz też użyć klawiszy <kbd>1</kbd>–<kbd>5</kbd>, a
-            <kbd>←</kbd> cofa pytanie.
+            Możesz też używać klawiszy numerycznych <kbd>1</kbd>–<kbd>5</kbd>, a klawisz <kbd>←</kbd> cofa pytanie.
           </p>
         </div>
       </section>
@@ -228,30 +230,27 @@
       class="cookie-banner hidden"
       role="dialog"
       aria-modal="true"
-      aria-label="Informacja o ciasteczkach"
+      aria-label="Informacja o prywatności"
     >
       <div class="cookie-banner-inner">
-        <div class="cookie-icon">🍪</div>
+        <div class="cookie-icon">🔒</div>
         <div class="cookie-text">
-          <strong>Nie zbieramy żadnych Twoich danych.</strong>
-          Ta strona nie używa ciasteczek śledzących, Analytics ani żadnych
-          zewnętrznych trackerów. Używamy wyłącznie
-          <code>localStorage</code> Twojej przeglądarki do zapamiętania postępu
-          quizu — dane nie opuszczają Twojego urządzenia.
+          <strong>Szanujemy Twoją prywatność.</strong>
+          Nie używamy cookies śledzących ani inwazyjnych trackerów. Wykorzystujemy wyłącznie
+          <code>localStorage</code> do zapamiętania postępu Twojego testu na tym urządzeniu.
         </div>
         <div class="cookie-actions">
           <button id="cookie-accept-btn" class="btn btn-primary cookie-btn">
             Rozumiem ✓
           </button>
-          <a href="docs/polityka-prywatnosci.html" class="cookie-link"
-            >Polityka prywatności</a
-          >
+          <a href="docs/polityka-prywatnosci.html" class="cookie-link">Prywatność</a>
         </div>
       </div>
     </div>
 
     <footer class="site-footer">
-      KierunekKariera &copy; 2026. <a href="docs/regulamin.html">Regulamin</a> |
+      KierunekKariera &copy; 2026. Metodologia RIASEC (Holland Codes).<br />
+      <a href="docs/regulamin.html">Regulamin</a> |
       <a href="docs/polityka-prywatnosci.html">Polityka Prywatności</a>
     </footer>
 

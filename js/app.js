@@ -1,7 +1,34 @@
 // app.js
-// Kontroler całej aplikacji: przełączanie ekranów, render quizu, wynik, wykres.
+// Kontroler całej aplikacji: przełączanie ekranów, render quizu, wynik, paywall Stripe 5 zł.
 // Zależy od: quiz-data.js (QUESTIONS, CATEGORIES, SCALE_LABELS),
 //            scoring.js (analyzeAnswers), results-data.js (PROFILES), storage.js (Storage).
+
+// Konfiguracja płatności Stripe
+const STRIPE_CONFIG = {
+  // Wklej tutaj swój prawdziwy link Stripe Payment Link wygenerowany w Stripe Dashboard
+  paymentUrl: "https://buy.stripe.com/dRm5kw9Qs3OR2KG48k48000",
+  pricePln: "5 zł",
+};
+
+// Sprawdzenie czy raport jest odblokowany
+function isReportUnlocked() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get("unlocked") === "true" || params.get("paid") === "true") {
+    localStorage.setItem("kk_unlocked", "true");
+    // Usuń parametry z paska adresu URL bez przeładowania strony
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
+  return localStorage.getItem("kk_unlocked") === "true";
+}
+
+// Funkcja testowa dla developera / testera: przełącza stan blokady jednym kliknięciem
+window.toggleTestUnlock = function () {
+  const current = localStorage.getItem("kk_unlocked") === "true";
+  localStorage.setItem("kk_unlocked", current ? "false" : "true");
+  if (window.lastAnalysis) {
+    renderResult(window.lastAnalysis);
+  }
+};
 
 const state = {
   index: 0, // numer aktualnego pytania (0-based)
@@ -17,6 +44,8 @@ function cacheEls() {
   el.startBtn = document.getElementById("start-btn");
   el.progressBar = document.getElementById("progress-bar");
   el.progressText = document.getElementById("progress-text");
+  el.progressPercent = document.getElementById("progress-percent");
+  el.questionEyebrow = document.getElementById("question-eyebrow");
   el.quizStage = document.getElementById("quiz-stage");
   el.questionText = document.getElementById("question-text");
   el.answers = document.getElementById("answers");
@@ -26,8 +55,9 @@ function cacheEls() {
 
 // Restartuje animację CSS na elemencie (usuń klasę → reflow → dodaj).
 function replayAnim(node, className) {
+  if (!node) return;
   node.classList.remove(className);
-  void node.offsetWidth; // wymuszenie reflow
+  void node.offsetWidth;
   node.classList.add(className);
 }
 
@@ -43,7 +73,6 @@ function showScreen(name) {
 
 // --- Start / restart ---
 function startQuiz() {
-  document.body.classList.remove("show-premium-bg");
   state.index = 0;
   state.answers = [];
   Storage.clearProgress();
@@ -52,7 +81,6 @@ function startQuiz() {
 }
 
 function restart() {
-  document.body.classList.add("show-premium-bg");
   showScreen("landing");
 }
 
@@ -60,13 +88,23 @@ function restart() {
 function renderQuestion(animate = true) {
   const q = QUESTIONS[state.index];
   const total = QUESTIONS.length;
-  const answered = state.index; // ile już za nami
+  const currentNum = state.index + 1;
 
   // Pasek postępu
-  const pct = Math.round((answered / total) * 100);
-  el.progressBar.style.width = pct + "%";
-  el.progressBar.setAttribute("aria-valuenow", pct);
-  el.progressText.textContent = `Pytanie ${state.index + 1} z ${total}`;
+  const pct = Math.round((currentNum / total) * 100);
+  if (el.progressBar) {
+    el.progressBar.style.width = pct + "%";
+    el.progressBar.setAttribute("aria-valuenow", pct);
+  }
+  if (el.progressText) {
+    el.progressText.textContent = `Pytanie ${currentNum} z ${total}`;
+  }
+  if (el.progressPercent) {
+    el.progressPercent.textContent = pct + "%";
+  }
+  if (el.questionEyebrow) {
+    el.questionEyebrow.textContent = `Krok ${currentNum} z ${total}`;
+  }
 
   // Treść pytania
   el.questionText.textContent = q.text;
@@ -78,8 +116,14 @@ function renderQuestion(animate = true) {
     btn.type = "button";
     btn.className = "answer-btn";
     btn.dataset.value = String(value);
-    btn.setAttribute("aria-pressed", state.answers[state.index] === value ? "true" : "false");
-    btn.innerHTML = `<span class="answer-dot">${value}</span><span class="answer-label">${SCALE_LABELS[value]}</span>`;
+    btn.setAttribute(
+      "aria-pressed",
+      state.answers[state.index] === value ? "true" : "false"
+    );
+    btn.innerHTML = `
+      <span class="answer-dot">${value}</span>
+      <span class="answer-label">${SCALE_LABELS[value]}</span>
+    `;
     if (state.answers[state.index] === value) btn.classList.add("selected");
     btn.addEventListener("click", () => selectAnswer(value));
     el.answers.appendChild(btn);
@@ -88,72 +132,64 @@ function renderQuestion(animate = true) {
   // Przycisk "Wstecz" tylko od 2. pytania
   el.backBtn.classList.toggle("hidden", state.index === 0);
 
-  // Animacja wejścia tylko przy zmianie pytania (nie przy samym zaznaczeniu)
-  if (animate) {
-    el.quizStage.classList.remove("stage-out");
+  // Płynne wejście pytania
+  if (animate && el.quizStage) {
     replayAnim(el.quizStage, "stage-in");
   }
 }
 
 function selectAnswer(value) {
-  if (state.locked) return; // blokada podwójnego wyboru w trakcie przejścia
+  if (state.locked) return;
   state.locked = true;
+
   state.answers[state.index] = value;
   Storage.saveProgress({ index: state.index, answers: state.answers });
 
-  // krótka pauza na feedback wizualny, potem dalej
   const isLast = state.index === QUESTIONS.length - 1;
-  renderQuestion(false); // pokaż zaznaczenie bez ponownej animacji
-  
-  // Opóźnienie na pokazanie zaznaczenia, następnie wyjazd ekranu
-  setTimeout(() => {
-    if (!isLast) {
-      el.quizStage.classList.remove("stage-in");
-      replayAnim(el.quizStage, "stage-out");
-    }
-  }, 80);
+  renderQuestion(false);
 
   setTimeout(() => {
     if (isLast) {
       finishQuiz();
     } else {
       state.index += 1;
-      // Pakiet WOW UX - Motywacyjny checkpoint w połowie quizu
+      // Motywacyjny toast na półmetku
       if (state.index === 15) {
         showCheckpointToast();
       }
       renderQuestion(true);
     }
     state.locked = false;
-  }, 280);
+  }, 220);
 }
 
-// Gamifikacja: Checkpoint motywacyjny (Toast)
+// Checkpoint motywacyjny (Toast)
 function showCheckpointToast() {
   const toast = document.createElement("div");
-  toast.className = "toast pop-in";
-  toast.innerHTML = "🎉 Świetnie Ci idzie! Jesteś za półmetkiem.";
+  toast.className = "toast";
+  toast.innerHTML = "🎉 Świetne tempo! Jesteś już za półmetkiem testu.";
   Object.assign(toast.style, {
     position: "fixed",
-    bottom: "30px",
+    bottom: "24px",
     left: "50%",
     transform: "translateX(-50%)",
-    background: "var(--primary)",
-    color: "#fff",
-    padding: "12px 24px",
-    borderRadius: "var(--radius-pill)",
+    background: "#0f172a",
+    color: "#ffffff",
+    padding: "10px 20px",
+    borderRadius: "9999px",
+    fontSize: "0.88rem",
     fontWeight: "600",
-    boxShadow: "0 10px 25px rgba(99, 102, 241, 0.4)",
+    boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.2)",
     zIndex: "9999",
     pointerEvents: "none",
-    transition: "opacity 0.4s ease"
+    transition: "opacity 0.3s ease",
   });
   document.body.appendChild(toast);
-  
+
   setTimeout(() => {
     toast.style.opacity = "0";
-    setTimeout(() => toast.remove(), 400);
-  }, 3000);
+    setTimeout(() => toast.remove(), 350);
+  }, 2800);
 }
 
 function goBack() {
@@ -166,7 +202,7 @@ function goBack() {
 // Obsługa klawiatury na ekranie quizu: 1–5 = odpowiedź, ←/Backspace = wstecz.
 function onKeydown(e) {
   const quizScreen = document.getElementById("screen-quiz");
-  if (quizScreen.classList.contains("hidden")) return;
+  if (quizScreen && quizScreen.classList.contains("hidden")) return;
   if (e.key >= "1" && e.key <= "5") {
     selectAnswer(Number(e.key));
   } else if (e.key === "ArrowLeft" || e.key === "Backspace") {
@@ -177,7 +213,6 @@ function onKeydown(e) {
 
 // --- Zakończenie i wynik ---
 function finishQuiz() {
-  document.body.classList.add("show-premium-bg");
   const answers = QUESTIONS.map((q, i) => ({
     category: q.category,
     value: state.answers[i],
@@ -191,16 +226,19 @@ function finishQuiz() {
   showScreen("result");
 }
 
-// --- Render ekranu wyniku (paywall "na honor" - pełny wynik od razu) ---
+// --- Render ekranu wyniku (Freemium + Paywall 5 zł) ---
 function renderResult(analysis) {
+  window.lastAnalysis = analysis;
+  const unlocked = isReportUnlocked();
+
   // Walidacja: zbyt neutralne odpowiedzi
   if (analysis.neutralWarning) {
     el.resultContent.innerHTML = `
-      <div class="notice">
+      <div class="card" style="text-align: center; padding: 40px 20px;">
         <h2>Twoje odpowiedzi były bardzo neutralne 🤔</h2>
         <p>Prawie na wszystko odpowiedziałeś/aś „nie wiem". Spróbuj jeszcze raz,
         odpowiadając bardziej zdecydowanie - dzięki temu wynik będzie trafniejszy.</p>
-        <button class="btn btn-primary" onclick="restart()">Zrób test ponownie</button>
+        <button class="btn btn-primary" onclick="restart()">Rozwiąż test ponownie</button>
       </div>`;
     return;
   }
@@ -214,7 +252,7 @@ function renderResult(analysis) {
     .map((m) => `<span class="chip">${m}</span>`)
     .join("");
 
-  // Lista zasobów (klikalne linki, otwierane w nowej karcie).
+  // Lista zasobów
   const renderResources = (list) =>
     list
       .map(
@@ -232,12 +270,16 @@ function renderResult(analysis) {
   const zawody = profile.zawody
     .map(
       (z) => `
-      <li class="job ${z.bezStudiow ? 'bez-studiow' : 'wymaga-studiow'}">
+      <li class="job ${z.bezStudiow ? "bez-studiow" : "wymaga-studiow"}">
         <details class="job-details">
           <summary class="job-summary">
             <div class="job-summary-header">
               <span class="job-name">${z.nazwa}</span>
-              ${z.bezStudiow ? '<span class="badge badge-green">bez studiów</span>' : '<span class="badge">wymaga studiów</span>'}
+              ${
+                z.bezStudiow
+                  ? '<span class="badge badge-green">bez studiów</span>'
+                  : '<span class="badge">wymaga studiów</span>'
+              }
             </div>
             <span class="job-chevron">▼</span>
           </summary>
@@ -253,48 +295,83 @@ function renderResult(analysis) {
     )
     .join("");
 
-  const kroki = profile.pierwszeKroki
-    .map((k) => `<li>${k}</li>`)
-    .join("");
+  const kroki = profile.pierwszeKroki.map((k) => `<li>${k}</li>`).join("");
 
-  const borderlineNote =
-    alt !== null
-      ? `<p class="borderline">Jesteś na pograniczu dwóch typów - warto zerknąć też na profil
-         <strong>${alt.nazwa}</strong> (${analysis.altCode}).</p>`
-      : "";
+  // Karta Paywalla (gdy raport jest zablokowany)
+  const paywallCardHtml = `
+    <div class="paywall-card" id="paywall-card">
+      <div class="paywall-ribbon">PEŁNY RAPORT KARIERY</div>
+      <div class="paywall-icon">🎯</div>
+      <h2 class="paywall-title">Odblokuj Pełną Bazę Zawodów i Plan Działania</h2>
+      <p class="paywall-subtitle">
+        Poznaj konkretne zawody dopasowane do Twojego profilu <strong>${profile.nazwa}</strong> (${analysis.code}), rekomendowane studia oraz plan na pierwsze 90 dni.
+      </p>
 
-  const versatileNote =
-    analysis.versatile && !analysis.neutralWarning
-      ? `<p class="versatile">Twoje wyniki są dość wyrównane - jesteś osobą wszechstronną.
-         Traktuj profil jako wskazówkę, a nie sztywną ramkę.</p>`
-      : "";
+      <ul class="paywall-checklist">
+        <li>
+          <span>✓</span>
+          <div><strong>50+ dopasowanych zawodów</strong> z opisem codziennych obowiązków i realiów rynkowych</div>
+        </li>
+        <li>
+          <span>✓</span>
+          <div><strong>Opcje bez studiów i szybkie przebranżowienie</strong> — ścieżki wejścia bez dyplomu</div>
+        </li>
+        <li>
+          <span>✓</span>
+          <div><strong>Konkretny plan działania na 90 dni</strong> — co robić krok po kroku tydzień po tygodniu</div>
+        </li>
+        <li>
+          <span>✓</span>
+          <div><strong>Darmowe certyfikowane kursy i szkolenia</strong> dopasowane do profilu ${analysis.code}</div>
+        </li>
+      </ul>
 
-  el.resultContent.innerHTML = `
-    <div id="export-target" style="padding: 0 16px; margin-bottom: 24px;">
-      <div class="result-header" style="flex-direction: column; text-align: center; gap: 12px;">
-        ${profile.avatar 
-          ? `<img src="${profile.avatar}" alt="Awatar ${profile.nazwa}" class="profile-avatar" style="width: 140px; height: 140px; border-radius: 50%; object-fit: cover; border: 2px solid var(--glass-border); box-shadow: 0 4px 15px rgba(0,0,0,0.3);">` 
-          : `<div class="result-code" style="--c: ${CATEGORIES[analysis.code[0]].color}; margin: 0 auto;">${profile.ikona || analysis.code}</div>`
-        }
-        <div>
-          <p class="result-eyebrow">Twój profil zawodowy</p>
-          <h1 class="result-name">${profile.nazwa}</h1>
-          <div class="result-code-badge" style="display: inline-block; padding: 4px 10px; background: rgba(255,255,255,0.05); border-radius: 12px; margin-top: 8px; font-weight: 700; color: var(--text-muted); font-size: 0.85rem;">Kod RIASEC: ${analysis.code}</div>
-        </div>
+      <div class="paywall-price-wrap">
+        <span class="paywall-price-num">5 zł</span>
+        <span class="paywall-price-period">jednorazowo · dostęp od razu · bez subskrypcji</span>
       </div>
-      <div class="card" style="margin-bottom: 0;">
-        <h2>Twoje kategorie</h2>
-        ${chart}
+
+      <a
+        id="stripe-payment-link"
+        href="${STRIPE_CONFIG.paymentUrl}"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn-stripe-pay"
+      >
+        ⚡ Odblokuj pełny raport za 5 zł
+      </a>
+
+      <div class="paywall-badges-row">
+        <span class="paywall-badge-pill">BLIK</span>
+        <span class="paywall-badge-pill">Apple Pay</span>
+        <span class="paywall-badge-pill">Google Pay</span>
+        <span class="paywall-badge-pill">Karta</span>
+      </div>
+      <p class="paywall-security-note">🔒 Bezpieczna płatność przez Stripe · Odblokowanie w 5 sekund</p>
+
+      <div style="margin-top: 16px; border-top: 1px dashed var(--border-light); padding-top: 12px;">
+        <button type="button" class="btn-ghost" style="font-size: 0.78rem; text-decoration: underline; cursor: pointer;" onclick="toggleTestUnlock()">
+          🧪 [Podgląd dla testera: Kliknij tutaj, aby natychmiast odblokować raport]
+        </button>
       </div>
     </div>
+  `;
 
-    <div class="card">
-      <h2>O Tobie</h2>
-      ${opisHtml}
-      <div class="chips">${mocne}</div>
+  // Banner o odblokowanym raporcie (gdy opłacony)
+  const unlockedBannerHtml = `
+    <div class="unlocked-success-card">
+      <span class="unlocked-success-icon">✓</span>
+      <div class="unlocked-success-text">
+        <strong>Pełny Raport Kariery jest odblokowany!</strong>
+        <p>Dziękujemy za wsparcie projektu. Masz pełny dostęp do bazy zawodów, planu 90 dni oraz materiałów.</p>
+      </div>
+      <button type="button" class="btn-ghost" style="margin-left: auto; font-size: 0.75rem;" onclick="toggleTestUnlock()">Zablokuj (test)</button>
     </div>
+  `;
 
-    <div class="card">
+  // Sekcja zawartości szczegółowej (zawody, kroki, kursy)
+  const detailedContentHtml = `
+    <div class="card" id="jobs-section">
       <div class="card-header-flex">
         <h2>Zawody, w których się odnajdziesz</h2>
         <label class="toggle-switch">
@@ -307,12 +384,12 @@ function renderResult(analysis) {
     </div>
 
     <div class="card">
-      <h2>Pierwsze kroki</h2>
+      <h2>Plan działania i pierwsze kroki</h2>
       <ol class="steps">${kroki}</ol>
     </div>
 
     <div class="card">
-      <h2>Darmowe kursy dla Ciebie</h2>
+      <h2>Darmowe kursy i certyfikaty dla Ciebie</h2>
       <ul class="resources">${kursy}</ul>
     </div>
 
@@ -321,68 +398,83 @@ function renderResult(analysis) {
       <ul class="resources">${uniwersalne}</ul>
     </div>
 
-    <div class="card ai-card">
-      <h2>Chcesz drążyć temat dalej? 🔎</h2>
-      <p>Wygeneruj gotowy prompt do AI (ChatGPT / Claude / Gemini). Wklej go do czatu
-      i uzupełnij pola w [nawiasach] - AI podpowie Ci konkretne oferty pracy, szkoły
-      i kursy w Twojej okolicy (z dojazdami), orientacyjne zarobki i plan pierwszych kroków.</p>
-      <button class="btn btn-primary" id="ai-prompt-btn">📋 Wygeneruj i skopiuj prompt</button>
-      <div id="ai-prompt-box" class="ai-prompt-box hidden">
-        <textarea id="ai-prompt-text" readonly rows="20" aria-label="Gotowy prompt do AI"></textarea>
-        <div class="ai-prompt-actions">
-          <button class="btn btn-secondary" id="ai-copy-btn">Skopiuj ponownie</button>
-          <span id="ai-copy-status" class="ai-copy-status" role="status"></span>
-        </div>
+    <div class="card">
+      <h2>Chcesz drążyć temat dalej z AI? 🔎</h2>
+      <p>Wygeneruj gotowy prompt do ChatGPT / Claude / Gemini. Wklej go do czatu, a sztuczna inteligencja przygotuje dla Ciebie spersonalizowane oferty pracy i lokalne szkolenia.</p>
+      <button class="btn btn-primary" id="ai-prompt-btn">📋 Wygeneruj prompt do AI</button>
+      <div id="ai-prompt-box" class="ai-prompt-box hidden" style="margin-top: 14px;">
+        <textarea id="ai-prompt-text" readonly rows="12" style="width: 100%; padding: 12px; font-family: monospace; font-size: 0.85rem; border: 1px solid var(--border-light); border-radius: 8px; margin-bottom: 8px;"></textarea>
+        <button class="btn btn-secondary" id="ai-copy-btn">Skopiuj ponownie</button>
+        <span id="ai-copy-status" style="font-size: 0.85rem; color: var(--primary); margin-left: 10px;"></span>
       </div>
-    </div>
-
-    <!-- PAYWALL CARD: Szczegółowy Raport PDF -->
-    <div class="card paywall-card" id="paywall-card">
-      <div class="paywall-badge">PREMIUM</div>
-      <div class="paywall-header">
-        <span class="paywall-icon">📄</span>
-        <div>
-          <h2 class="paywall-title">Szczegółowy Raport PDF</h2>
-          <p class="paywall-subtitle">Spersonalizowany przewodnik po Twojej karierze</p>
-        </div>
-      </div>
-      <ul class="paywall-features">
-        <li>✅ Pełna analiza Twojego profilu <strong>${analysis.code}</strong> — ${profile.nazwa}</li>
-        <li>✅ Plan działania na 90 dni: co robić tydzień po tygodniu</li>
-        <li>✅ Lista 15+ dopasowanych zawodów z wymaganiami i zarobkami</li>
-        <li>✅ Konkretne kursy i szkoły (Polska) z linkami i cenami</li>
-        <li>✅ Mocne strony i jak je opisywać na CV / rozmowie</li>
-        <li>✅ Plik PDF gotowy do druku i zapisania</li>
-      </ul>
-      <div class="paywall-cta">
-        <div class="paywall-price">
-          <span class="paywall-price-amount">5 zł</span>
-          <span class="paywall-price-note">jednorazowo · dostęp od razu · bez subskrypcji</span>
-        </div>
-        <a
-          id="stripe-payment-link"
-          href="https://buy.stripe.com/dRm5kw9Qs3OR2KG48k48000"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="btn btn-paywall"
-        >
-          🔓 Kup Raport PDF — 5 zł
-        </a>
-        <p class="paywall-security">🔒 Bezpieczna płatność przez Stripe · BLIK, karta, Przelewy24</p>
-      </div>
-    </div>
-
-    <div class="result-actions" style="flex-wrap: wrap;">
-      <button class="btn btn-primary" onclick="restart()">Zrób test ponownie</button>
-      <button class="btn btn-secondary" id="share-btn">Udostępnij wynik</button>
-      <button class="btn btn-secondary" id="export-btn" style="width: 100%;">📸 Zapisz na Instagram</button>
     </div>
   `;
 
-  const shareBtn = document.getElementById("share-btn");
-  if (shareBtn) shareBtn.addEventListener("click", () => shareResult(analysis, profile));
+  el.resultContent.innerHTML = `
+    <div id="export-target">
+      <!-- 1. Karta Główna Profilu (Darmowa) -->
+      <div class="result-header-card">
+        <div class="avatar-wrapper">
+          ${
+            profile.avatar
+              ? `<img src="${profile.avatar}" alt="${profile.nazwa}" class="profile-avatar">`
+              : `<div style="font-size: 3rem; margin-bottom: 8px;">🧭</div>`
+          }
+        </div>
+        <div>
+          <span class="result-badge">Twój profil zawodowy</span>
+          <h1 class="result-name">${profile.nazwa}</h1>
+          <div class="result-code-pill">Kod Hollanda (RIASEC): <strong>${analysis.code}</strong></div>
+        </div>
+      </div>
 
-  // Eksport Canvas (Instagram)
+      <!-- 2. Karta Wykresu Kategorii (Darmowa) -->
+      <div class="card">
+        <h2>Twoje kategorie predyspozycji</h2>
+        ${chart}
+      </div>
+
+      <!-- 3. Karta "O Tobie" (Darmowa) -->
+      <div class="card">
+        <h2>Charakterystyka profilu</h2>
+        ${opisHtml}
+        <div class="chips">${mocne}</div>
+      </div>
+    </div>
+
+    <!-- 4. Paywall lub Odblokowany Pełny Raport -->
+    ${
+      unlocked
+        ? unlockedBannerHtml + detailedContentHtml
+        : paywallCardHtml +
+          `
+          <div class="locked-section-container is-locked">
+            <div class="lock-overlay">
+              <div class="lock-overlay-icon">🔒</div>
+              <div class="lock-overlay-title">Szczegółowa baza zawodów jest zablokowana</div>
+              <div class="lock-overlay-desc">Odblokuj pełny raport za jednorazowe 5 zł, aby uzyskać dostęp do listy 50+ zawodów, ścieżek edukacji oraz planu wdrożeniowego.</div>
+              <a href="#paywall-card" class="btn btn-primary">Odblokuj pełny raport (5 zł) ↑</a>
+            </div>
+            <div class="locked-content-blur" aria-hidden="true">
+              ${detailedContentHtml}
+            </div>
+          </div>
+          `
+    }
+
+    <!-- 5. Przyciski akcji na dole -->
+    <div class="result-actions">
+      <button class="btn btn-secondary" onclick="restart()">Rozwiąż test ponownie</button>
+      <button class="btn btn-secondary" id="share-btn">Udostępnij wynik</button>
+      <button class="btn btn-secondary" id="export-btn">📸 Pobierz grafikę z wynikiem</button>
+    </div>
+  `;
+
+  // Obsługa przycisków
+  const shareBtn = document.getElementById("share-btn");
+  if (shareBtn)
+    shareBtn.addEventListener("click", () => shareResult(analysis, profile));
+
   const exportBtn = document.getElementById("export-btn");
   if (exportBtn) {
     exportBtn.addEventListener("click", () => {
@@ -390,25 +482,31 @@ function renderResult(analysis) {
       exportBtn.disabled = true;
       const target = document.getElementById("export-target");
       if (window.html2canvas) {
-        window.html2canvas(target, {
-          scale: 2,
-          useCORS: true,
-          backgroundColor: '#1E1B29'
-        }).then((canvas) => {
-          const link = document.createElement("a");
-          link.download = `Moj_Kierunek_${analysis.code}.png`;
-          link.href = canvas.toDataURL("image/png");
-          link.click();
-          exportBtn.textContent = "📸 Zapisz na Instagram";
-          exportBtn.disabled = false;
-        }).catch(err => {
-          console.error("Błąd generowania:", err);
-          exportBtn.textContent = "❌ Błąd";
-          setTimeout(() => { exportBtn.textContent = "📸 Zapisz na Instagram"; exportBtn.disabled = false; }, 2000);
-        });
+        window
+          .html2canvas(target, {
+            scale: 2,
+            useCORS: true,
+            backgroundColor: "#ffffff",
+          })
+          .then((canvas) => {
+            const link = document.createElement("a");
+            link.download = `KierunekKariera_${analysis.code}.png`;
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+            exportBtn.textContent = "📸 Pobierz grafikę z wynikiem";
+            exportBtn.disabled = false;
+          })
+          .catch((err) => {
+            console.error("Błąd generowania:", err);
+            exportBtn.textContent = "❌ Błąd";
+            setTimeout(() => {
+              exportBtn.textContent = "📸 Pobierz grafikę z wynikiem";
+              exportBtn.disabled = false;
+            }, 2000);
+          });
       } else {
-        alert("Funkcja niedostępna. Upewnij się, że masz połączenie z internetem (wymagana biblioteka zewnętrzna).");
-        exportBtn.textContent = "📸 Zapisz na Instagram";
+        alert("Funkcja pobierania wymaga aktywnego połączenia sieciowego.");
+        exportBtn.textContent = "📸 Pobierz grafikę z wynikiem";
         exportBtn.disabled = false;
       }
     });
@@ -419,15 +517,13 @@ function renderResult(analysis) {
   if (filterBtn) {
     filterBtn.addEventListener("change", (e) => {
       const jobsList = document.getElementById("jobs-list");
-      if (e.target.checked) {
-        jobsList.classList.add("filter-active");
-      } else {
-        jobsList.classList.remove("filter-active");
+      if (jobsList) {
+        jobsList.classList.toggle("filter-active", e.target.checked);
       }
     });
   }
 
-  // Prompt do AI: pokaż + skopiuj do schowka
+  // Generator promptu do AI
   const promptStr = buildAiPrompt(analysis, profile);
   const aiBtn = document.getElementById("ai-prompt-btn");
   const aiBox = document.getElementById("ai-prompt-box");
@@ -435,66 +531,39 @@ function renderResult(analysis) {
   const aiStatus = document.getElementById("ai-copy-status");
   const aiCopyBtn = document.getElementById("ai-copy-btn");
 
-  if (aiBtn) {
+  if (aiBtn && aiBox && aiText) {
     aiBtn.addEventListener("click", () => {
       aiText.value = promptStr;
       aiBox.classList.remove("hidden");
-      aiBtn.textContent = "Prompt gotowy - zobacz niżej ↓";
+      aiBtn.textContent = "Prompt przygotowany poniżej ↓";
       copyText(promptStr).then((ok) => {
-        aiStatus.textContent = ok
-          ? "Skopiowano do schowka ✓ - wklej w ChatGPT / Claude"
-          : "Zaznacz tekst poniżej i skopiuj ręcznie (Ctrl/Cmd+C).";
+        if (aiStatus) {
+          aiStatus.textContent = ok
+            ? "Skopiowano do schowka! Wklej w ChatGPT / Claude."
+            : "Zaznacz tekst i skopiuj (Cmd+C).";
+        }
       });
-      aiText.scrollIntoView({ behavior: "smooth", block: "nearest" });
     });
   }
-  if (aiCopyBtn) {
+
+  if (aiCopyBtn && aiText) {
     aiCopyBtn.addEventListener("click", () => {
-      aiText.focus();
-      aiText.select();
-      copyText(promptStr).then((ok) => {
-        aiStatus.textContent = ok ? "Skopiowano ponownie ✓" : "Zaznacz tekst i skopiuj ręcznie.";
+      copyText(aiText.value).then((ok) => {
+        if (aiStatus) {
+          aiStatus.textContent = ok ? "Skopiowano!" : "Błąd kopiowania.";
+        }
       });
     });
   }
 }
 
-// Buduje gotowy, uniwersalny prompt do AI spersonalizowany profilem użytkownika.
-function buildAiPrompt(analysis, profile) {
-  const zawody = profile.zawody.map((z) => z.nazwa).join(", ");
-  const mocne = profile.mocneStrony.join(", ");
-  return `Jestem na etapie wybierania ścieżki zawodowej i chcę to z Tobą przedyskutować krok po kroku.
-
-MÓJ PROFIL (z testu predyspozycji zawodowych RIASEC):
-- Kod profilu: ${analysis.code} - ${profile.nazwa}
-- Moje mocne strony: ${mocne}
-- Zawody dopasowane do mnie: ${zawody}
-
-MOJE DANE (uzupełnij pola w nawiasach):
-- Miejscowość / region: [np. Kraków]
-- Wiek: [np. 25]
-- Wykształcenie: [np. średnie / zawodowe / w trakcie nauki]
-- Obecna sytuacja: [np. bezrobotny/a, chcę się przebranżowić]
-- Ile czasu mogę poświęcić na naukę: [np. 2 h dziennie]
-- Czy mogę dojeżdżać / przeprowadzić się: [np. dojazd do 30 min, bez przeprowadzki]
-- Preferowany tryb pracy: [zdalna / stacjonarna / hybrydowa]
-- Budżet na naukę: [np. tylko darmowe / do 500 zł]
-
-CZEGO OD CIEBIE POTRZEBUJĘ:
-1. Wybierz z powyższych 2–3 zawody, które najlepiej pasują do mojej sytuacji, i krótko uzasadnij dlaczego.
-2. Znajdź konkretne szkoły, kursy lub studia w mojej okolicy (albo online) przygotowujące do tych zawodów - podaj nazwy, orientacyjny czas trwania i przybliżony dojazd z mojej miejscowości.
-3. Sprawdź zapotrzebowanie na te zawody w moim regionie i orientacyjne zarobki na start.
-4. Rozpisz plan pierwszych 30 dni: co robić krok po kroku, żeby ruszyć.
-5. Podaj darmowe źródła nauki (kursy online, materiały) do tych zawodów.
-6. Na koniec zadaj mi 3 pytania, które pomogą Ci lepiej doprecyzować rekomendacje.
-
-Odpowiadaj konkretnie, po polsku, prostym językiem. Jeśli masz dostęp do internetu, sprawdzaj aktualne oferty i ceny. Jeśli czegoś o mnie nie wiesz - dopytaj, zanim odpowiesz.`;
-}
-
-// Kopiowanie do schowka z fallbackiem (starsze przeglądarki / brak uprawnień).
+// Kopiowanie tekstu
 function copyText(text) {
   if (navigator.clipboard && navigator.clipboard.writeText) {
-    return navigator.clipboard.writeText(text).then(() => true).catch(() => fallbackCopy(text));
+    return navigator.clipboard
+      .writeText(text)
+      .then(() => true)
+      .catch(() => fallbackCopy(text));
   }
   return Promise.resolve(fallbackCopy(text));
 }
@@ -517,9 +586,25 @@ function fallbackCopy(text) {
   }
 }
 
-// --- Wykres 6 kategorii (czysty CSS, słupki poziome) ---
+// --- Generator promptu do AI ---
+function buildAiPrompt(analysis, profile) {
+  return `Cześć! Właśnie rozwiązałem test predyspozycji zawodowych RIASEC na KierunekKariera.
+Mój dominujący kod to: ${analysis.code} (${profile.nazwa}).
+Mocne strony: ${profile.mocneStrony.join(", ")}.
+
+Moja obecna sytuacja to: [np. maturzysta / mam 25 lat i pracuję w gastronomii / szukam pierwszej pracy w biurze].
+Mieszkam w okolicach: [Twoje miasto / województwo].
+Czy dopuszczam przeprowadzkę lub pracę zdalną: [tak/nie].
+
+Na podstawie mojego profilu RIASEC przygotuj dla mnie:
+1. 5 najbardziej perspektywicznych ścieżek kariery z uwzględnieniem realiów polskiego rynku.
+2. 3 zawody, do których mogę wejść w ciągu 3-6 miesięcy bez formalnych studiów.
+3. Konkretny plan działania na najbliższy miesiąc.`;
+}
+
+// --- Wykres 6 kategorii (Czysty CSS) ---
 function buildChart(analysis) {
-  const MAX = 25; // maksymalny możliwy wynik kategorii (5 pytań × 5 pkt)
+  const MAX = 25;
   const topTwo = analysis.sorted.slice(0, 2).map((s) => s.cat);
 
   return (
@@ -533,7 +618,7 @@ function buildChart(analysis) {
         <div class="bar-row ${isTop ? "bar-top" : ""}">
           <span class="bar-label">${meta.label}</span>
           <span class="bar-track">
-            <span class="bar-fill" style="width:${pct}%; background:${meta.color}"></span>
+            <span class="bar-fill" style="width:${pct}%; background-color:${meta.color}"></span>
           </span>
           <span class="bar-value">${s.score}</span>
         </div>`;
@@ -543,16 +628,16 @@ function buildChart(analysis) {
   );
 }
 
-// --- Udostępnianie (Web Share API + fallback: kopiuj do schowka) ---
+// --- Udostępnianie ---
 function shareResult(analysis, profile) {
-  const text = `Mój profil zawodowy to ${analysis.code} - ${profile.nazwa}. Sprawdź swój na KierunekKariera!`;
+  const text = `Mój profil zawodowy to ${analysis.code} - ${profile.nazwa}. Sprawdź swoje predyspozycje na KierunekKariera!`;
   const url = window.location.href;
 
   if (navigator.share) {
     navigator.share({ title: "KierunekKariera", text, url }).catch(() => {});
   } else if (navigator.clipboard) {
     navigator.clipboard.writeText(`${text} ${url}`).then(() => {
-      alert("Skopiowano wynik do schowka!");
+      alert("Skopiowano link do schowka!");
     });
   } else {
     alert(text);
@@ -562,20 +647,18 @@ function shareResult(analysis, profile) {
 // --- Inicjalizacja ---
 function init() {
   cacheEls();
-  el.startBtn.addEventListener("click", startQuiz);
-  el.backBtn.addEventListener("click", goBack);
+  if (el.startBtn) el.startBtn.addEventListener("click", startQuiz);
+  if (el.backBtn) el.backBtn.addEventListener("click", goBack);
   document.addEventListener("keydown", onKeydown);
-  
-  // Wznowienie postępu, jeśli użytkownik odświeżył stronę w trakcie
+
+  // Wznowienie testu
   const saved = Storage.loadProgress();
   if (saved && saved.index > 0 && saved.index < QUESTIONS.length) {
     state.index = saved.index;
     state.answers = saved.answers;
-    document.body.classList.remove("show-premium-bg");
     showScreen("quiz");
     renderQuestion(false);
   } else {
-    document.body.classList.add("show-premium-bg");
     showScreen("landing");
   }
 }
