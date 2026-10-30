@@ -98,6 +98,25 @@
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
+    <!-- Stonowane animowane elementy i odznaki po bokach (Desktop) -->
+    <div class="ambient-side-bg" aria-hidden="true">
+      <div class="ambient-orb ambient-orb-left"></div>
+      <div class="ambient-orb ambient-orb-right"></div>
+
+      <!-- Pływające eleganckie odznaki na bokach ekranu -->
+      <aside class="side-badges side-badges-left">
+        <div class="side-pill pill-1"><span>🧭</span> 6 wymiarów RIASEC</div>
+        <div class="side-pill pill-2"><span>🔒</span> 100% anonimowo</div>
+        <div class="side-pill pill-3"><span>⚡</span> ~5 minut · 30 pytań</div>
+      </aside>
+
+      <aside class="side-badges side-badges-right">
+        <div class="side-pill pill-4"><span>🎓</span> Opcje bez studiów</div>
+        <div class="side-pill pill-5"><span>🇵🇱</span> Rynek pracy 2026</div>
+        <div class="side-pill pill-6"><span>📅</span> Plan na 90 dni</div>
+      </aside>
+    </div>
+
     <main id="app">
       <!-- Top Navigation -->
       <header class="top-nav">
@@ -147,6 +166,65 @@
             </div>
           </div>
         </div>
+
+        <!-- Sekcja: Dlaczego ten test, a nie przypadkowy quiz z internetu -->
+        <section class="why-us-section">
+          <div class="why-us-badge">PORÓWNANIE</div>
+          <h2 class="why-us-title">Dlaczego ten test, a nie przypadkowy quiz z internetu?</h2>
+          <p class="why-us-lead">
+            Większość quizów w sieci to albo 5 ogólnych pytań z horoskopem, albo 120 nudnych pytań, które na końcu zmuszają do podania numeru telefonu. My podeszliśmy do tego profesjonalnie:
+          </p>
+
+          <div class="comparison-grid">
+            <div class="comp-item">
+              <div class="comp-icon">🎯</div>
+              <div class="comp-body">
+                <h3>Naukowa metodologia RIASEC, a nie horoskop</h3>
+                <p>Nasz algorytm bazuje na typologii Johna Hollanda badającej 6 wymiarów osobowości. To uznana na świecie metoda stosowana na uniwersytetach i w doradztwie kariery.</p>
+              </div>
+            </div>
+
+            <div class="comp-item">
+              <div class="comp-icon">🎓</div>
+              <div class="comp-body">
+                <h3>Realne ścieżki kariery bez studiów</h3>
+                <p>Nie mówimy każdemu „idź na kolejne 5 lat na studia”. Wyróżniamy konkretne, dobrze płatne zawody i branże, do których wejdziesz dzięki praktycznym kursom i certyfikatom.</p>
+              </div>
+            </div>
+
+            <div class="comp-item">
+              <div class="comp-icon">🇵🇱</div>
+              <div class="comp-body">
+                <h3>Dopasowanie do polskiego rynku 2026</h3>
+                <p>Rekomendacje odpowiadają aktualnemu zapotrzebowaniu i realiom zarobkowym w Polsce, a nie przedawnionym tłumaczeniom z zagranicznych portali z lat 90.</p>
+              </div>
+            </div>
+
+            <div class="comp-item">
+              <div class="comp-icon">🔒</div>
+              <div class="comp-body">
+                <h3>Zero wymuszania danych i spamu</h3>
+                <p>Nie musisz zakładać konta, podawać e-maila ani telefonu. Nie wysyłamy spamu ani reklam. Wynik widzisz od razu po ukończeniu 30 pytań.</p>
+              </div>
+            </div>
+
+            <div class="comp-item">
+              <div class="comp-icon">📋</div>
+              <div class="comp-body">
+                <h3>Praktyczny plan działania na 90 dni</h3>
+                <p>Zamiast pustego hasła „jesteś myślicielem”, otrzymujesz zestaw bezpłatnych certyfikowanych kursów, sprawdzonych linków i listę kroków tydzień po tygodniu.</p>
+              </div>
+            </div>
+
+            <div class="comp-item">
+              <div class="comp-icon">⏱️</div>
+              <div class="comp-body">
+                <h3>Precyzja w ~5 minut (30 pytań)</h3>
+                <p>Algorytm jest zoptymalizowany pod kątem trafności: 30 pytań wystarcza, aby dokładnie zmapować dominujący profil bez nudzenia Cię w nieskończoność.</p>
+              </div>
+            </div>
+          </div>
+        </section>
 
         <!-- SEO / AIO Content -->
         <article class="seo-content">
