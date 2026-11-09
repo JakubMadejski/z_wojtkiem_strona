@@ -3,17 +3,17 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>KierunekKariera - Odkryj swój profil zawodowy i pasujące zawody</title>
+    <title>CheckYourself - Odkryj swój profil zawodowy i pasujące zawody</title>
     <meta
       name="description"
-      content="Darmowy test predyspozycji zawodowych oparty na modelu RIASEC (Holland Codes). 30 pytań, ~5 minut, bez rejestracji. Poznaj swoje predyspozycje i pasujące zawody."
+      content="Darmowy test predyspozycji zawodowych oparty na modelu RIASEC. 30 pytań, ~5 minut, bez rejestracji. Sprawdź, do jakich zawodów pasujesz i jak do nich wejść – także bez studiów."
     />
 
     <!-- SEO / Canonical -->
     <link rel="canonical" href="https://checkyourself.pl/" />
 
     <!-- Open Graph (Facebook, LinkedIn) -->
-    <meta property="og:title" content="KierunekKariera - Odkryj swój profil zawodowy" />
+    <meta property="og:title" content="CheckYourself - Odkryj swój profil zawodowy" />
     <meta
       property="og:description"
       content="Darmowy test 30 pytań oparty na modelu RIASEC. Poznaj zawody, w których nie będziesz się męczyć - bez rejestracji, w 5 minut."
@@ -25,10 +25,10 @@
 
     <!-- Twitter Cards -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="KierunekKariera - Test Predyspozycji Zawodowych" />
+    <meta name="twitter:title" content="CheckYourself - Test Predyspozycji Zawodowych" />
     <meta
       name="twitter:description"
-      content="Darmowy test 30 pytań oparty na modelu RIASEC. Odkryj zawody dopasowane do Twojej osobowości."
+      content="Darmowy test 30 pytań oparty na modelu RIASEC. Odkryj zawody dopasowane do Twojej osobowości z polskimi zarobkami."
     />
 
     <!-- Structured Data: FAQ Schema + Application Schema (JSON-LD) -->
@@ -44,7 +44,7 @@
                 "name": "Czy test predyspozycji zawodowych jest darmowy?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Tak, rozwiązanie testu i poznanie swojego profilu z wykresem RIASEC jest darmowe bez konieczności rejestracji. Pełny, szczegółowy raport z bazą 50+ zawodów i planem działania można opcjonalnie odblokować za 5 zł."
+                  "text": "Tak, rozwiązanie testu i poznanie swojego profilu z wykresem RIASEC oraz pełną próbką zawodu nr 1 jest darmowe bez konieczności rejestracji. Pełny, szczegółowy raport z 18 dopasowanymi zawodami, polskimi zarobkami i 12-tygodniowym planem działania można opcjonalnie odblokować za 19 zł z 14-dniową gwarancją satysfakcji."
                 }
               },
               {
@@ -67,10 +67,10 @@
           },
           {
             "@type": "EducationalApplication",
-            "name": "KierunekKariera - Test Predyspozycji Zawodowych",
+            "name": "CheckYourself - Test Predyspozycji Zawodowych",
             "operatingSystem": "All",
             "applicationCategory": "EducationalApplication",
-            "description": "Profesjonalny quiz doradztwa zawodowego pomagający w wyborze ścieżki kariery i przebranżowieniu w oparciu o model badawczy RIASEC.",
+            "description": "Profesjonalny quiz doradztwa zawodowego pomagający w wyborze ścieżki kariery i przebranżowieniu w oparciu o sprawdzony model RIASEC.",
             "offers": {
               "@type": "Offer",
               "price": "0",
@@ -98,7 +98,7 @@
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
-    <!-- Architektoniczna mapa nawigacyjna i warstwice topograficzne (KierunekKariera Topography) -->
+    <!-- Architektoniczna mapa nawigacyjna i warstwice topograficzne (CheckYourself Topography) -->
     <div class="nav-map-background" aria-hidden="true">
       <svg class="topo-lines" viewBox="0 0 1440 900" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M-100 160 C 240 80, 500 320, 720 160 C 940 0, 1180 260, 1540 130" stroke="rgba(124, 58, 237, 0.08)" stroke-width="1.5" stroke-dasharray="6 4" />
@@ -131,7 +131,7 @@
       <header class="top-nav">
         <a href="#" class="nav-brand" onclick="restart(); return false;">
           <span class="nav-brand-icon">🧭</span>
-          <span>KierunekKariera</span>
+          <span>CheckYourself</span>
         </a>
         <span class="nav-tag">Metodologia RIASEC</span>
       </header>
@@ -140,41 +140,150 @@
       <section id="screen-landing" class="screen">
         <div class="landing">
           <div class="hero-badge">✨ Test Predyspozycji Zawodowych 2026</div>
-          <h1>Nie wiesz, w którą stronę iść? Odkryj swój profil zawodowy.</h1>
+          <h1>Masz dość obecnej pracy? Sprawdź, do jakich zawodów pasujesz i jak do nich wejść – także bez studiów.</h1>
           <p class="lead">
-            Darmowy, 5-minutowy test psychologiczny oparty na uznanym modelu RIASEC. Sprawdź, w jakich rolach naturalnie wykorzystasz swoje mocne strony.
+            5 minut, bez rejestracji. Wynik od razu, za darmo. Pełny plan wdrożenia z polskimi zarobkami i kursami – jeśli zechcesz.
           </p>
 
-          <!-- Transparentne zasady płatności na samym początku -->
-          <div class="pricing-notice-box">
-            <div class="pricing-notice-header">Przejrzyste zasady testu:</div>
-            <ul class="pricing-notice-list">
-              <li>
-                <span class="pricing-icon-free">✓</span>
-                <div><strong>100% darmowy wynik bazowy:</strong> natychmiast po teście poznasz swój dominujący typ osobowości, kod RIASEC, wykres wszystkich 6 kategorii i kluczowe mocne strony.</div>
-              </li>
-              <li>
-                <span class="pricing-icon-pay">⚡</span>
-                <div><strong>Opcjonalny pełny raport (5 zł):</strong> jeśli zechcesz, na końcu możesz odblokować kompletną bazę 50+ pasujących zawodów, ścieżki bez studiów oraz 90-dniowy plan startu (BLIK / Apple Pay).</div>
-              </li>
-            </ul>
-          </div>
-
+          <!-- Przycisk CTA natychmiast widoczny nad linią zgięcia ekranu (Mobile Above-the-fold) -->
           <div class="landing-cta-wrap">
             <button id="start-btn" class="btn btn-primary btn-lg">
-              Rozpocznij darmowy test (30 pytań) →
+              Rozpocznij darmowy test (34 pytania) →
             </button>
             <div class="trust-row">
               <span>⏱ ~5 minut</span>
               <span>•</span>
               <span>🔒 Bez rejestracji</span>
               <span>•</span>
-              <span>🎯 30 pytań</span>
+              <span>🎯 34 pytania</span>
               <span>•</span>
               <span>⚡ Natychmiastowy wynik</span>
             </div>
           </div>
+
+          <!-- Transparentne zasady płatności -->
+          <div class="pricing-notice-box" style="margin-top: 28px;">
+            <div class="pricing-notice-header">Przejrzyste zasady testu:</div>
+            <ul class="pricing-notice-list">
+              <li>
+                <span class="pricing-icon-free">✓</span>
+                <div><strong>100% darmowy wynik bazowy:</strong> natychmiast po teście poznasz swój dominujący typ osobowości, kod RIASEC, wykres 6 kategorii oraz pełną darmową próbkę zawodu nr 1 z zarobkami.</div>
+              </li>
+              <li>
+                <span class="pricing-icon-pay">⚡</span>
+                <div><strong>Opcjonalny pełny raport (19 zł):</strong> jeśli zechcesz, na końcu możesz odblokować bazę 18 dopasowanych zawodów, ścieżki bez studiów oraz plan na 12 tygodni z 14-dniową gwarancją zwrotu (BLIK / Apple Pay).</div>
+              </li>
+            </ul>
+          </div>
         </div>
+
+        <!-- Sekcja: 15 Postaci i Archetypów RIASEC -->
+        <section class="characters-section">
+          <div class="characters-badge">15 PROFILI OSOBOWOŚCI</div>
+          <h2 class="characters-title">Którą z tych 15 postaci jesteś Ty?</h2>
+          <p class="characters-subtitle">
+            Każdy profil to unikalna kombinacja talentów i środowiska pracy. Przesuń w bok i zobacz archetypy, lub rozwiąż krótki test, aby poznać swój dominujący kod:
+          </p>
+
+          <div class="characters-carousel-wrap">
+            <div class="characters-track">
+              <div class="character-card" onclick="startQuiz()">
+                <img src="img/avatars/webp/avatar_cel_ri.webp" alt="Techniczny Analityk" class="character-avatar" width="76" height="76" loading="lazy" />
+                <span class="character-code">KOD RI</span>
+                <h3 class="character-name">Techniczny Analityk</h3>
+                <p class="character-desc">Ręce do konkretnej roboty i głowa, która chce wiedzieć, jak wszystko działa.</p>
+              </div>
+              <div class="character-card" onclick="startQuiz()">
+                <img src="img/avatars/webp/avatar_cel_ra.webp" alt="Kreatywny Rzemieślnik" class="character-avatar" width="76" height="76" loading="lazy" />
+                <span class="character-code">KOD RA</span>
+                <h3 class="character-name">Kreatywny Rzemieślnik</h3>
+                <p class="character-desc">Tworzenie namacalnych rzeczy z estetyką, wyczuciem materiału i własnym stylem.</p>
+              </div>
+              <div class="character-card" onclick="startQuiz()">
+                <img src="img/avatars/webp/avatar_cel_rs.webp" alt="Praktyczny Opiekun" class="character-avatar" width="76" height="76" loading="lazy" />
+                <span class="character-code">KOD RS</span>
+                <h3 class="character-name">Praktyczny Opiekun</h3>
+                <p class="character-desc">Opanowanie, fizyczna sprawność i realne niesienie pomocy drugiemu człowiekowi.</p>
+              </div>
+              <div class="character-card" onclick="startQuiz()">
+                <img src="img/avatars/webp/avatar_cel_re.webp" alt="Przedsiębiorczy Praktyk" class="character-avatar" width="76" height="76" loading="lazy" />
+                <span class="character-code">KOD RE</span>
+                <h3 class="character-name">Przedsiębiorczy Praktyk</h3>
+                <p class="character-desc">Smykałka do konkretnej roboty połączona z instynktem do interesów i zarabiania.</p>
+              </div>
+              <div class="character-card" onclick="startQuiz()">
+                <img src="img/avatars/webp/avatar_cel_rc.webp" alt="Precyzyjny Wykonawca" class="character-avatar" width="76" height="76" loading="lazy" />
+                <span class="character-code">KOD RC</span>
+                <h3 class="character-name">Precyzyjny Wykonawca</h3>
+                <p class="character-desc">Uporządkowanie, dokładność co do milimetra i działanie bez chodzenia na skróty.</p>
+              </div>
+              <div class="character-card" onclick="startQuiz()">
+                <img src="img/avatars/webp/avatar_cel_ia.webp" alt="Twórczy Badacz" class="character-avatar" width="76" height="76" loading="lazy" />
+                <span class="character-code">KOD IA</span>
+                <h3 class="character-name">Twórczy Badacz</h3>
+                <p class="character-desc">Analityczne myślenie połączone z nieszablonową wyobraźnią i dociekaniem prawdy.</p>
+              </div>
+              <div class="character-card" onclick="startQuiz()">
+                <img src="img/avatars/webp/avatar_cel_is.webp" alt="Analityczny Doradca" class="character-avatar" width="76" height="76" loading="lazy" />
+                <span class="character-code">KOD IS</span>
+                <h3 class="character-name">Analityczny Doradca</h3>
+                <p class="character-desc">Fascynacja psychologią człowieka i wykorzystanie wiedzy do rozwiązywania problemów.</p>
+              </div>
+              <div class="character-card" onclick="startQuiz()">
+                <img src="img/avatars/webp/avatar_cel_ie.webp" alt="Strategiczny Analityk" class="character-avatar" width="76" height="76" loading="lazy" />
+                <span class="character-code">KOD IE</span>
+                <h3 class="character-name">Strategiczny Analityk</h3>
+                <p class="character-desc">Dostrzeganie ukrytych trendów w liczbach i przekładanie danych na decyzje biznesowe.</p>
+              </div>
+              <div class="character-card" onclick="startQuiz()">
+                <img src="img/avatars/webp/avatar_cel_ic.webp" alt="Analityk Systemowy" class="character-avatar" width="76" height="76" loading="lazy" />
+                <span class="character-code">KOD IC</span>
+                <h3 class="character-name">Analityk Systemowy</h3>
+                <p class="character-desc">Żelazna logika, zamiłowanie do porządku i rozkładanie złożonych systemów na części.</p>
+              </div>
+              <div class="character-card" onclick="startQuiz()">
+                <img src="img/avatars/webp/avatar_cel_as.webp" alt="Inspirujący Przewodnik" class="character-avatar" width="76" height="76" loading="lazy" />
+                <span class="character-code">KOD AS</span>
+                <h3 class="character-name">Inspirujący Przewodnik</h3>
+                <p class="character-desc">Tworzenie treści i idei, które poruszają emocje, uczą i budują silną społeczność.</p>
+              </div>
+              <div class="character-card" onclick="startQuiz()">
+                <img src="img/avatars/webp/avatar_cel_ae.webp" alt="Kreatywny Przedsiębiorca" class="character-avatar" width="76" height="76" loading="lazy" />
+                <span class="character-code">KOD AE</span>
+                <h3 class="character-name">Kreatywny Przedsiębiorca</h3>
+                <p class="character-desc">Odważne koncepcje kreatywne i zmysł marketingowy, by z sukcesem wdrożyć je na rynek.</p>
+              </div>
+              <div class="character-card" onclick="startQuiz()">
+                <img src="img/avatars/webp/avatar_cel_ac.webp" alt="Projektant Formy" class="character-avatar" width="76" height="76" loading="lazy" />
+                <span class="character-code">KOD AC</span>
+                <h3 class="character-name">Projektant Formy</h3>
+                <p class="character-desc">Połączenie artystycznego oka z dbałością o każdy detal, siatkę i estetykę wykonania.</p>
+              </div>
+              <div class="character-card" onclick="startQuiz()">
+                <img src="img/avatars/webp/avatar_cel_se.webp" alt="Lider Społeczności" class="character-avatar" width="76" height="76" loading="lazy" />
+                <span class="character-code">KOD SE</span>
+                <h3 class="character-name">Lider Społeczności</h3>
+                <p class="character-desc">Charyzma, pociąganie ludzi za sobą, organizacja zespołu i odwaga do działania.</p>
+              </div>
+              <div class="character-card" onclick="startQuiz()">
+                <img src="img/avatars/webp/avatar_cel_sc.webp" alt="Rzetelny Pomocnik" class="character-avatar" width="76" height="76" loading="lazy" />
+                <span class="character-code">KOD SC</span>
+                <h3 class="character-name">Rzetelny Pomocnik</h3>
+                <p class="character-desc">Niezawodność, życzliwość i metodyczne wsparcie, na którym każdy zespół może polegać.</p>
+              </div>
+              <div class="character-card" onclick="startQuiz()">
+                <img src="img/avatars/webp/avatar_cel_ec.webp" alt="Menedżer Organizator" class="character-avatar" width="76" height="76" loading="lazy" />
+                <span class="character-code">KOD EC</span>
+                <h3 class="character-name">Menedżer Organizator</h3>
+                <p class="character-desc">Zarządzanie projektami, pilnowanie terminów i przekształcanie chaosu w czysty plan.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="characters-cta-hint">
+            <button class="btn btn-secondary btn-sm" onclick="startQuiz()">Sprawdź, który profil należy do Ciebie →</button>
+          </div>
+        </section>
 
         <!-- Sekcja: Dlaczego ten test, a nie przypadkowy quiz z internetu -->
         <section class="why-us-section">
@@ -188,8 +297,8 @@
             <div class="comp-item">
               <div class="comp-num">01</div>
               <div class="comp-body">
-                <h3>Naukowa metodologia RIASEC, a nie horoskop</h3>
-                <p>Nasz algorytm bazuje na typologii Johna Hollanda badającej 6 wymiarów osobowości. To uznana na świecie metoda stosowana na uniwersytetach i w doradztwie kariery.</p>
+                <h3>Oparty na modelu Hollanda, którego używają doradcy</h3>
+                <p>Nasz algorytm bazuje na typologii Johna Hollanda badającej 6 wymiarów osobowości. To uznana na świecie metoda stosowana przez certyfikowanych doradców kariery.</p>
               </div>
             </div>
 
@@ -197,7 +306,7 @@
               <div class="comp-num">02</div>
               <div class="comp-body">
                 <h3>Realne ścieżki kariery bez studiów</h3>
-                <p>Nie mówimy każdemu „idź na kolejne 5 lat na studia”. Wyróżniamy konkretne, dobrze płatne zawody i branże, do których wejdziesz dzięki praktycznym kursom i certyfikatom.</p>
+                <p>Nie mówimy każdemu „idź na kolejne 5 lat na studia”. Wyróżniamy konkretne, dobrze płatne zawody i branże, do których wejdziesz dzięki praktycznym kursom i uprawnieniom.</p>
               </div>
             </div>
 
@@ -205,7 +314,7 @@
               <div class="comp-num">03</div>
               <div class="comp-body">
                 <h3>Dopasowanie do polskiego rynku 2026</h3>
-                <p>Rekomendacje odpowiadają aktualnemu zapotrzebowaniu i realiom zarobkowym w Polsce, a nie przedawnionym tłumaczeniom z zagranicznych portali z lat 90.</p>
+                <p>Zarobki i zapotrzebowanie z polskich źródeł (Barometr Zawodów, GUS), ze wskazaniem kursów, uprawnień państwowych i bonów z Urzędu Pracy.</p>
               </div>
             </div>
 
@@ -213,23 +322,23 @@
               <div class="comp-num">04</div>
               <div class="comp-body">
                 <h3>Zero wymuszania danych i spamu</h3>
-                <p>Nie musisz zakładać konta, podawać e-maila ani telefonu. Nie wysyłamy spamu ani reklam. Wynik widzisz od razu po ukończeniu 30 pytań.</p>
+                <p>Nie musisz zakładać konta, podawać e-maila ani telefonu. Nie wysyłamy spamu ani reklam. Wynik widzisz od razu po ukończeniu pytań.</p>
               </div>
             </div>
 
             <div class="comp-item">
               <div class="comp-num">05</div>
               <div class="comp-body">
-                <h3>Praktyczny plan działania na 90 dni</h3>
-                <p>Zamiast pustego hasła „jesteś myślicielem”, otrzymujesz zestaw bezpłatnych certyfikowanych kursów, sprawdzonych linków i listę kroków tydzień po tygodniu.</p>
+                <h3>Praktyczny plan działania na 12 tygodni</h3>
+                <p>Zamiast pustego hasła „jesteś myślicielem”, otrzymujesz listę kroków tydzień po tygodniu z linkami do bezpłatnych materiałów i certyfikacji.</p>
               </div>
             </div>
 
             <div class="comp-item">
               <div class="comp-num">06</div>
               <div class="comp-body">
-                <h3>Precyzja w ~5 minut (30 pytań)</h3>
-                <p>Algorytm jest zoptymalizowany pod kątem trafności: 30 pytań wystarcza, aby dokładnie zmapować dominujący profil bez nudzenia Cię w nieskończoność.</p>
+                <h3>Szybki wynik w ~5 minut (34 pytania)</h3>
+                <p>Algorytm łączy 30 pytań psychometrycznych RIASEC z 4 pytaniami o Twoją sytuację życiową i edukacyjną, dając precyzyjne dopasowanie bez nudzenia Cię w nieskończoność.</p>
               </div>
             </div>
           </div>
@@ -238,7 +347,7 @@
         <!-- SEO / AIO Content -->
         <article class="seo-content">
           <header>
-            <h2>O teście predyspozycji zawodowych KierunekKariera</h2>
+            <h2>O teście predyspozycji zawodowych CheckYourself</h2>
           </header>
           <section>
             <p>
@@ -252,12 +361,12 @@
           <section>
             <h3>Sprawdzony model badawczy RIASEC (Typologia Hollanda)</h3>
             <p>
-              Aplikacja KierunekKariera wykorzystuje
+              Aplikacja CheckYourself wykorzystuje
               <strong>model RIASEC</strong>, opracowany przez psychologa Johna L. Hollanda.
               To standard stosowany przez doradców kariery na całym świecie,
               wyróżniający 6 profili: Realistyczny, Badawczy
               (Investigative), Artystyczny, Społeczny, Przedsiębiorczy
-              (Enterprising) i Konwencjonalny. Odpowiedzi na 30 pytań pozwalają
+              (Enterprising) i Konwencjonalny. Odpowiedzi na 30 pytań profilujących i 4 preferencje zawodowe pozwalają
               precyzyjnie określić Twoją unikalną kombinację talentów.
             </p>
           </section>
@@ -311,43 +420,44 @@
       </section>
     </main>
 
-    <!-- Cookie Consent Banner -->
-    <div
-      id="cookie-banner"
-      class="cookie-banner hidden"
-      role="dialog"
-      aria-modal="true"
-      aria-label="Informacja o prywatności"
-    >
-      <div class="cookie-banner-inner">
-        <div class="cookie-icon">🔒</div>
-        <div class="cookie-text">
-          <strong>Szanujemy Twoją prywatność.</strong>
-          Nie używamy cookies śledzących ani inwazyjnych trackerów. Wykorzystujemy wyłącznie
-          <code>localStorage</code> do zapamiętania postępu Twojego testu na tym urządzeniu.
+    <!-- Mobile Sticky Purchase Bar (Pływający pasek zakupu w strefie kciuka) -->
+    <aside id="sticky-purchase-bar" class="sticky-purchase-bar" aria-hidden="true">
+      <div class="sticky-bar-inner">
+        <div class="sticky-bar-info">
+          <span class="sticky-bar-title">Pełny Raport Kariery (18 zawodów)</span>
+          <div class="sticky-bar-price-row">
+            <span class="sticky-bar-price">19 zł</span>
+            <span class="sticky-bar-badge-blik">BLIK</span>
+            <span>· 14 dni gwarancji</span>
+          </div>
         </div>
-        <div class="cookie-actions">
-          <button id="cookie-accept-btn" class="btn btn-primary cookie-btn">
-            Rozumiem ✓
-          </button>
-          <a href="docs/polityka-prywatnosci.html" class="cookie-link">Prywatność</a>
-        </div>
+        <button id="sticky-buy-btn" class="btn btn-primary sticky-bar-btn" type="button">
+          Odblokuj plan →
+        </button>
       </div>
-    </div>
+    </aside>
 
     <footer class="site-footer">
-      KierunekKariera &copy; 2026. Metodologia RIASEC (Holland Codes).<br />
-      <a href="docs/regulamin.html">Regulamin</a> |
-      <a href="docs/polityka-prywatnosci.html">Polityka Prywatności</a>
+      <div style="max-width: 720px; margin: 0 auto; text-align: center; font-size: 0.82rem; line-height: 1.6; color: var(--text-muted);">
+        <strong>CheckYourself &copy; 2026.</strong> Test predyspozycji zawodowych oparty na metodologii RIASEC J.L. Hollanda.<br />
+        <span class="privacy-note">Zero inwazyjnych ciasteczek śledzących — pełna ochrona prywatności (RODO).</span><br />
+        <div style="margin: 8px 0; font-size: 0.76rem; color: var(--text-subtle);">
+          Sprzedawca: CheckYourself (działalność nierejestrowana na podstawie art. 5 ustawy Prawo przedsiębiorców). Zwolnienie podmiotowe z VAT (art. 113 ust. 1 i 9 ustawy o VAT). Kontakt: <a href="mailto:kontakt@checkyourself.pl" style="color: var(--primary);">kontakt@checkyourself.pl</a>.<br />
+          Opinie i rekomendacje w serwisie pochodzą od użytkowników testu i są weryfikowane przed publikacją (art. 7 ust. 27 ustawy o przeciwdziałaniu nieuczciwym praktykom rynkowym).
+        </div>
+        <div style="margin-top: 8px;">
+          <a href="docs/regulamin.html">Regulamin i Cennik</a> &nbsp;|&nbsp;
+          <a href="docs/polityka-prywatnosci.html">Polityka Prywatności</a> &nbsp;|&nbsp;
+          <span>14 dni gwarancji satysfakcji</span>
+        </div>
+      </div>
     </footer>
 
     <!-- Scripts -->
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script src="js/quiz-data.js"></script>
     <script src="js/results-data.js"></script>
     <script src="js/scoring.js"></script>
     <script src="js/storage.js"></script>
-    <script src="js/cookie.js"></script>
     <script src="js/app.js"></script>
   </body>
 </html>

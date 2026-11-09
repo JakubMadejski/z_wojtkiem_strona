@@ -2,3 +2,7 @@
 .env*
 .env.deploy
 node_modules/
+api/data/*.db
+api/data/reports/
+api/data/cache/
+*.code-workspace

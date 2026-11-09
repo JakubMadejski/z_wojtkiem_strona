@@ -81,7 +81,7 @@ const UNIVERSAL_RESOURCES = [
 const PROFILES = {
   RI: {
     ikona: "👨‍🔧",
-    avatar: "img/avatars/wersja_2/avatar_cel_ri.png",
+    avatar: "img/avatars/webp/avatar_cel_ri.webp",
     nazwa: "Techniczny Analityk",
     opis: [
       "Masz rzadkie połączenie: ręce do konkretnej roboty i głowę, która chce wiedzieć, jak coś działa od środka. Nie wystarcza Ci, że urządzenie działa - chcesz rozumieć dlaczego, i potrafisz rozłożyć problem na części.",
@@ -107,7 +107,7 @@ const PROFILES = {
 
   RA: {
     ikona: "🎨",
-    avatar: "img/avatars/wersja_2/avatar_cel_ra.png",
+    avatar: "img/avatars/webp/avatar_cel_ra.webp",
     nazwa: "Kreatywny Rzemieślnik",
     opis: [
       "Tworzysz rzeczy rękami, ale z pomysłem i wyczuciem estetyki. Nie wystarcza Ci, że coś działa - ma też dobrze wyglądać i być Twoje, z Twoim podpisem.",
@@ -133,7 +133,7 @@ const PROFILES = {
 
   RS: {
     ikona: "🚒",
-    avatar: "img/avatars/wersja_2/avatar_cel_rs.png",
+    avatar: "img/avatars/webp/avatar_cel_rs.webp",
     nazwa: "Praktyczny Opiekun",
     opis: [
       "Działasz konkretnie i lubisz, gdy Twoja praca komuś realnie pomaga. Łączysz sprawność i opanowanie z troską o drugiego człowieka - nie boisz się fizycznego wysiłku ani trudnych sytuacji.",
@@ -159,7 +159,7 @@ const PROFILES = {
 
   RE: {
     ikona: "👷",
-    avatar: "img/avatars/wersja_2/avatar_cel_re.png",
+    avatar: "img/avatars/webp/avatar_cel_re.webp",
     nazwa: "Przedsiębiorczy Praktyk",
     opis: [
       "Masz smykałkę do konkretnej roboty i głowę do interesów. Wolisz decydować sam i widzieć efekt swojej pracy, niż czekać, aż ktoś powie Ci, co masz robić.",
@@ -184,7 +184,7 @@ const PROFILES = {
 
   RC: {
     ikona: "🔬",
-    avatar: "img/avatars/wersja_2/avatar_cel_rc.png",
+    avatar: "img/avatars/webp/avatar_cel_rc.webp",
     nazwa: "Precyzyjny Wykonawca",
     opis: [
       "Jesteś konkretny, uporządkowany i lubisz, gdy wszystko ma swoje miejsce. Robisz rzeczy dokładnie i do końca, bez chodzenia na skróty.",
@@ -210,7 +210,7 @@ const PROFILES = {
 
   IA: {
     ikona: "🔭",
-    avatar: "img/avatars/wersja_2/avatar_cel_ia.png",
+    avatar: "img/avatars/webp/avatar_cel_ia.webp",
     nazwa: "Twórczy Badacz",
     opis: [
       "Łączysz analityczne myślenie z wyobraźnią. Lubisz najpierw zrozumieć problem do końca, a potem wymyślić rozwiązanie, na które inni nie wpadli.",
@@ -235,7 +235,7 @@ const PROFILES = {
 
   IS: {
     ikona: "📊",
-    avatar: "img/avatars/wersja_2/avatar_cel_is.png",
+    avatar: "img/avatars/webp/avatar_cel_is.webp",
     nazwa: "Analityczny Doradca",
     opis: [
       "Interesują Cię ludzie - jak myślą, co czują, dlaczego robią to, co robią - i chcesz tę wiedzę wykorzystać, żeby im pomagać. Łączysz analityczne podejście z autentyczną troską.",
@@ -261,7 +261,7 @@ const PROFILES = {
 
   IE: {
     ikona: "📈",
-    avatar: "img/avatars/wersja_2/avatar_cel_ie.png",
+    avatar: "img/avatars/webp/avatar_cel_ie.webp",
     nazwa: "Strategiczny Analityk",
     opis: [
       "Widzisz zależności, które innym umykają, i lubisz przekładać dane na konkretne decyzje. Dla Ciebie liczby to nie cel, tylko narzędzie, żeby coś zmienić.",
@@ -286,7 +286,7 @@ const PROFILES = {
 
   IC: {
     ikona: "💻",
-    avatar: "img/avatars/wersja_2/avatar_cel_ic.png",
+    avatar: "img/avatars/webp/avatar_cel_ic.webp",
     nazwa: "Analityk Systemowy",
     opis: [
       "Łączysz ciekawość badacza z zamiłowaniem do porządku. Lubisz logiczne, precyzyjne zadania, w których liczy się dokładność i konsekwencja - i potrafisz godzinami rozgryzać problem, aż zadziała.",
@@ -311,7 +311,7 @@ const PROFILES = {
 
   AS: {
     ikona: "💡",
-    avatar: "img/avatars/wersja_2/avatar_cel_as.png",
+    avatar: "img/avatars/webp/avatar_cel_as.webp",
     nazwa: "Inspirujący Przewodnik",
     opis: [
       "Tworzysz nie dla samego tworzenia, ale żeby coś dać innym - poruszyć, nauczyć, zbudować wspólnotę. Twoja wrażliwość to Twoja siła.",
@@ -336,7 +336,7 @@ const PROFILES = {
 
   AE: {
     ikona: "🎬",
-    avatar: "img/avatars/wersja_2/avatar_cel_ae.png",
+    avatar: "img/avatars/webp/avatar_cel_ae.webp",
     nazwa: "Kreatywny Przedsiębiorca",
     opis: [
       "Masz pomysły i energię, żeby je sprzedać. Łączysz twórcze podejście z instynktem marketingowym - potrafisz nie tylko coś stworzyć, ale też przekonać do tego ludzi.",
@@ -361,7 +361,7 @@ const PROFILES = {
 
   AC: {
     ikona: "📐",
-    avatar: "img/avatars/wersja_2/avatar_cel_ac.png",
+    avatar: "img/avatars/webp/avatar_cel_ac.webp",
     nazwa: "Projektant Formy",
     opis: [
       "Łączysz artystyczne oko z dokładnością i dbałością o detal. Lubisz, gdy coś jest ładne, ale też poukładane i dopracowane co do piksela.",
@@ -386,7 +386,7 @@ const PROFILES = {
 
   SE: {
     ikona: "🤝",
-    avatar: "img/avatars/wersja_2/avatar_cel_se.png",
+    avatar: "img/avatars/webp/avatar_cel_se.webp",
     nazwa: "Lider Społeczności",
     opis: [
       "Ludzie za Tobą idą - potrafisz zarazić energią, zorganizować grupę i doprowadzić sprawę do końca. Naturalnie bierzesz sprawy w swoje ręce.",
@@ -411,7 +411,7 @@ const PROFILES = {
 
   SC: {
     ikona: "📋",
-    avatar: "img/avatars/wersja_2/avatar_cel_sc.png",
+    avatar: "img/avatars/webp/avatar_cel_sc.webp",
     nazwa: "Rzetelny Pomocnik",
     opis: [
       "Jesteś osobą, na której można polegać: uporządkowaną, dokładną i życzliwą wobec ludzi. Robisz swoje solidnie i nie zostawiasz spraw w połowie.",
@@ -436,7 +436,7 @@ const PROFILES = {
 
   EC: {
     ikona: "📅",
-    avatar: "img/avatars/wersja_2/avatar_cel_ec.png",
+    avatar: "img/avatars/webp/avatar_cel_ec.webp",
     nazwa: "Menedżer Organizator",
     opis: [
       "Ogarniasz chaos: potrafisz zaplanować, poukładać i doprowadzić projekt do końca, pilnując budżetu i terminów. Tam, gdzie inni widzą bałagan, Ty widzisz plan.",

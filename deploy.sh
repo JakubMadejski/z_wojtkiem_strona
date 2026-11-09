@@ -32,6 +32,10 @@ mirror -R --delete --verbose \
   -x "README\.md" \
   -x "\.DS_Store" \
   -x "^docs/.*\.md$" \
+  -x "^scripts(/|$)" \
+  -x "^api/data/.*\.db$" \
+  -x "^api/data/reports(/|$)" \
+  -x "^api/data/cache(/|$)" \
   "$SCRIPT_DIR/" "$REMOTE_DIR"
 
 quit

@@ -1,6 +1,9 @@
-# 🧭 KierunekKariera — Quiz doradztwa zawodowego
+# 🧭 CheckYourself — Quiz predyspozycji zawodowych i plan wejścia na rynek pracy
 
-> Quiz online oparty na modelu RIASEC (Holland Codes), który pomaga bezrobotnym i osobom szukającym swojej drogi zawodowej odkryć, w czym mogą się odnaleźć. **Wypełnienie testu jest darmowe; pełny wynik (profil + lista zawodów + pierwsze kroki) odblokowuje się po mikropłatności ~5 zł z VAT.** Zero AI w runtime, minimalny koszt utrzymania — scoring po stronie klienta, płatność przez zewnętrznego dostawcę.
+> Quiz online oparty na modelu RIASEC (Holland Codes), który pomaga dorosłym przed przebranżowieniem oraz maturzystom odkryć, w czym naturalnie się odnajdą, i zdobyć konkretny plan wejścia do nowego zawodu w Polsce. **Wypełnienie testu jest darmowe (wynik bazowy + pełna próbka zawodu nr 1 z zarobkami i tygodniem planu); pełny spersonalizowany raport (15–25 zawodów + plan 12 tygodni + PDF na e-mail) odblokowuje się po płatności 19 zł z 14-dniową gwarancją satysfakcji.**
+> 
+> 📋 **Główny plan transformacji i backlog:** [DO-ZROBIENIA.md](./DO-ZROBIENIA.md)  
+> 📐 **Szczegółowa specyfikacja architektoniczna i API:** [SPECYFIKACJA-WDROZENIOWA.md](./SPECYFIKACJA-WDROZENIOWA.md)
 
 ---
 

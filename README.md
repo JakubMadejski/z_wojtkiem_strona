@@ -1,4 +1,4 @@
-# 🧭 KierunekKariera
+# 🧭 CheckYourself — Test Predyspozycji Zawodowych RIASEC
 
 > Darmowy quiz doradztwa zawodowego oparty na modelu **RIASEC (Holland Codes)**. Pomaga osobom bezrobotnym i niezdecydowanym zawodowo odkryć pasujące ścieżki kariery. 30 pytań, ~5 minut, bez rejestracji, działa w całości w przeglądarce.
 

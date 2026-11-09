@@ -1,0 +1,12 @@
+# Zablokuj bezpośredni dostęp HTTP do wszystkich plików w tym folderze
+# PHP na serwerze ma nadal pełny dostęp lokalny (file_get_contents / json_decode)
+
+<IfModule mod_authz_core.c>
+    Require all denied
+</IfModule>
+
+<IfModule !mod_authz_core.c>
+    Order Allow,Deny
+    Deny from all
+</IfModule>
+

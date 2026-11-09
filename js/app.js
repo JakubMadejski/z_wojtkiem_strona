@@ -5,30 +5,44 @@
 
 // Konfiguracja płatności Stripe
 const STRIPE_CONFIG = {
-  // Wklej tutaj swój prawdziwy link Stripe Payment Link wygenerowany w Stripe Dashboard
+  // Prawdziwy link Stripe Payment Link wygenerowany w Stripe Dashboard
   paymentUrl: "https://buy.stripe.com/dRm5kw9Qs3OR2KG48k48000",
-  pricePln: "5 zł",
+  pricePln: "19 zł",
 };
 
-// Sprawdzenie czy raport jest odblokowany
-function isReportUnlocked() {
-  const params = new URLSearchParams(window.location.search);
-  if (params.get("unlocked") === "true" || params.get("paid") === "true") {
-    localStorage.setItem("kk_unlocked", "true");
-    // Usuń parametry z paska adresu URL bez przeładowania strony
-    window.history.replaceState({}, document.title, window.location.pathname);
+// --- Bezciasteczkowa Telemetria Lejka (Zero-Cookie, 100% zgodna z RODO) ---
+function trackFunnel(eventName, stepNumber, metadata = {}) {
+  try {
+    const payload = {
+      event: eventName,
+      step: stepNumber,
+      ref:
+        new URLSearchParams(window.location.search).get("utm_source") ||
+        (document.referrer ? new URL(document.referrer).hostname : "direct"),
+      ...metadata,
+    };
+    const bodyStr = JSON.stringify(payload);
+    if (navigator.sendBeacon) {
+      const blob = new Blob([bodyStr], { type: "application/json" });
+      navigator.sendBeacon("api/track.php", blob);
+    } else {
+      fetch("api/track.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: bodyStr,
+        keepalive: true,
+      }).catch(() => {});
+    }
+  } catch (e) {
+    // telemetria nie powinna nigdy blokować działania aplikacji
   }
-  return localStorage.getItem("kk_unlocked") === "true";
 }
 
-// Funkcja testowa dla developera / testera: przełącza stan blokady jednym kliknięciem
-window.toggleTestUnlock = function () {
-  const current = localStorage.getItem("kk_unlocked") === "true";
-  localStorage.setItem("kk_unlocked", current ? "false" : "true");
-  if (window.lastAnalysis) {
-    renderResult(window.lastAnalysis);
-  }
-};
+// Sprawdzenie czy raport jest odblokowany (bezpieczna weryfikacja tokenem sesji)
+function isReportUnlocked() {
+  const token = sessionStorage.getItem("cy_report_token");
+  return Boolean(token && token.length > 20);
+}
 
 const state = {
   index: 0, // numer aktualnego pytania (0-based)
@@ -51,6 +65,8 @@ function cacheEls() {
   el.answers = document.getElementById("answers");
   el.backBtn = document.getElementById("back-btn");
   el.resultContent = document.getElementById("result-content");
+  el.stickyBar = document.getElementById("sticky-purchase-bar");
+  el.stickyBuyBtn = document.getElementById("sticky-buy-btn");
 }
 
 // Restartuje animację CSS na elemencie (usuń klasę → reflow → dodaj).
@@ -69,6 +85,11 @@ function showScreen(name) {
     if (active) replayAnim(s, "screen-in");
   });
   window.scrollTo(0, 0);
+
+  // Ukryj sticky bar przy wyjściu z ekranu wyniku
+  if (name !== "result") {
+    hideStickyBar();
+  }
 }
 
 // --- Start / restart ---
@@ -76,6 +97,7 @@ function startQuiz() {
   state.index = 0;
   state.answers = [];
   Storage.clearProgress();
+  trackFunnel("quiz_start", 2);
   showScreen("quiz");
   renderQuestion();
 }
@@ -103,30 +125,54 @@ function renderQuestion(animate = true) {
     el.progressPercent.textContent = pct + "%";
   }
   if (el.questionEyebrow) {
-    el.questionEyebrow.textContent = `Krok ${currentNum} z ${total}`;
+    el.questionEyebrow.textContent =
+      q.eyebrow || `Krok ${currentNum} z ${total}`;
   }
 
   // Treść pytania
   el.questionText.textContent = q.text;
 
-  // Przyciski odpowiedzi (skala 1–5)
+  // Przyciski odpowiedzi: warianty sytuacyjne LUB skala Likerta 1–5
   el.answers.innerHTML = "";
-  for (let value = 1; value <= 5; value++) {
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "answer-btn";
-    btn.dataset.value = String(value);
-    btn.setAttribute(
-      "aria-pressed",
-      state.answers[state.index] === value ? "true" : "false"
-    );
-    btn.innerHTML = `
-      <span class="answer-dot">${value}</span>
-      <span class="answer-label">${SCALE_LABELS[value]}</span>
-    `;
-    if (state.answers[state.index] === value) btn.classList.add("selected");
-    btn.addEventListener("click", () => selectAnswer(value));
-    el.answers.appendChild(btn);
+  if (q.options && Array.isArray(q.options)) {
+    // Pytanie wielowariantowe (sytuacja, edukacja, budżet, tryb pracy)
+    q.options.forEach((optText, idx) => {
+      const val = idx + 1;
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "answer-btn answer-btn-situational";
+      btn.dataset.value = String(val);
+      btn.setAttribute(
+        "aria-pressed",
+        state.answers[state.index] === val ? "true" : "false"
+      );
+      btn.innerHTML = `
+        <span class="answer-dot">${val}</span>
+        <span class="answer-label">${optText}</span>
+      `;
+      if (state.answers[state.index] === val) btn.classList.add("selected");
+      btn.addEventListener("click", () => selectAnswer(val));
+      el.answers.appendChild(btn);
+    });
+  } else {
+    // Standardowa psychometryczna skala Likerta 1–5 (RIASEC)
+    for (let value = 1; value <= 5; value++) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "answer-btn";
+      btn.dataset.value = String(value);
+      btn.setAttribute(
+        "aria-pressed",
+        state.answers[state.index] === value ? "true" : "false"
+      );
+      btn.innerHTML = `
+        <span class="answer-dot">${value}</span>
+        <span class="answer-label">${SCALE_LABELS[value]}</span>
+      `;
+      if (state.answers[state.index] === value) btn.classList.add("selected");
+      btn.addEventListener("click", () => selectAnswer(value));
+      el.answers.appendChild(btn);
+    }
   }
 
   // Przycisk "Wstecz" tylko od 2. pytania
@@ -145,6 +191,13 @@ function selectAnswer(value) {
   state.answers[state.index] = value;
   Storage.saveProgress({ index: state.index, answers: state.answers });
 
+  // Telemetria drop-offu w trakcie testu
+  if (state.index === 9) {
+    trackFunnel("checkpoint_10", 3);
+  } else if (state.index === 19) {
+    trackFunnel("checkpoint_20", 3);
+  }
+
   const isLast = state.index === QUESTIONS.length - 1;
   renderQuestion(false);
 
@@ -153,8 +206,8 @@ function selectAnswer(value) {
       finishQuiz();
     } else {
       state.index += 1;
-      // Motywacyjny toast na półmetku
-      if (state.index === 15) {
+      // Motywacyjny toast w połowie testu (np. krok 17 z 34)
+      if (state.index === Math.floor(QUESTIONS.length / 2)) {
         showCheckpointToast();
       }
       renderQuestion(true);
@@ -199,12 +252,15 @@ function goBack() {
   }
 }
 
-// Obsługa klawiatury na ekranie quizu: 1–5 = odpowiedź, ←/Backspace = wstecz.
+// Obsługa klawiatury na ekranie quizu: cyfry 1–5 = odpowiedź, ←/Backspace = wstecz.
 function onKeydown(e) {
   const quizScreen = document.getElementById("screen-quiz");
   if (quizScreen && quizScreen.classList.contains("hidden")) return;
-  if (e.key >= "1" && e.key <= "5") {
-    selectAnswer(Number(e.key));
+  const q = QUESTIONS[state.index];
+  const maxVal = q && q.options ? q.options.length : 5;
+  const num = Number(e.key);
+  if (num >= 1 && num <= maxVal) {
+    selectAnswer(num);
   } else if (e.key === "ArrowLeft" || e.key === "Backspace") {
     e.preventDefault();
     goBack();
@@ -214,13 +270,22 @@ function onKeydown(e) {
 // --- Zakończenie i wynik ---
 function finishQuiz() {
   const answers = QUESTIONS.map((q, i) => ({
+    id: q.id,
     category: q.category,
+    type: q.type || "riasec",
+    situationKey: q.situationKey || null,
     value: state.answers[i],
   }));
 
   const analysis = analyzeAnswers(answers);
   Storage.clearProgress();
-  Storage.addToHistory({ code: analysis.code, scores: analysis.scores });
+  Storage.addToHistory({
+    code: analysis.code,
+    code3: analysis.code3,
+    scores: analysis.scores,
+    situation: analysis.situation,
+  });
+  trackFunnel("quiz_complete", 4, { code: analysis.code, code3: analysis.code3 });
 
   renderResult(analysis);
   showScreen("result");
@@ -297,75 +362,194 @@ function renderResult(analysis) {
 
   const kroki = profile.pierwszeKroki.map((k) => `<li>${k}</li>`).join("");
 
+  // 1. Darmowa próbka zawodu nr 1 (Value Hook zamiast rozmytej atrapy)
+  const sampleJob =
+    profile.zawody && profile.zawody.length > 0 ? profile.zawody[0] : null;
+  const sampleJobHtml = sampleJob
+    ? `
+    <div class="card sample-job-card">
+      <div class="sample-job-badge">⭐ DARMOWA PRÓBKA RAPORTU: TWÓJ ZAWÓD NR 1</div>
+      <div class="sample-job-header">
+        <div>
+          <h2 class="sample-job-title">${sampleJob.nazwa}</h2>
+          <span class="sample-job-subtitle">Najwyższy współczynnik dopasowania do Twojego profilu</span>
+        </div>
+        <span class="badge ${sampleJob.bezStudiow ? "badge-green" : ""}">${
+        sampleJob.bezStudiow ? "bez studiów" : "wymaga studiów"
+      }</span>
+      </div>
+      <p class="sample-job-desc">${sampleJob.opis}</p>
+
+      <div class="sample-job-grid">
+        <div class="sample-job-item">
+          <span class="sample-job-label">Typowa ścieżka wejścia:</span>
+          <span class="sample-job-val">${sampleJob.sciezka}</span>
+        </div>
+        <div class="sample-job-item">
+          <span class="sample-job-label">Widełki płacowe w Polsce (2026):</span>
+          <span class="sample-job-val sample-job-salary">5 500 – 12 500 zł brutto (GUS / Barometr)</span>
+        </div>
+        <div class="sample-job-item">
+          <span class="sample-job-label">Finansowanie:</span>
+          <span class="sample-job-val">Możliwy bon z PUP lub refundacja BUR do 80–100%</span>
+        </div>
+      </div>
+
+      <div class="sample-job-step-box">
+        <strong>Tydzień 1 Twojego planu działania:</strong>
+        <p>Rozpocznij od darmowych materiałów wprowadzających online i sprawdź zapotrzebowanie na lokalnym rynku pracy (Barometr Zawodów).</p>
+      </div>
+
+      <div class="sample-job-more-hint">
+        👇 <em>To jest 1 z 18 zawodów dopasowanych do Twojego profilu. Pozostałe 17 ścieżek, pełne stawki oraz 12-tygodniowy plan wdrożenia znajdziesz w pełnym raporcie poniżej.</em>
+      </div>
+    </div>`
+    : "";
+
   // Karta Paywalla (gdy raport jest zablokowany)
+  const codeParam = encodeURIComponent(analysis.code3 || analysis.code);
   const paywallCardHtml = `
     <div class="paywall-card" id="paywall-card">
-      <div class="paywall-ribbon">PEŁNY RAPORT KARIERY</div>
+      <div class="paywall-ribbon">WYBIERZ SWÓJ PAKIET</div>
       <div class="paywall-icon">🎯</div>
-      <h2 class="paywall-title">Odblokuj Pełną Bazę Zawodów i Plan Działania</h2>
+      <h2 class="paywall-title">Odblokuj Swój Pełny Raport Kariery</h2>
       <p class="paywall-subtitle">
-        Poznaj konkretne zawody dopasowane do Twojego profilu <strong>${profile.nazwa}</strong> (${analysis.code}), rekomendowane studia oraz plan na pierwsze 90 dni.
+        Poznaj pozostałe 17 zawodów dopasowanych do Twojego profilu <strong>${profile.nazwa}</strong> (${analysis.code3 || analysis.code}), polskie widełki płacowe 2026 oraz 12-tygodniowy plan wdrożeniowy.
       </p>
 
-      <ul class="paywall-checklist">
-        <li>
-          <span>✓</span>
-          <div><strong>50+ dopasowanych zawodów</strong> z opisem codziennych obowiązków i realiów rynkowych</div>
-        </li>
-        <li>
-          <span>✓</span>
-          <div><strong>Opcje bez studiów i szybkie przebranżowienie</strong> — ścieżki wejścia bez dyplomu</div>
-        </li>
-        <li>
-          <span>✓</span>
-          <div><strong>Konkretny plan działania na 90 dni</strong> — co robić krok po kroku tydzień po tygodniu</div>
-        </li>
-        <li>
-          <span>✓</span>
-          <div><strong>Darmowe certyfikowane kursy i szkolenia</strong> dopasowane do profilu ${analysis.code}</div>
-        </li>
-      </ul>
+      <div class="pricing-tiers-grid">
+        <!-- Pakiet 1: Samodzielny Raport PDF (19 zł) -->
+        <div class="pricing-tier-card pricing-tier-popular">
+          <div class="pricing-tier-badge">NAJCZĘŚCIEJ WYBIERANY (85%)</div>
+          <h3 class="pricing-tier-title">Pełny Raport Kariery PDF</h3>
+          <p class="pricing-tier-subtitle">Kompleksowa diagnoza i plan działania do samodzielnego wdrożenia</p>
+          
+          <div class="pricing-tier-price">
+            <span class="price-val">19 zł</span>
+            <span class="price-sub">jednorazowo · dostęp natychmiast</span>
+          </div>
 
-      <div class="paywall-price-wrap">
-        <span class="paywall-price-num">5 zł</span>
-        <span class="paywall-price-period">jednorazowo · dostęp od razu · bez subskrypcji</span>
+          <ul class="pricing-tier-list">
+            <li><span class="tier-check">✓</span> <div><strong>18 zawodów dopasowanych</strong> do kodu ${analysis.code3 || analysis.code}</div></li>
+            <li><span class="tier-check">✓</span> <div><strong>Polskie zarobki 2026</strong> (Junior / Mid / Senior)</div></li>
+            <li><span class="tier-check">✓</span> <div><strong>12-tygodniowa roadmapa</strong> dla TOP 3 zawodów</div></li>
+            <li><span class="tier-check">✓</span> <div><strong>Przewodnik po dofinansowaniach</strong> (bon PUP do 8 500 zł, BUR 80%)</div></li>
+            <li><span class="tier-check">✓</span> <div><strong>Oficjalny PDF (12 stron A4)</strong> wysyłany na e-mail</div></li>
+            <li><span class="tier-check">✓</span> <div><strong>14 dni gwarancji satysfakcji</strong> (100% zwrotu)</div></li>
+          </ul>
+
+          <a
+            id="stripe-payment-link"
+            href="api/create-checkout.php?package=report&code=${codeParam}"
+            class="btn-stripe-pay btn-tier-cta"
+          >
+            Odblokuj raport – 19 zł →
+          </a>
+
+          <div class="paywall-badges-row">
+            <span class="paywall-badge-pill">BLIK</span>
+            <span class="paywall-badge-pill">Apple Pay</span>
+            <span class="paywall-badge-pill">Google Pay</span>
+            <span class="paywall-badge-pill">Karta</span>
+          </div>
+        </div>
+
+        <!-- Pakiet 2: Raport + Konsultacja 1:1 (129 zł) - Price Anchor & VIP Upsell -->
+        <div class="pricing-tier-card pricing-tier-vip">
+          <div class="pricing-tier-badge badge-vip">KOMPLEKSOWE WSPARCIE 1:1</div>
+          <h3 class="pricing-tier-title">Raport + Konsultacja 1:1</h3>
+          <p class="pricing-tier-subtitle">Wszystko z Raportu PDF + 45 minut indywidualnej pracy z doradcą</p>
+
+          <div class="pricing-tier-price">
+            <span class="price-val">129 zł</span>
+            <span class="price-sub">jednorazowo · limit: 5 miejsc / tydz.</span>
+          </div>
+
+          <ul class="pricing-tier-list">
+            <li><span class="tier-check">✓</span> <div><strong>Wszystko z Pełnego Raportu PDF (12 stron)</strong></div></li>
+            <li><span class="tier-check star">⭐</span> <div><strong>45 min wideorozmowy 1:1</strong> (Google Meet) z doradcą kariery</div></li>
+            <li><span class="tier-check star">⭐</span> <div><strong>Osobisty audyt Twojego CV i profilu LinkedIn</strong> pod kątem branży</div></li>
+            <li><span class="tier-check star">⭐</span> <div><strong>Dobór optymalnej dotacji (PUP / BUR)</strong> w Twoim powiecie</div></li>
+            <li><span class="tier-check star">⭐</span> <div><strong>Przełamanie blokad</strong> i ułożenie realnego harmonogramu</div></li>
+            <li><span class="tier-check">✓</span> <div><strong>14 dni gwarancji satysfakcji</strong> na całą usługę</div></li>
+          </ul>
+
+          <a
+            id="stripe-consultation-link"
+            href="api/create-checkout.php?package=consultation&code=${codeParam}"
+            class="btn-stripe-pay btn-tier-cta btn-tier-vip"
+          >
+            Wybierz pakiet z konsultacją – 129 zł →
+          </a>
+
+          <p class="vip-booking-note">📅 Rezerwacja terminu w kalendarzu od razu po zakupie</p>
+        </div>
       </div>
 
-      <a
-        id="stripe-payment-link"
-        href="${STRIPE_CONFIG.paymentUrl}"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="btn-stripe-pay"
-      >
-        ⚡ Odblokuj pełny raport za 5 zł
-      </a>
-
-      <div class="paywall-badges-row">
-        <span class="paywall-badge-pill">BLIK</span>
-        <span class="paywall-badge-pill">Apple Pay</span>
-        <span class="paywall-badge-pill">Google Pay</span>
-        <span class="paywall-badge-pill">Karta</span>
+      <div class="paywall-guarantee-box" style="margin-top: 24px;">
+        🛡️ <strong>14 dni bezwarunkowej gwarancji satysfakcji:</strong> Jeśli którykolwiek pakiet nie przyniesie Ci pełnej jasności co do dalszej drogi zawodowej, napisz do nas maila — zwracamy 100% środków bez zadawania zbędnych pytań.
       </div>
-      <p class="paywall-security-note">🔒 Bezpieczna płatność przez Stripe · Odblokowanie w 5 sekund</p>
+      <p style="font-size: 11px; color: var(--color-text-muted); margin-top: 10px; line-height: 1.4; text-align: center;">
+        Wybierając płatność, wyrażasz zgodę na natychmiastowe rozpoczęcie świadczenia i dostarczenie raportu PDF na podany e-mail przed upływem terminu odstąpienia od umowy (art. 38 pkt 13 Ustawy o prawach konsumenta).
+      </p>
+    </div>
+  `;
 
-      <div style="margin-top: 16px; border-top: 1px dashed var(--border-light); padding-top: 12px;">
-        <button type="button" class="btn-ghost" style="font-size: 0.78rem; text-decoration: underline; cursor: pointer;" onclick="toggleTestUnlock()">
-          🧪 [Podgląd dla testera: Kliknij tutaj, aby natychmiast odblokować raport]
-        </button>
+  // Karta Lead Magnet: Zapisz wynik na e-mail (Bezpłatnie)
+  const emailCaptureCardHtml = `
+    <div class="card lead-capture-card" id="lead-capture-section">
+      <div class="lead-capture-header">
+        <span class="lead-capture-icon">📩</span>
+        <div>
+          <h3 class="lead-capture-title">Zapisz swój wynik — wyślij darmowe podsumowanie na e-mail</h3>
+          <p class="lead-capture-desc">Nie trać czasu na ponowne wypełnianie testu. Wyślemy Ci bezpośredni link powrotny do Twojego wyniku, kod RIASEC oraz pełną próbkę zawodu nr 1.</p>
+        </div>
       </div>
+      
+      <form id="lead-capture-form" class="lead-capture-form" onsubmit="handleLeadSubmit(event)">
+        <div class="lead-input-row">
+          <input
+            type="email"
+            id="lead-email-input"
+            class="lead-email-input"
+            placeholder="Twój adres e-mail (np. imie@gmail.com)"
+            required
+          />
+          <button type="submit" id="lead-submit-btn" class="btn btn-primary lead-submit-btn">
+            Wyślij wynik →
+          </button>
+        </div>
+
+        <label class="lead-consent-label">
+          <input type="checkbox" id="lead-newsletter-consent" class="lead-consent-checkbox" />
+          <span>Chcę otrzymywać bezpłatne analizy zawodów deficytowych i dofinansowań w Polsce (Newsletter CheckYourself). Mogę zrezygnować w każdej chwili 1 kliknięciem.</span>
+        </label>
+
+        <div id="lead-status-msg" class="lead-status-msg" style="display: none;"></div>
+      </form>
     </div>
   `;
 
   // Banner o odblokowanym raporcie (gdy opłacony)
+  const token = sessionStorage.getItem("cy_report_token") || "";
+  const pdfDownloadUrl = token
+    ? `api/generate-pdf.php?token=${encodeURIComponent(token)}`
+    : `api/generate-pdf.php?preview=1&code=${encodeURIComponent(analysis.code3 || analysis.code)}`;
+
   const unlockedBannerHtml = `
-    <div class="unlocked-success-card">
-      <span class="unlocked-success-icon">✓</span>
-      <div class="unlocked-success-text">
-        <strong>Pełny Raport Kariery jest odblokowany!</strong>
-        <p>Dziękujemy za wsparcie projektu. Masz pełny dostęp do bazy zawodów, planu 90 dni oraz materiałów.</p>
+    <div class="unlocked-success-card" style="background: linear-gradient(135deg, #059669 0%, #047857 100%); color: #ffffff; padding: 22px; border-radius: 12px; margin-bottom: 24px; box-shadow: 0 10px 25px -5px rgba(5, 150, 105, 0.3);">
+      <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 12px;">
+        <span class="unlocked-success-icon" style="font-size: 26px; background: rgba(255,255,255,0.2); width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%;">✓</span>
+        <div class="unlocked-success-text">
+          <strong style="font-size: 17px; display: block;">Twój Pełny Raport Kariery jest odblokowany!</strong>
+          <p style="font-size: 13px; margin: 4px 0 0 0; opacity: 0.95;">Dziękujemy za zakup. Masz pełny dostęp do bazy 18 zawodów, 12-tygodniowej roadmapy oraz przewodnika dofinansowań.</p>
+        </div>
       </div>
-      <button type="button" class="btn-ghost" style="margin-left: auto; font-size: 0.75rem;" onclick="toggleTestUnlock()">Zablokuj (test)</button>
+      <div style="margin-top: 14px; display: flex; flex-wrap: wrap; gap: 10px;">
+        <a href="${pdfDownloadUrl}" target="_blank" class="btn" style="background: #ffffff; color: #047857; font-weight: bold; padding: 12px 20px; border-radius: 8px; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+          📄 Pobierz Oficjalny Raport PDF (12 stron A4)
+        </a>
+      </div>
     </div>
   `;
 
@@ -424,8 +608,20 @@ function renderResult(analysis) {
         <div>
           <span class="result-badge">Twój profil zawodowy</span>
           <h1 class="result-name">${profile.nazwa}</h1>
-          <div class="result-code-pill">Kod Hollanda (RIASEC): <strong>${analysis.code}</strong></div>
+          <div class="result-code-pill">Kod Hollanda (RIASEC): <strong>${analysis.code3 || analysis.code}</strong></div>
         </div>
+      </div>
+
+      <!-- Akcja Stories bezpośrednio pod kartą profilu (Viral Loop) -->
+      <div class="stories-quick-action">
+        <button id="stories-card-btn" class="btn btn-stories-cta" type="button">
+          <span class="stories-cta-icon">📸</span>
+          <div class="stories-cta-text">
+            <strong>Pobierz kartę profilu na Stories <span class="stories-tag">9:16 · IG / TikTok</span></strong>
+            <span>Generuj grafikę 1080×1920 z Twoją postacią, kodem i supermocami</span>
+          </div>
+          <span class="stories-cta-arrow">→</span>
+        </button>
       </div>
 
       <!-- 2. Karta Wykresu Kategorii (Darmowa) -->
@@ -442,24 +638,14 @@ function renderResult(analysis) {
       </div>
     </div>
 
+    <!-- Punkt odniesienia dla Sticky Bottom Bar -->
+    <div id="sticky-trigger-sentinel" class="sticky-sentinel"></div>
+
     <!-- 4. Paywall lub Odblokowany Pełny Raport -->
     ${
       unlocked
         ? unlockedBannerHtml + detailedContentHtml
-        : paywallCardHtml +
-          `
-          <div class="locked-section-container is-locked">
-            <div class="lock-overlay">
-              <div class="lock-overlay-icon">🔒</div>
-              <div class="lock-overlay-title">Szczegółowa baza zawodów jest zablokowana</div>
-              <div class="lock-overlay-desc">Odblokuj pełny raport za jednorazowe 5 zł, aby uzyskać dostęp do listy 50+ zawodów, ścieżek edukacji oraz planu wdrożeniowego.</div>
-              <a href="#paywall-card" class="btn btn-primary">Odblokuj pełny raport (5 zł) ↑</a>
-            </div>
-            <div class="locked-content-blur" aria-hidden="true">
-              ${detailedContentHtml}
-            </div>
-          </div>
-          `
+        : sampleJobHtml + paywallCardHtml + emailCaptureCardHtml
     }
 
     <!-- 5. Przyciski akcji na dole -->
@@ -471,45 +657,22 @@ function renderResult(analysis) {
   `;
 
   // Obsługa przycisków
+  const storiesCardBtn = document.getElementById("stories-card-btn");
+  if (storiesCardBtn) {
+    storiesCardBtn.addEventListener("click", () =>
+      exportStoriesGraphic(analysis, profile, storiesCardBtn)
+    );
+  }
+
   const shareBtn = document.getElementById("share-btn");
   if (shareBtn)
     shareBtn.addEventListener("click", () => shareResult(analysis, profile));
 
   const exportBtn = document.getElementById("export-btn");
   if (exportBtn) {
-    exportBtn.addEventListener("click", () => {
-      exportBtn.textContent = "⏳ Generowanie...";
-      exportBtn.disabled = true;
-      const target = document.getElementById("export-target");
-      if (window.html2canvas) {
-        window
-          .html2canvas(target, {
-            scale: 2,
-            useCORS: true,
-            backgroundColor: "#ffffff",
-          })
-          .then((canvas) => {
-            const link = document.createElement("a");
-            link.download = `KierunekKariera_${analysis.code}.png`;
-            link.href = canvas.toDataURL("image/png");
-            link.click();
-            exportBtn.textContent = "📸 Pobierz grafikę z wynikiem";
-            exportBtn.disabled = false;
-          })
-          .catch((err) => {
-            console.error("Błąd generowania:", err);
-            exportBtn.textContent = "❌ Błąd";
-            setTimeout(() => {
-              exportBtn.textContent = "📸 Pobierz grafikę z wynikiem";
-              exportBtn.disabled = false;
-            }, 2000);
-          });
-      } else {
-        alert("Funkcja pobierania wymaga aktywnego połączenia sieciowego.");
-        exportBtn.textContent = "📸 Pobierz grafikę z wynikiem";
-        exportBtn.disabled = false;
-      }
-    });
+    exportBtn.addEventListener("click", () =>
+      exportStoriesGraphic(analysis, profile, exportBtn)
+    );
   }
 
   // Filtr zawodów bez studiów
@@ -555,7 +718,201 @@ function renderResult(analysis) {
       });
     });
   }
+
+  // Telemetria paywalla: widoczność i kliknięcie (Zero-Cookie)
+  const paywallEl = document.getElementById("paywall-card");
+  if (paywallEl && window.IntersectionObserver) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            trackFunnel("paywall_view", 5, { code: analysis.code });
+            observer.disconnect();
+          }
+        });
+      },
+      { threshold: 0.25 }
+    );
+    observer.observe(paywallEl);
+  }
+
+  const stripePayBtn = document.getElementById("stripe-payment-link");
+  if (stripePayBtn) {
+    stripePayBtn.addEventListener("click", () => {
+      trackFunnel("paywall_click", 6, { code: analysis.code, package: "report" });
+    });
+  }
+
+  const stripeConsultationBtn = document.getElementById("stripe-consultation-link");
+  if (stripeConsultationBtn) {
+    stripeConsultationBtn.addEventListener("click", () => {
+      trackFunnel("paywall_click", 6, { code: analysis.code, package: "consultation" });
+    });
+  }
+
+  // Sticky Bottom Bar w strefie kciuka (tylko gdy raport jest zablokowany)
+  if (!unlocked) {
+    setupStickyBar(analysis);
+  } else {
+    hideStickyBar();
+  }
 }
+
+// --- Sticky Bottom Bar (Pływający pasek zakupu w strefie kciuka) ---
+let stickyObserver = null;
+
+function hideStickyBar() {
+  const bar = document.getElementById("sticky-purchase-bar");
+  if (bar) {
+    bar.classList.remove("visible");
+    bar.setAttribute("aria-hidden", "true");
+  }
+}
+
+function setupStickyBar(analysis) {
+  const bar = document.getElementById("sticky-purchase-bar");
+  const sentinel = document.getElementById("sticky-trigger-sentinel");
+  const paywallCard = document.getElementById("paywall-card");
+  const buyBtn = document.getElementById("sticky-buy-btn");
+
+  if (!bar || isReportUnlocked()) {
+    hideStickyBar();
+    return;
+  }
+
+  if (!sentinel || !paywallCard) {
+    hideStickyBar();
+    return;
+  }
+
+  let passedSentinel = false;
+  let paywallVisible = false;
+
+  function updateBar() {
+    if (passedSentinel && !paywallVisible) {
+      bar.classList.add("visible");
+      bar.setAttribute("aria-hidden", "false");
+    } else {
+      bar.classList.remove("visible");
+      bar.setAttribute("aria-hidden", "true");
+    }
+  }
+
+  if (window.IntersectionObserver) {
+    if (stickyObserver) {
+      stickyObserver.disconnect();
+    }
+    stickyObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.target === sentinel) {
+            // Gdy sentinel minął górną krawędź okna (użytkownik przewinął wykres w dół)
+            passedSentinel = entry.boundingClientRect.top < 0;
+          } else if (entry.target === paywallCard) {
+            paywallVisible = entry.isIntersecting;
+          }
+        });
+        updateBar();
+      },
+      { threshold: [0, 0.1, 0.5, 1.0] }
+    );
+
+    stickyObserver.observe(sentinel);
+    stickyObserver.observe(paywallCard);
+  } else {
+    window.addEventListener(
+      "scroll",
+      () => {
+        const sRect = sentinel.getBoundingClientRect();
+        const pRect = paywallCard.getBoundingClientRect();
+        passedSentinel = sRect.top < 0;
+        paywallVisible = pRect.top < window.innerHeight && pRect.bottom > 0;
+        updateBar();
+      },
+      { passive: true }
+    );
+  }
+
+  if (buyBtn) {
+    buyBtn.onclick = () => {
+      trackFunnel("paywall_click", 6, {
+        code: analysis.code,
+        source: "sticky_bottom_bar",
+      });
+      paywallCard.scrollIntoView({ behavior: "smooth", block: "center" });
+
+      const stripeBtn = document.getElementById("stripe-payment-link");
+      if (stripeBtn) {
+        stripeBtn.classList.add("btn-pulse-focus");
+        setTimeout(() => stripeBtn.classList.remove("btn-pulse-focus"), 1400);
+      }
+    };
+  }
+}
+
+// Obsługa zapisu leada (wysyłka darmowego wyniku na e-mail)
+function handleLeadSubmit(event) {
+  if (event) event.preventDefault();
+  const emailInput = document.getElementById("lead-email-input");
+  const consentBox = document.getElementById("lead-newsletter-consent");
+  const submitBtn = document.getElementById("lead-submit-btn");
+  const statusMsg = document.getElementById("lead-status-msg");
+
+  if (!emailInput || !emailInput.value.trim()) return;
+
+  const email = emailInput.value.trim();
+  const consent = consentBox ? consentBox.checked : false;
+  const analysis = window.lastAnalysis || {};
+  const code = analysis.code3 || analysis.code || "RIA";
+
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Wysyłanie...";
+  }
+  if (statusMsg) statusMsg.style.display = "none";
+
+  fetch("api/subscribe.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      email: email,
+      code: code,
+      newsletter_consent: consent,
+    }),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Wyślij wynik →";
+      }
+      if (statusMsg) {
+        if (data.ok) {
+          statusMsg.className = "lead-status-msg lead-status-success";
+          statusMsg.innerHTML = "✓ <strong>Wysłano pomyślnie!</strong> Podsumowanie wyniku i link powrotny trafiły na Twój e-mail.";
+          statusMsg.style.display = "block";
+          emailInput.value = "";
+          trackFunnel("lead_submitted", 5, { code: code, consent: consent });
+        } else {
+          statusMsg.className = "lead-status-msg lead-status-error";
+          statusMsg.textContent = data.error || "Wystąpił błąd podczas wysyłki.";
+          statusMsg.style.display = "block";
+        }
+      }
+    })
+    .catch((err) => {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Wyślij wynik →";
+      }
+      if (statusMsg) {
+        statusMsg.className = "lead-status-msg lead-status-error";
+        statusMsg.textContent = "Błąd połączenia. Spróbuj ponownie za chwilę.";
+        statusMsg.style.display = "block";
+      }
+    });
+}
+window.handleLeadSubmit = handleLeadSubmit;
 
 // Kopiowanie tekstu
 function copyText(text) {
@@ -588,8 +945,9 @@ function fallbackCopy(text) {
 
 // --- Generator promptu do AI ---
 function buildAiPrompt(analysis, profile) {
-  return `Cześć! Właśnie rozwiązałem test predyspozycji zawodowych RIASEC na KierunekKariera.
-Mój dominujący kod to: ${analysis.code} (${profile.nazwa}).
+  const code = analysis.code3 || analysis.code;
+  return `Cześć! Właśnie rozwiązałem test predyspozycji zawodowych RIASEC na CheckYourself.
+Mój dominujący kod to: ${code} (${profile.nazwa}).
 Mocne strony: ${profile.mocneStrony.join(", ")}.
 
 Moja obecna sytuacja to: [np. maturzysta / mam 25 lat i pracuję w gastronomii / szukam pierwszej pracy w biurze].
@@ -628,13 +986,326 @@ function buildChart(analysis) {
   );
 }
 
+// --- Generator Karty Instagram / TikTok Stories (1080×1920 px) ---
+function drawRoundedRect(ctx, x, y, width, height, radius) {
+  if (typeof ctx.roundRect === "function") {
+    ctx.beginPath();
+    ctx.roundRect(x, y, width, height, radius);
+    return;
+  }
+  ctx.beginPath();
+  ctx.moveTo(x + radius, y);
+  ctx.lineTo(x + width - radius, y);
+  ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+  ctx.lineTo(x + width, y + height - radius);
+  ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+  ctx.lineTo(x + radius, y + height);
+  ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+  ctx.lineTo(x, y + radius);
+  ctx.quadraticCurveTo(x, y, x + radius, y);
+  ctx.closePath();
+}
+
+function downloadBlob(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1200);
+}
+
+function generateStoryCanvas(analysis, profile) {
+  return new Promise((resolve) => {
+    const canvas = document.createElement("canvas");
+    canvas.width = 1080;
+    canvas.height = 1920;
+    const ctx = canvas.getContext("2d");
+
+    // 1. Tło: Głęboki elegancki gradient tech-violet
+    const bgGrad = ctx.createLinearGradient(0, 0, 0, 1920);
+    bgGrad.addColorStop(0, "#0b0f19");
+    bgGrad.addColorStop(0.35, "#15102a");
+    bgGrad.addColorStop(0.7, "#231145");
+    bgGrad.addColorStop(1, "#090d16");
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, 1080, 1920);
+
+    // 2. Ozdobne glowing orbs (światła w tle)
+    const orb1 = ctx.createRadialGradient(540, 500, 20, 540, 500, 480);
+    orb1.addColorStop(0, "rgba(124, 58, 237, 0.35)");
+    orb1.addColorStop(0.5, "rgba(124, 58, 237, 0.12)");
+    orb1.addColorStop(1, "rgba(124, 58, 237, 0)");
+    ctx.fillStyle = orb1;
+    ctx.fillRect(0, 0, 1080, 1920);
+
+    const orb2 = ctx.createRadialGradient(920, 1380, 10, 920, 1380, 420);
+    orb2.addColorStop(0, "rgba(236, 72, 153, 0.22)");
+    orb2.addColorStop(1, "rgba(236, 72, 153, 0)");
+    ctx.fillStyle = orb2;
+    ctx.fillRect(0, 0, 1080, 1920);
+
+    // 3. Subtelna siatka współrzędnych / ramka techniczna
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.04)";
+    ctx.lineWidth = 1;
+    for (let x = 80; x < 1080; x += 160) {
+      ctx.beginPath();
+      ctx.moveTo(x, 60);
+      ctx.lineTo(x, 1860);
+      ctx.stroke();
+    }
+    for (let y = 80; y < 1920; y += 160) {
+      ctx.beginPath();
+      ctx.moveTo(60, y);
+      ctx.lineTo(1020, y);
+      ctx.stroke();
+    }
+
+    // Ramka zewnętrzna
+    drawRoundedRect(ctx, 40, 40, 1000, 1840, 32);
+    ctx.strokeStyle = "rgba(139, 92, 246, 0.3)";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // 4. Nagłówek marki i testu
+    ctx.textAlign = "center";
+    ctx.fillStyle = "rgba(255, 255, 255, 0.95)";
+    ctx.font = "800 34px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+    ctx.fillText("🧭 CHECKYOURSELF.PL", 540, 125);
+
+    // Badge metodologii
+    drawRoundedRect(ctx, 310, 155, 460, 44, 22);
+    ctx.fillStyle = "rgba(124, 58, 237, 0.25)";
+    ctx.fill();
+    ctx.strokeStyle = "rgba(139, 92, 246, 0.5)";
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    ctx.fillStyle = "#c4b5fd";
+    ctx.font = "700 18px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+    ctx.fillText("TEST PREDYSPOZYCJI ZAWODOWYCH · 2026", 540, 184);
+
+    // Funkcja dopełniająca treść po załadowaniu avatara
+    const renderContent = () => {
+      // Pill z kodem RIASEC
+      drawRoundedRect(ctx, 360, 725, 360, 54, 27);
+      ctx.fillStyle = "rgba(124, 58, 237, 0.45)";
+      ctx.fill();
+      ctx.strokeStyle = "#a78bfa";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "800 24px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+      ctx.fillText(`KOD HOLLANDA: ${analysis.code3 || analysis.code}`, 540, 761);
+
+      // Nazwa typu osobowości
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "800 48px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+      ctx.fillText(profile.nazwa.toUpperCase(), 540, 840);
+
+      // Podtytuł
+      ctx.fillStyle = "#94a3b8";
+      ctx.font = "600 24px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+      ctx.fillText("Osobisty Profil Kariery i Predyspozycji", 540, 885);
+
+      // Sekcja supermocy
+      ctx.fillStyle = "#a78bfa";
+      ctx.font = "800 22px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+      ctx.fillText("⚡ TWOJE DOMINUJĄCE SUPERMOCE:", 540, 965);
+
+      const strengths = profile.mocneStrony ? profile.mocneStrony.slice(0, 3) : [];
+      let cardY = 1005;
+      strengths.forEach((st) => {
+        drawRoundedRect(ctx, 130, cardY, 820, 72, 18);
+        ctx.fillStyle = "rgba(255, 255, 255, 0.06)";
+        ctx.fill();
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.12)";
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        ctx.fillStyle = "#10b981";
+        ctx.font = "800 26px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+        ctx.textAlign = "left";
+        ctx.fillText("✦", 160, cardY + 46);
+
+        ctx.fillStyle = "#f8fafc";
+        ctx.font = "700 25px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+        ctx.fillText(st, 200, cardY + 46);
+        cardY += 90;
+      });
+
+      // Mini Wykres RIASEC (Top 3 kategorie)
+      ctx.textAlign = "center";
+      ctx.fillStyle = "#cbd5e1";
+      ctx.font = "700 20px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+      ctx.fillText("STRUKTURA TALENTÓW WG MODELU RIASEC", 540, 1320);
+
+      const sorted = analysis.sorted ? analysis.sorted.slice(0, 3) : [];
+      let barY = 1360;
+      sorted.forEach((item) => {
+        const catMeta = CATEGORIES[item.cat] || { label: item.cat, color: "#7c3aed" };
+        const pct = Math.min(100, Math.round((item.score / 25) * 100));
+
+        ctx.textAlign = "left";
+        ctx.fillStyle = "#e2e8f0";
+        ctx.font = "700 22px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+        ctx.fillText(catMeta.label, 130, barY + 20);
+
+        ctx.textAlign = "right";
+        ctx.fillStyle = "#94a3b8";
+        ctx.font = "700 22px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+        ctx.fillText(`${pct}%`, 950, barY + 20);
+
+        drawRoundedRect(ctx, 130, barY + 32, 820, 14, 7);
+        ctx.fillStyle = "rgba(255, 255, 255, 0.1)";
+        ctx.fill();
+
+        const fillW = Math.max(14, (820 * pct) / 100);
+        drawRoundedRect(ctx, 130, barY + 32, fillW, 14, 7);
+        ctx.fillStyle = catMeta.color || "#7c3aed";
+        ctx.fill();
+
+        barY += 72;
+      });
+
+      // Stopka / CTA Box do sprawdzenia
+      drawRoundedRect(ctx, 100, 1660, 880, 120, 24);
+      ctx.fillStyle = "rgba(255, 255, 255, 0.07)";
+      ctx.fill();
+      ctx.strokeStyle = "rgba(139, 92, 246, 0.4)";
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      ctx.textAlign = "center";
+      ctx.fillStyle = "#94a3b8";
+      ctx.font = "600 22px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+      ctx.fillText("Sprawdź bezpłatnie do jakich zawodów pasujesz Ty:", 540, 1706);
+
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "800 32px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
+      ctx.fillText("👉 www.checkyourself.pl (5 min, za darmo)", 540, 1748);
+
+      resolve(canvas);
+    };
+
+    // Rysowanie avatara
+    if (profile.avatar) {
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.onload = () => {
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(540, 460, 195, 0, Math.PI * 2);
+        ctx.strokeStyle = "rgba(139, 92, 246, 0.6)";
+        ctx.lineWidth = 4;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(540, 460, 180, 0, Math.PI * 2);
+        ctx.closePath();
+        ctx.clip();
+        ctx.drawImage(img, 360, 280, 360, 360);
+        ctx.restore();
+
+        renderContent();
+      };
+      img.onerror = () => {
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(540, 460, 180, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(124, 58, 237, 0.3)";
+        ctx.fill();
+        ctx.restore();
+
+        ctx.textAlign = "center";
+        ctx.font = "120px sans-serif";
+        ctx.fillText("🧭", 540, 500);
+        renderContent();
+      };
+      img.src = profile.avatar;
+    } else {
+      ctx.textAlign = "center";
+      ctx.font = "120px sans-serif";
+      ctx.fillText("🧭", 540, 500);
+      renderContent();
+    }
+  });
+}
+
+async function exportStoriesGraphic(analysis, profile, triggerBtn) {
+  const originalHtml = triggerBtn.innerHTML;
+  try {
+    triggerBtn.disabled = true;
+    triggerBtn.innerHTML = `<span>⏳ Generowanie karty Stories (1080×1920)...</span>`;
+
+    const canvas = await generateStoryCanvas(analysis, profile);
+
+    await new Promise((resolve) => {
+      canvas.toBlob(async (blob) => {
+        if (!blob) {
+          triggerBtn.innerHTML = `<span>❌ Błąd generowania</span>`;
+          setTimeout(() => {
+            triggerBtn.disabled = false;
+            triggerBtn.innerHTML = originalHtml;
+          }, 2000);
+          resolve();
+          return;
+        }
+
+        const filename = `CheckYourself_${analysis.code3 || analysis.code}_Stories.png`;
+        const file = new File([blob], filename, { type: "image/png" });
+        const codeDisplay = analysis.code3 || analysis.code;
+        const shareData = {
+          title: `Mój profil w CheckYourself: ${profile.nazwa} (${codeDisplay})`,
+          text: `Mój profil w teście CheckYourself to ${profile.nazwa} (kod: ${codeDisplay}). Sprawdź do jakich zawodów pasujesz na checkyourself.pl`,
+          files: [file],
+        };
+
+        if (navigator.canShare && navigator.canShare(shareData)) {
+          try {
+            await navigator.share(shareData);
+            triggerBtn.innerHTML = `<span>✓ Udostępniono pomyślnie!</span>`;
+          } catch (err) {
+            if (err.name !== "AbortError") {
+              downloadBlob(blob, filename);
+              triggerBtn.innerHTML = `<span>✓ Pobrano plik Stories!</span>`;
+            } else {
+              triggerBtn.innerHTML = originalHtml;
+            }
+          }
+        } else {
+          downloadBlob(blob, filename);
+          triggerBtn.innerHTML = `<span>✓ Pobrano plik graficzny (1080×1920)!</span>`;
+        }
+
+        setTimeout(() => {
+          triggerBtn.disabled = false;
+          triggerBtn.innerHTML = originalHtml;
+        }, 2500);
+        resolve();
+      }, "image/png");
+    });
+  } catch (err) {
+    console.error("Błąd generowania Stories:", err);
+    triggerBtn.innerHTML = `<span>❌ Błąd</span>`;
+    setTimeout(() => {
+      triggerBtn.disabled = false;
+      triggerBtn.innerHTML = originalHtml;
+    }, 2000);
+  }
+}
+
 // --- Udostępnianie ---
 function shareResult(analysis, profile) {
-  const text = `Mój profil zawodowy to ${analysis.code} - ${profile.nazwa}. Sprawdź swoje predyspozycje na KierunekKariera!`;
+  const code = analysis.code3 || analysis.code;
+  const text = `Mój profil zawodowy to ${code} - ${profile.nazwa}. Sprawdź swoje predyspozycje na CheckYourself!`;
   const url = window.location.href;
 
   if (navigator.share) {
-    navigator.share({ title: "KierunekKariera", text, url }).catch(() => {});
+    navigator.share({ title: "CheckYourself", text, url }).catch(() => {});
   } else if (navigator.clipboard) {
     navigator.clipboard.writeText(`${text} ${url}`).then(() => {
       alert("Skopiowano link do schowka!");
@@ -647,9 +1318,53 @@ function shareResult(analysis, profile) {
 // --- Inicjalizacja ---
 function init() {
   cacheEls();
+  trackFunnel("page_view", 1);
   if (el.startBtn) el.startBtn.addEventListener("click", startQuiz);
   if (el.backBtn) el.backBtn.addEventListener("click", goBack);
   document.addEventListener("keydown", onKeydown);
+
+  // Obsługa powrotu z bramki Stripe (parametr session_id w URL)
+  const urlParams = new URLSearchParams(window.location.search);
+  const sessionId = urlParams.get("session_id");
+  if (sessionId && sessionId.startsWith("cs_")) {
+    fetch("api/report.php?session_id=" + encodeURIComponent(sessionId))
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.ok && data.token) {
+          sessionStorage.setItem("cy_report_token", data.token);
+          trackFunnel("purchase_success", 7, { code: data.profile_code });
+          window.history.replaceState({}, document.title, window.location.pathname);
+          const profileCode = data.profile_code || "RIA";
+          const mockAnalysis = {
+            code: profileCode.slice(0, 2),
+            code3: profileCode,
+            scores: { R: 85, I: 70, A: 60, S: 35, E: 50, C: 30 },
+            situation: {}
+          };
+          showScreen("result");
+          renderResult(window.lastAnalysis || mockAnalysis);
+        }
+      })
+      .catch((err) => {
+        console.error("Błąd weryfikacji sesji płatności:", err);
+      });
+    return;
+  }
+
+  // Obsługa przywrócenia wyniku z linku e-mail (?restore=RIA)
+  const restoreCode = urlParams.get("restore");
+  if (restoreCode && /^[RIASEC]{2,3}$/i.test(restoreCode)) {
+    const cleanCode = restoreCode.toUpperCase();
+    const mockAnalysis = {
+      code: cleanCode.slice(0, 2),
+      code3: cleanCode,
+      scores: { R: 85, I: 70, A: 60, S: 35, E: 50, C: 30 },
+      situation: {}
+    };
+    showScreen("result");
+    renderResult(mockAnalysis);
+    return;
+  }
 
   // Wznowienie testu
   const saved = Storage.loadProgress();

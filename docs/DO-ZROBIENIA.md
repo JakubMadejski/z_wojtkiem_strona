@@ -1,271 +1,293 @@
-# 📝 DO ZROBIENIA — status płatności i backlog
+# 📋 DO ZROBIENIA — Master Plan Transformacji CheckYourself (Nowy Backlog)
 
-> Roboczy notatnik: co jest zrobione „na skróty", co dokończyć, co poprawić. Sekcje są **zwijane** — kliknij nagłówek, żeby rozwinąć/zwinąć. Główna dokumentacja → [DOKUMENTACJA.md](./DOKUMENTACJA.md).
-
----
-
-## 🚨 Status płatności (w skrócie)
-
-**Teraz działa PAYWALL „NA HONOR" — wynik widoczny OD RAZU, ZA DARMO, bez żadnej opłaty.**
-Pełne profile leżą w pliku klienta `js/results-data.js`, więc każdy zobaczy je w przeglądarce (F12). To świadoma, tymczasowa decyzja — realną płatność ogarniemy później. Szczegóły w zwijanych sekcjach niżej. 👇
+> **Dokument strategiczny i operacyjny** opracowany na podstawie audytu z 8 listopada 2026 r. (@Wojtek) oraz pełnej analizy technicznej repozytorium.
+> Zastępuje poprzedni backlog „na skróty”. 
+> 
+> **Cel główny:** Przekształcenie darmowego quizu RIASEC w dochodowy, zaufany produkt cyfrowy o wysokiej konwersji (sprzedaż płatnego raportu za 19–29 zł oraz pakietu konsultacji 99–149 zł).
+> 
+> **Zasada wdrożenia:** Najpierw uszczelnienie i pomiar → potem podniesienie wartości produktu → na końcu pozyskiwanie ruchu. Przejście do kolejnej fazy wymaga zaliczenia **Bramki Jakościowej**.
 
 ---
 
-<details>
-<summary><strong>🔒 Jak zmienić „na honor" na realny paywall (rozwiń)</strong></summary>
+## 🚦 Status i Bramki Kontrolne (Quality Gates)
 
-<br>
+```
+[FAZA 1: Dni 1–30] ──▶ 🚪 BRAMKA 1: Szczelny paywall + sprawna analityka 7 kroków
+         │
+[FAZA 2: Dni 31–60] ──▶ 🚪 BRAMKA 2: Konkretny raport 15-25 zawodów, <5% zwrotów, zachwyceni klienci
+         │
+[FAZA 3: Dni 61–90] ──▶ 🚀 Skalowanie: SEO, virale Stories, doradcy szkolni, płatny ruch (Meta Ads)
+```
 
-Kolejność mniej więcej taka:
-
-1. **Wybrać dostawcę płatności** (patrz sekcja „Dostawcy") i założyć konto + pobrać klucze API (test/live).
-2. **Wyprowadzić pełne profile z klienta na serwer.**
-   - Dziś: `js/results-data.js` (widoczne w przeglądarce).
-   - Docelowo: `api/_profiles.js` — plik po stronie serwera, niedostępny z przeglądarki.
-   - Klient dostaje tylko „zajawkę" (kod + nazwa + wykres). Pełny opis przychodzi z serwera.
-3. **Dodać funkcje serverless** (Vercel/Netlify, darmowy tier):
-   - `api/create-payment.js` — tworzy sesję płatności na kwotę 5 zł brutto.
-   - `api/verify-payment.js` — sprawdza u dostawcy, czy zapłacono; jeśli tak → zwraca pełny profil.
-4. **Dodać `js/payment.js`** po stronie klienta (przycisk „Odblokuj — 5 zł" → bramka → powrót → render wyniku).
-5. **Zmienić hosting na taki z funkcjami serverless** (Vercel/Netlify — same GitHub Pages nie wystarczą).
-6. **Formalności / VAT:** kto wystawia paragon/fakturę i rozlicza podatek. Cena: **5 zł brutto** (z 23% VAT ≈ 4,07 zł netto).
-7. **Testy w sandboxie** dostawcy przed włączeniem produkcji.
-
-> Skrót: dopóki pełny wynik jest w pliku `js/`, płatność zawsze będzie „na honor". Realny paywall = wynik wydawany z serwera po weryfikacji płatności.
-
-</details>
-
-<details>
-<summary><strong>💳 Dostawcy płatności — porównanie (rozwiń)</strong></summary>
-
-<br>
-
-Jeszcze nie zdecydowaliśmy. BLIK jest ważny przy mikropłatnościach 5 zł.
-
-| Dostawca       | BLIK         | Karty | Umowa/weryfikacja         | DX (dla dewelopera) | Uwagi                                                                        |
-| -------------- | ------------ | ----- | ------------------------- | ------------------- | ---------------------------------------------------------------------------- |
-| **Stripe**     | ✅           | ✅    | Lekka, szybki start       | ⭐ Najlepsza        | Globalny, 1 funkcja serverless wystarczy. Rekomendowany na start techniczny. |
-| **Przelewy24** | ✅ (natywny) | ✅    | Umowa + weryfikacja firmy | Dobra               | Bardzo „polski", dużo metod lokalnych.                                       |
-| **PayU**       | ✅           | ✅    | Umowa + weryfikacja       | Dobra               | Mocny w polskim e-commerce, obsługuje raty.                                  |
-
-**W skrócie:** Stripe = najszybszy technicznie i najlepsza dokumentacja; Przelewy24/PayU = bardziej lokalne, ale więcej formalności na start.
-
-**Decyzja:** ⏳ do podjęcia w Fazie B / po zbudowaniu całości.
-
-</details>
-
-<details>
-<summary><strong>⚖️ Formalności prawne — co trzeba ogarnąć przed paywallem (rozwiń)</strong></summary>
-
-<br>
-
-> **Status:** teoria RIASEC jest public domain, pytania i profile są naszymi oryginalnymi treściami — więc **sam quiz jest w pełni legalny**. Ale żeby _sprzedawać_ wynik (paywall 5 zł), trzeba ogarnąć formalno-prawne minimum. Poniżej rozbite na konkretne problemy z pomysłami na rozwiązanie.
+- [x] **BRAMKA 1 (Gotowość do sprzedaży):** Zero możliwości odblokowania raportu za darmo (brak przycisków testowych, brak treści w JS/DOM, tokenizowany dostęp), wdrożona analityka 7 kroków lejka bez cookies, nowa cena 19 zł, legalna formuła w Stripe z 14-dniową gwarancją.
+- [x] **BRAMKA 2 (Wartość produktu):** Płatny raport zawiera 15–25 zawodów z polskimi realiami i zarobkami, 12-tygodniowy plan wdrożenia, generator PDF na e-mail, darmowa próbka zawodu nr 1 na ekranie wyniku, wdrożony pakiet 129 zł (konsultacja 1:1) jako kotwica cenowa.
 
 ---
 
-#### 1. 🏢 Działalność gospodarcza
+## 📑 Spis Treści Backlogu
 
-**Problem:** nie można sprzedawać usług w Polsce bez jakiejś formy prawnej.
-
-**Opcje:**
-
-- [ ] **Działalność nierejestrowa (na start)** — jeśli przychód < 75% minimalnego wynagrodzenia (~3 225 zł/mies. w 2026). Nie wymaga rejestracji w CEIDG, nie płaci się ZUS. Wymaga uproszczonej ewidencji sprzedaży. Idealne na test rynku.
-- [ ] **Jednoosobowa Działalność Gospodarcza (JDG)** — rejestracja w CEIDG (za darmo, online, w 1 dzień). Pełna firma z PKD (np. `63.11.Z` — przetwarzanie danych / hosting, lub `62.01.Z` — działalność związana z oprogramowaniem). Trzeba płacić ZUS (ale jest ulga na start — 6 mies. bez składek, potem 2 lata preferencyjny ZUS ~400 zł/mies.).
-- [ ] **Spółka cywilna** — jeśli robicie to we dwóch i chcecie dzielić zyski formalnie. Wymaga umowy + 2× JDG.
-
-**Rekomendacja:** zacznijcie od **działalności nierejestrowej**. Jeśli przychód urośnie powyżej limitu → przejście na JDG.
-
----
-
-#### 2. 📋 Regulamin serwisu
-
-**Problem:** sprzedaż B2C w Polsce **wymaga regulaminu** (art. 8 ustawy o świadczeniu usług drogą elektroniczną). Bez niego sprzedaż jest nielegalna.
-
-**Co musi zawierać:**
-
-- [ ] Dane sprzedawcy (imię, nazwisko lub firma, adres, email, NIP jeśli jest)
-- [ ] Opis usługi (co dokładnie user kupuje — „pełny wynik quizu doradztwa zawodowego")
-- [ ] Cena brutto z VAT (5 zł)
-- [ ] Sposób płatności i realizacji usługi
-- [ ] Prawo odstąpienia od umowy (patrz punkt 4)
-- [ ] Procedura reklamacji
-- [ ] Informacja o pozasądowym rozwiązywaniu sporów (platforma ODR UE)
-
-**Jak to zrobić:**
-
-- [ ] **Napisać samemu** — serwis jest prosty (1 usługa, 1 cena, brak kont), więc regulamin to ~2 strony A4. Można napisać na podstawie darmowych szablonów z sieci albo wygenerować z AI i zredagować. **Koszt: 0 zł.**
-- [ ] **Opcjonalnie:** płatny generator (~100 zł) lub prawnik (~300–800 zł) jeśli chcecie 100% pewności.
-
-**Rekomendacja:** napiszcie sami (albo poproście AI) — przy tak prostym modelu biznesowym to wystarczy. Prawnik ma sens dopiero jak obroty urosną.
+1. [Filar 1: Bezpieczeństwo i Uszczelnienie Paywalla (KRYTYCZNE)](#1-filar-1-bezpieczeństwo-i-uszczelnienie-paywalla-krytyczne)
+2. [Filar 2: Wartość Płatnego Raportu i Silnik Danych](#2-filar-2-wartość-płatnego-raportu-i-silnik-danych)
+3. [Filar 3: Przebudowa Quizu i Personalizacja (3-literowy kod)](#3-filar-3-przebudowa-quizu-i-personalizacja-3-literowy-kod)
+4. [Filar 4: Copywriting, Uczciwość i Budowa Zaufania](#4-filar-4-copywriting-uczciwość-i-budowa-zaufania)
+5. [Filar 5: Cennik, Pakiety i Polityka Zwrotów](#5-filar-5-cennik-pakiety-i-polityka-zwrotów)
+6. [Filar 6: Lejek Sprzedażowy i UX/UI Mobile-First](#6-filar-6-lejek-sprzedażowy-i-uxui-mobile-first)
+7. [Filar 7: Branding, Prawa Autorskie i Kwestie Prawne](#7-filar-7-branding-prawa-autorskie-i-kwestie-prawne)
+8. [Filar 8: Optymalizacja Techniczna i Wydajność](#8-filar-8-optymalizacja-techniczna-i-wydajność)
+9. [Filar 9: Analityka i Pomiar Lejka (Bez Cookies)](#9-filar-9-analityka-i-pomiar-lejka-bez-cookies)
+10. [Filar 10: Dystrybucja, SEO i Pozyskiwanie Ruchu](#10-filar-10-dystrybucja-seo-i-pozyskiwanie-ruchu)
+11. [Harmonogram Wdrożenia: Faza 1 / Faza 2 / Faza 3](#11-harmonogram-wdrożenia)
 
 ---
 
-#### 3. 🔐 Polityka prywatności
+## 1. Filar 1: Bezpieczeństwo i Uszczelnienie Paywalla (KRYTYCZNE)
 
-**Problem:** obowiązkowa na każdej stronie zbierającej jakiekolwiek dane (RODO/GDPR). Nawet bez backendu — Google Fonts i dostawca płatności = transfer danych do podmiotów trzecich.
+*Dziś raport może mieć każdy za 0 zł — przez parametr URL, przycisk testerski w kodzie oraz F12 Inspect Element.*
 
-**Co musi zawierać:**
-
-- [ ] Kto jest administratorem danych (wy)
-- [ ] Jakie dane zbieracie (przy paywlalu: email/dane z bramki płatności; aktualnie: zero)
-- [ ] Cel przetwarzania (realizacja usługi, płatność)
-- [ ] Podstawa prawna (art. 6 ust. 1 lit. b RODO — wykonanie umowy)
-- [ ] Okres przechowywania
-- [ ] Prawa użytkownika (dostęp, usunięcie, przenoszenie)
-- [ ] Informacja o cookies / localStorage
-- [ ] Podmioty trzecie (Google Fonts, dostawca płatności)
-
-**Jak to zrobić:**
-
-- [ ] **Napisać samemu** — polityka prywatności do prostego serwisu bez kont to ~1,5 strony A4. Szablon RODO + dostosowanie pod wasze dane. **Koszt: 0 zł.**
-- [ ] **Ciekawostka:** aktualnie nie zbieracie żadnych danych osobowych (localStorage jest lokalne, nie wysyłacie nic na serwer). Polityka jest potrzebna dopiero gdy dodacie paywall + Google Fonts (dane o IP transferowane do Google).
-- [ ] **Minimalizacja:** rozważcie self-hosting fontu Inter (pobrać pliki .woff2 lokalnie) — wtedy zero transferu danych do Google i prostszy RODO.
-
-**Rekomendacja:** napiszcie razem z regulaminem — ten sam dokument może mieć oba w sobie.
+- [x] **Usunięcie backdoorów testerskich z frontendu:**
+  - [x] Całkowite wycięcie funkcji `toggleTestUnlock()` z `js/app.js` i przycisku z DOM.
+  - [x] Usunięcie sprawdzania `?unlocked=true` oraz `?paid=true` w funkcji `isReportUnlocked()`.
+  - [x] Usunięcie przechowywania flagi `kk_unlocked=true` jako jedynego weryfikatora dostępu w `localStorage`.
+- [x] **Wyprowadzenie płatnej treści z klienta na serwer:**
+  - [x] Utworzenie chronionego katalogu `api/data/` z regułami `.htaccess` (`Require all denied`).
+  - [x] Wyprowadzenie bazy 80 zawodów z polskimi zarobkami 2026 i ścieżkami wejścia do `api/data/jobs.json`.
+  - [x] Usunięcie z DOM elementu `.locked-content-blur` (koniec z zasłanianiem treści filtrem CSS `blur(10px)` — wdrożenie darmowej próbki zawodu nr 1 w `sampleJobHtml`).
+  - [x] Utworzenie chronionego endpointu `api/report.php`, serwującego pełne dane z weryfikacją sesji Stripe lub tokenu HMAC.
+- [x] **Weryfikacja płatności po stronie serwera:**
+  - [x] Integracja Stripe Webhook (`checkout.session.completed`): serwer odbiera potwierdzenie opłacenia sesji (`api/webhook.php`).
+  - [x] Generowanie unikalnego, jednorazowego tokenu dostępu (lub linku z sygnaturą HMAC), który odblokowuje dostęp do strony raportu i PDF.
+- [x] **Automatyczna wysyłka trwałego nośnika (PDF):**
+  - [x] Po potwierdzeniu zakupu w Stripe webhook generuje PDF i wysyła maila transakcyjnego przez SMTP (`api/mailer.php`) z załączonym raportem w formacie PDF.
+  - [x] Potwierdzenie na trwałym nośniku spełnia wymogi ustawy o prawach konsumenta (art. 2 pkt 17).
 
 ---
 
-#### 4. ↩️ Prawo odstąpienia od umowy (14 dni)
+## 2. Filar 2: Wartość Płatnego Raportu i Silnik Danych
 
-**Problem:** konsument ma prawo odstąpić od umowy zawartej na odległość w ciągu 14 dni. Ale przy treści cyfrowej (jak wynik quizu) istnieje wyjątek.
+*Raport musi być warty 19–29 zł. 5–6 ogólnych zawodów to za mało. Raport musi dawać konkretne rozwiązania dla polskiego rynku.*
 
-**Rozwiązanie:**
-
-- [ ] **Wyjątek z art. 38 pkt 13 ustawy o prawach konsumenta:** prawo odstąpienia **nie przysługuje**, jeśli:
-  1. Treść cyfrowa nie jest dostarczana na nośniku materialnym (✅ — wynik jest online)
-  2. Konsument **wyraził zgodę** na rozpoczęcie świadczenia przed upływem 14 dni (trzeba checkbox)
-  3. Konsument **został poinformowany** o utracie prawa odstąpienia
-
-**Implementacja:**
-
-- [ ] Przed kliknięciem „Zapłać 5 zł" dodać checkbox: _„Wyrażam zgodę na natychmiastowe udostępnienie pełnego wyniku i przyjmuję do wiadomości, że tracę prawo do odstąpienia od umowy."_
-- [ ] Ten checkbox musi być odznaczony domyślnie (nie może być pre-checked)
-- [ ] Zapisać fakt zaznaczenia w logach/bazie (na wypadek sporu)
-
-**Rekomendacja:** standardowa praktyka w branży — większość platform z treściami cyfrowymi robi dokładnie tak.
-
----
-
-#### 5. 🧾 Paragon / faktura
-
-**Problem:** przy sprzedaży B2C trzeba dokumentować transakcje. Pytanie: paragon fiskalny czy rachunek?
-
-**Opcje:**
-
-- [ ] **Działalność nierejestrowa:** nie trzeba kasy fiskalnej (zwolnienie podmiotowe do 20 tys. zł/rok). Wystarczy **rachunek** wystawiany na żądanie klienta. Prowadzicie uproszczoną ewidencję sprzedaży (data, kwota, opis).
-- [ ] **JDG poniżej 20 tys. zł/rok:** zwolnienie z VAT (art. 113 ustawy o VAT) + zwolnienie z kasy fiskalnej. Wystarczy faktura bez VAT / rachunek.
-- [ ] **JDG powyżej 20 tys. zł/rok:** rejestracja VAT + kasa fiskalna online **lub** skorzystanie ze zwolnienia z kasy (jeśli 100% płatności elektronicznych — przelewem / kartą / BLIK — i macie ewidencję). **Ważne:** sprzedaż wyłącznie elektroniczna z płatnością elektroniczną = zwolnienie z kasy fiskalnej (§ 2 ust. 1 rozporządzenia MF).
-- [ ] **Stripe / PayU / Przelewy24:** dostawca płatności nie wystawia paragonów za was — to wasz obowiązek. Ale daje dane potrzebne do ewidencji (transakcje, kwoty, daty).
-
-**Rekomendacja na start:** działalność nierejestrowa + uproszczona ewidencja. Przy 5 zł za quiz to nie jest dużo papierologii.
+- [x] **Rozbudowa bazy zawodów (do ~150 pozycji):**
+  - [x] Stworzenie ustrukturyzowanej bazy ok. 150 współczesnych zawodów na polskim rynku (`api/data/jobs.json`).
+  - [x] Przypisanie do każdego zawodu: 3-literowego kodu Hollanda, wymagań edukacyjnych (ze studiami / bez studiów / kursy / szkoły policealne / uprawnienia państwowe).
+- [x] **Personalizacja wyniku: 15–25 zawodów w raporcie:**
+  - [x] Algorytm dobiera 18 najlepiej dopasowanych zawodów na podstawie 3-literowego kodu oraz odpowiedzi z ankiety sytuacyjnej (wiek, budżet, czas, preferencje studiów).
+- [x] **Karta pojedynczego zawodu (konkret zamiast 1 zdania):**
+  - [x] **Dzień z życia:** Na czym polega realna codzienna praca, typowe środowisko i narzędzia.
+  - [x] **Polskie widełki płacowe 2026:** Mediana, zarobki na start (junior) vs po 3-5 latach (mid/senior), ze wskazaniem wiarygodnego źródła (GUS, Barometr Zawodów, raporty płacowe).
+  - [x] **Próg wejścia (czas i budżet):** Ile miesięcy trwa nauka, ile kosztuje certyfikacja (np. prawo jazdy kat. C+E, uprawnienia SEP do 1 kV, UDT na wózki, certyfikat testerski ISTQB).
+  - [x] **Ścieżka edukacyjna:** Konkretne kursy, certyfikaty państwowe, studia podyplomowe lub szkoły policealne.
+  - [x] **Popyt na rynku:** Link i dane o deficycie/nadwyżce z Barometru Zawodów dla danego regionu.
+- [x] **Praktyczny plan działania na 12 tygodni:**
+  - [x] Opracowanie planu tydzień po tygodniu dla TOP 3 najwyżej dopasowanych zawodów.
+  - [x] Tygodnie 1–4: Poznanie podstaw i pierwsze darmowe materiały.
+  - [x] Tygodnie 5–8: Konkretny kurs, projekt do portfolio lub zapis na egzamin uprawniający.
+  - [x] Tygodnie 9–12: Przygotowanie CV, profil na LinkedIn/Pracuj.pl, aplikowanie na staże/prace juniorskie.
+- [x] **Baza dofinansowań i instytucji w Polsce:**
+  - [x] Instrukcja krok po kroku: jak uzyskać bon szkoleniowy lub bon na zasiedlenie z Powiatowego Urzędu Pracy (PUP).
+  - [x] Jak skorzystać z Bazy Usług Rozwojowych (BUR) i dofinansowań unijnych PARP (nawet do 80–100% kosztów kursu).
+- [ ] **Sekcja dla młodzieży i maturzystów:**
+  - [ ] Rekomendowane kierunki studiów i politechnik powiązane z danym profilem.
+  - [ ] Wymagane przedmioty maturalne na poziomie rozszerzonym i orientacyjne progi punktowe.
 
 ---
 
-#### 6. 🛡️ RODO / GDPR
+## 3. Filar 3: Przebudowa Quizu i Personalizacja (3-literowy kod)
 
-**Problem:** przetwarzanie danych osobowych użytkowników (zwłaszcza przy płatności) podlega RODO.
+*JobCannon daje 3 litery za darmo. CheckYourself musi mieć 3-literowy kod Hollanda i pytania kontekstowe.*
 
-**Aktualny stan:**
-
-- [ ] ✅ **Teraz (bez paywalla):** nie zbieracie żadnych danych osobowych. localStorage jest lokalne, dane nie opuszczają przeglądarki. Jedyny transfer to Google Fonts (IP użytkownika → Google) — minimalny.
-- [ ] ⚠️ **Po dodaniu paywalla:** dostawca płatności (Stripe/P24/PayU) przetwarza dane płatnicze. Wy jako „administrator danych" musicie mieć:
-  - Politykę prywatności (punkt 3 wyżej)
-  - Umowę powierzenia danych z dostawcą płatności (zwykle jest w ich regulaminie — nie trzeba oddzielnie negocjować)
-  - Rejestr czynności przetwarzania (jeśli firma > 250 pracowników — was to nie dotyczy)
-
-**Co zrobić:**
-
-- [ ] **Minimalizować dane:** nie zbierajcie emaila / imienia / niczego oprócz tego, co płatność wymaga. Im mniej danych, tym prostsze RODO.
-- [ ] **Klauzula informacyjna:** dodać link do polityki prywatności przy formularzu płatności.
-- [ ] **Rozważyć self-hosting fontu Inter:** pobrać pliki `.woff2` lokalnie zamiast z Google Fonts → zero transferu danych do Google → prostszy compliance.
-- [ ] **Baner cookies:** aktualnie nie potrzebujecie (localStorage ≠ cookies, nie macie analityki). Jeśli dodacie Plausible/GoatCounter (bez cookies) — nadal nie trzeba. Baner byłby potrzebny tylko przy Google Analytics / Facebook Pixel (których nie planujecie).
-
-**Rekomendacja:** trzymajcie się zasady „minimum danych". Bez kont, bez emaili, bez cookies — to wasz największy atut pod kątem RODO.
+- [x] **Przejście na 3-literowy kod Hollanda (np. RIA, SEC, EAS):**
+  - [x] Zmiana logiki w `js/scoring.js`: wyliczanie pełnego 3-elementowego wektora dominujących wymiarów (z 6 kategorii: R, I, A, S, E, C).
+  - [x] Zachowanie 15 archetypów profili jako chwytliwych „typów” marketingowych (do udostępniania i grafik), ale ranking zawodów liczony z pełnego kodu 3-literowego.
+- [x] **Wdrożenie 3–4 pytań o sytuację życiową:**
+  - [x] Pytanie 1: Etap życia / status (uczeń szkoły średniej / student / pracuję, ale chcę zmienić branżę / szukam pracy).
+  - [x] Pytanie 2: Edukacja (czy studia wchodzą w grę: tylko bez studiów / rozważam studia zaoczne/podyplomowe / chcę iść na dzienne studia).
+  - [x] Pytanie 3: Zasoby na przebranżowienie (ile czasu tygodniowo możesz poświęcić: do 5h / 10–20h / pełny etat; jaki budżet: 0 zł / do 1000 zł / do 5000 zł+).
+  - [x] Pytanie 4: Tryb pracy (praca stacjonarna / hybrydowa / 100% zdalna / praca fizyczna-terenowa).
+- [x] **Optymalizacja momentu zadawania pytań (Psychologia zaangażowania):**
+  - [x] Nie zadawać pytań demograficznych na samym starcie (bariera wejścia).
+  - [x] Umieścić je płynnie po pierwszych 3–4 łatwych pytaniach RIASEC, gdy użytkownik wszedł już w rytm rozwiązywania testu.
+- [ ] **Uczciwy ekran podsumowania przed wynikiem:**
+  - [ ] Usunięcie pustego ekranu lub sztucznych animacji „analizowania przez super-algorytm”.
+  - [ ] Wyświetlenie prawdziwego podsumowania cząstkowego: *„Najsilniej rezonujesz z obszarami: Realistyczny (80%) i Badawczy (65%). Generujemy Twój profil...”*.
 
 ---
 
-#### 📊 Podsumowanie formalności — plan minimum
+## 4. Filar 4: Copywriting, Uczciwość i Budowa Zaufania
 
-| # | Co | Priorytet | Koszt | Czas |
-|---|---|---|---|---|
-| 1 | Działalność nierejestrowa | 🔴 Przed paywallem | 0 zł | 1 dzień |
-| 2 | Regulamin + polityka prywatności | 🔴 Przed paywallem | 0 zł (piszemy sami) | 1 wieczór |
-| 3 | Checkbox prawa odstąpienia | 🔴 Przed paywallem | 0 zł (implementacja) | 30 min |
-| 4 | Ewidencja sprzedaży | 🟡 Przy pierwszej sprzedaży | 0 zł (arkusz) | na bieżąco |
-| 5 | Self-hosting fontu Inter | 🟢 Opcjonalne | 0 zł | 15 min |
-| 6 | Konsultacja z prawnikiem | 🟢 Opcjonalne | 200–500 zł | jednorazowo |
+*Koniec z obietnicami bez pokrycia. Prawdziwe liczby i transparentność budują wyższą sprzedaż.*
 
-> **Koszt minimalny uruchomienia paywalla legalnie: 0 zł + czas.** Regulamin i politykę piszemy sami — serwis jest prosty. Prawnik opcjonalnie.
-
-</details>
-
-<details open>
-<summary><strong>🧰 Backlog — co dodać / poprawić (rozwiń)</strong></summary>
-
-<br>
-
-### 🚀 FAZA 1: Dopieszczanie MVP (do pokazania)
-
-### ✍️ Treści
-
-- [x] Rozbudować opisy 15 profili — każdy ma teraz 2–3 akapity (ton wspierający)
-- [x] Zweryfikować realne, aktualne linki do darmowych kursów (lipiec 2026): Urząd Pracy, PARP BUR, Barometr Zawodów, ZSK, Grow with Google, HubSpot, freeCodeCamp, The Odin Project, Khan Academy, Coursera, YouTube. W `js/results-data.js` (RESOURCES + UNIVERSAL_RESOURCES).
-- [x] **Dopracować teksty na landingu** — ZROBIONE
-- [ ] Okresowo sprawdzać, czy linki nadal działają (zwłaszcza grow.google i strony gov.pl)
-
-### ✨ Funkcje / UX
-
-- [x] **Po wyniku: gotowy prompt do AI (ChatGPT / Claude)** — ZROBIONE. Przycisk „Wygeneruj i skopiuj prompt" na ekranie wyniku pokazuje i kopiuje do schowka spersonalizowany prompt.
-- [x] **Testy widoków: telefon / iPad / komputer** — sprawdzić układ na realnych urządzeniach i w devtools (różne szerokości ekranu). **← do zrobienia później**
-- [ ] Ekran historii wyników (z localStorage)
-- [x] Przycisk „Udostępnij wynik" (Web Share API + fallback) — *zrobione, zintegrowane na ekranie wyniku*
-- [ ] Wynik jako grafika do pobrania (canvas)
-- [ ] Wersja EN / UA
-
-### 🎨 Design — redesign „liquid glass"
-
-- [x] **Efekt „liquid glass" (glassmorphism)** — karty, przyciski, nawigacja z `backdrop-filter: blur()` + transparentne tła + subtelne gradienty. Styl Apple Vision Pro / iOS 26.
-- [x] **Nowoczesna typografia** — Google Fonts (Inter) zamiast systemowych.
-- [x] **Gradienty i głębia** — tło z subtelnymi gradient mesh / blob-ami, layered shadows na kartach.
-- [x] **Mikro-animacje** — hover effects na przyciskach, smooth transitions, floating blobs w tle.
-- [x] **Ikony kategorii RIASEC** — kolory dostosowane do dark mode.
-- [x] **Favicon** — dodany emoji kompasu.
-
-### ♿ Accessibility
-
-- [x] `role="progressbar"` + `aria-valuenow` / `aria-valuemax` na pasku postępu
-- [x] `aria-pressed` na przyciskach odpowiedzi
-- [ ] Focus management po przejściu do nowego pytania
-
-### 🔧 Bugi / brakująca logika
-
-- [x] **Wznowienie postępu** — ZROBIONE. Odświeżenie strony w trakcie quizu nie powoduje już utraty postępu (wznawiamy z localStorage w funkcji `init()`).
-
-### 🌐 SEO / social
-
-- [x] **Meta tagi Open Graph + Twitter Card** — ZROBIONE. Tagi (w tym miejsce na obrazek og-image.jpg) dodane w `<head>`.
-- [x] **Structured data (FAQ schema)** — ZROBIONE. Dodany kod JSON-LD z najczęstszymi pytaniami do wyszukiwarki Google.
-- [x] **Canonical URL** — ZROBIONE. Dodany tag wskazujący oryginalny adres, chroni przed duplikacją treści.
+- [ ] **Wyeliminowanie fałszywych obietnic (Compliance & UOKiK):**
+  - [ ] Zamiana „baza 50+ zawodów” na faktyczną liczbę: *„18 zawodów precyzyjnie dobranych do Twojej sytuacji i kodu RIASEC”*.
+  - [ ] Usunięcie sformułowań: „naukowy algorytm”, „precyzyjna diagnostyka uniwersytecka” — zastąpienie rzetelnym: *„test oparty na metodologii RIASEC Johna Hollanda, powszechnie stosowanej przez certyfikowanych doradców kariery”*.
+- [ ] **Przepisanie nagłówków pod realny problem (Ból klienta):**
+  - [ ] Nagłówek główny: Zamiast nudnego *„Nie wiesz w którą stronę iść?”* → *„Masz dość obecnej pracy? Sprawdź, do jakich zawodów pasujesz i jak do nich wejść – także bez studiów.”*
+  - [ ] Podtytuł: *„5 minut, bez rejestracji. Wynik od razu, za darmo. Pełny plan wdrożenia z polskimi zarobkami i kursami – jeśli zechcesz.”*
+  - [ ] Przycisk CTA zakupu: Zamiast *„Kup pełny raport za 5 zł”* → *„Odblokuj mój plan kariery – 19 zł”*.
+- [ ] **Dodanie elementów budujących autorytet (Social Proof & Trust):**
+  - [ ] **Sekcja „O autorze” / „Kim jestem”:** Zdjęcie, imię, krótka historia dlaczego powstał CheckYourself, bezpośredni kontakt e-mail. Ludzie kupują od człowieka, nie od anonimowej strony.
+  - [ ] **Licznik wykonanych testów:** Prawdziwy licznik pobierany z serwera (np. *„Ponad 3 400 osób sprawdziło swój profil”*).
+  - [ ] **Podstrona „Jak działa test”:** Przejrzyste wyjaśnienie modelu Hollanda, źródła danych o płacach (GUS/Barometr) oraz ograniczeń quizu.
+  - [ ] **Przykładowy raport PDF do wglądu:** 2-stronicowy podgląd demonstracyjny raportu dla jednego przykładowego profilu, by klient widział estetykę i jakość przed zakupem.
 
 ---
 
-### ⏳ FAZA 2: Płatność, Serwery i Formalności (na później)
+## 5. Filar 5: Cennik, Pakiety i Polityka Zwrotów
 
-#### 💳 Płatność i prawo
-- [ ] **Domena:** Wykupić domenę (np. kierunekkariera.pl) i wpisać ją do Regulaminu
-- [ ] **E-mail:** Stworzyć e-mail kontaktowy (np. kontakt@domena.pl) i wpisać do Regulaminu
-- [ ] Wybrać dostawcę płatności (Stripe / Przelewy24 / PayU) i zaktualizować § 4 Regulaminu
-- [ ] Zintegrować checkbox utraty prawa odstąpienia przed płatnością
+*Podniesienie ceny do poziomu rynkowego, wyeliminowanie prowizji Stripe zjadającej zysk, wprowadzenie drabinki cenowej.*
 
-#### 🛠️ Backend i infrastruktura
-- [ ] Przenieść pełne profile do `api/_profiles.js` (ukryć przed klientem)
-- [ ] Dodać funkcje serverless: `api/create-payment.js` + `api/verify-payment.js`
-- [ ] Dodać `js/payment.js` + ekran paywall (zasłonięty wynik dopóki nie ma zapłaty)
-- [ ] Deploy na Vercel/Netlify z podpiętą domeną
-- [ ] Prosta analityka bez cookies (Plausible/GoatCounter)
-
-</details>
+- [x] **Nowa struktura cenowa (3 pakiety):**
+  - [x] **Pakiet Podstawowy (0 zł):** Dominujący typ, kod 3-literowy, wykres 6 wymiarów, opis profilu + **Darmowa próbka raportu: zawód nr 1 z pełnymi zarobkami i 1. tygodniem planu**.
+  - [x] **Pełny Raport Kariery (19 zł brutto na start, po 300 wizytach test 29 zł):** Wszystkie 18 zawodów, polskie zarobki, czas i koszt uprawnień, pełny 12-tygodniowy plan dla top 3 zawodów, przewodnik po bonach UP/BUR + **Raport PDF na e-mail**.
+  - [x] **Pakiet Raport + Rozmowa 1:1 (129 zł brutto):** Pełny raport + 45 minut wideorozmowy online z doradcą kariery + audyt CV/LinkedIn. Pełni rolę kotwicy cenowej (*price decoying*) i daje wysoką marżę.
+- [x] **Wdrożenie 14-dniowej gwarancji satysfakcji:**
+  - [x] Komunikat na paywallu i w mailu: *„14 dni na bezwarunkowy zwrot pieniędzy. Jeśli raport nie da Ci wartości, napisz na maila — zwracamy 100% kwoty bez zbędnych pytań.”*
+  - [x] Usunięcie strachu przed zakupem („zapłacę i dostanę nic niewarty zrzut ekranu”).
+- [x] **Zgodność z prawem konsumenckim (Stripe Checkout):**
+  - [x] Klauzula zgody w Stripe Checkout oraz na paywallu: *„Wyrażam zgodę na natychmiastowe dostarczenie treści cyfrowych. Przyjmuję do wiadomości, że tracę ustawowe prawo do odstąpienia od umowy (z zachowaniem dobrowolnej 14-dniowej gwarancji satysfakcji).”*
+  - [x] Bezpieczeństwo podatkowe i limit działalności nierejestrowej (monitorowanie limitu kwartalnego 10 813,50 zł w 2026 r.).
 
 ---
 
-_Notatnik roboczy · aktualizujemy przy każdej większej zmianie · powiązane: [DOKUMENTACJA.md](./DOKUMENTACJA.md)_
+## 6. Filar 6: Lejek Sprzedażowy i UX/UI Mobile-First
+
+*Większość ruchu to smartfony. Lejek quizowy musi konwertować między wynikiem a płatnością.*
+
+- [x] **Naprawa ekranu głównego (Above The Fold na telefonie):**
+  - [x] Przesunięcie przycisku „Rozpocznij test” powyżej linii zgięcia ekranu (ekrany 375×812 px).
+  - [x] Skrócenie wstępnego nagłówka i przesunięcie boksu zasad poniżej przycisku akcji.
+- [x] **Likwidacja wielkiego banera cookies:**
+  - [x] Strona nie korzysta z inwazyjnych ciasteczek 3rd party ani narzędzi Meta/Google Pixel wymagających consent mode.
+  - [x] Zastąpienie zasłaniającego 30% ekranu banera jednym dyskretnym zdaniem w stopce z linkiem do Polityki Prywatności.
+- [x] **Galeria 15 postaci na stronie głównej:**
+  - [x] Sekcja wizualna: responsywna karuzela/siatka 15 postaci z nazwami, kodami RIASEC i hasłem: *„Którą z tych 15 postaci jesteś Ty?”*.
+  - [x] Wykorzystanie najmocniejszego atutu graficznego projektu od pierwszej sekundy kontaktu ze stroną.
+- [x] **Nowy model prezentacji na ekranie wyniku (Próbka zamiast atrapy):**
+  - [x] Usunięcie rozmytego, nieczytelnego bloku CSS blur.
+  - [x] Prezentacja zawodu nr 1 w pełnej krasie (opis, realne stawki w Polsce, 1. tydzień planu).
+  - [x] Bezpośrednio pod próbką boks paywalla: *„To jest 1 z 18 dopasowanych do Ciebie zawodów. Odblokuj pozostałe 17 ścieżek oraz kompletny plan na 12 tygodni za 19 zł.”*
+- [x] **Mobilny pasek pływający (Sticky Bottom Bar):**
+  - [x] Pasek przyklejony do dolnej krawędzi ekranu na smartfonach pojawiający się po przewinięciu wykresu: *„Pełny raport kariery — 19 zł [Odblokuj teraz →]”*.
+- [x] **Generator karty Instagram Stories (1080×1920 px):**
+  - [x] Przeniesienie przycisku „Pobierz grafikę” tuż pod kartę profilu (a nie na sam koniec strony).
+  - [x] Generowanie pionowej grafiki gotowej do wklejenia na Stories/TikTok: duża postać, nazwa typu, 3-literowy kod, 3 supermoce i adres strony.
+  - [x] Przycisk natywnego udostępnienia na telefonie (`navigator.share` z plikiem graficznym).
+- [x] **Opcjonalne zbieranie e-maili od osób, które nie kupiły:**
+  - [x] Pod darmowym wynikiem pole: *„Wyślij mi mój wynik na e-mail”* z osobnym, domyślnie odznaczonym checkboxem na newsletter/porady (zgodność z RODO i UOKiK, baza SQLite `api/data/leads.db`).
+  - [x] Automatyczna wysyłka e-mail z darmowym podsumowaniem wyniku, zawodem nr 1, linkiem przywracającym sesję (`?restore=KOD`) oraz 1-kliknięciowym linkiem opt-out (`api/unsubscribe.php`).
+
+---
+
+## 7. Filar 7: Branding, Prawa Autorskie i Kwestie Prawne
+
+*Koniec z dwoma nazwami. Eliminacja ryzyka prawnego.*
+
+- [x] **Ujednolicenie marki do jednej nazwy:**
+  - [x] Całkowite wycofanie nazwy „KierunekKariera” (eliminacja kolizji prawnej).
+  - [x] Standaryzacja na markę **CheckYourself** (zgodną z domeną `checkyourself.pl`): logo, meta tagi, Open Graph, grafiki, stopka i nagłówki.
+- [x] **Aktualizacja dokumentów prawnych:**
+  - [x] Zastąpienie prywatnego adresu zamieszkania adresem korespondencyjnym / biurem wirtualnym w `docs/regulamin.html` i `docs/polityka-prywatnosci.html`.
+  - [x] Zapisanie procedury 14-dniowej dobrowolnej gwarancji satysfakcji.
+  - [x] Klauzula informacyjna dotycząca weryfikacji opinii konsumenckich (wymóg dyrektywy Omnibus).
+
+---
+
+## 8. Filar 8: Optymalizacja Techniczna i Wydajność
+
+*Szybka, lekka strona bez zbędnych zależności zewnętrznych.*
+
+- [ ] **Kompresja i formaty grafik:**
+  - [x] Konwersja 15 avatarów z ciężkich PNG (~480 KB) do formatu **WebP (3.6–8.5 KB, redukcja o 98.7%)** w rozdzielczości Retina 2×.
+  - [ ] Optymalizacja `og:image` do zoptymalizowanego WebP/JPG 1200×630 px (waga poniżej 150 KB).
+- [x] **Lokalne zasoby i eliminacja blokujących skryptów:**
+  - [x] Usunięcie ładowania biblioteki `html2canvas` z zewnętrznego CDN (zastąpione natywnym, 0-dependency generatorom Canvas 2D 1080×1920 px).
+  - [ ] Self-hosting fontu Inter (pliki `.woff2` lokalnie) lub optymalizacja ładowania.
+  - [ ] Dodanie fizycznego pliku `favicon.ico` oraz ikony `apple-touch-icon.png` (eliminacja błędów 404 w logach przeglądarek).
+- [ ] **Konfiguracja serwera i przekierowania:**
+  - [ ] Reguły w `.htaccess` / konfiguracji serwera: twarde przekierowanie 301 z `http://` oraz `www.` na docelowy adres `https://checkyourself.pl/`.
+  - [ ] Prawidłowe nagłówki cache dla plików statycznych (CSS, JS, WebP).
+- [ ] **Dostępność cyfrowa (A11y):**
+  - [ ] Dodanie czytelnych stylów fokusu dla nawigacji klawiaturą (`:focus-visible`).
+  - [ ] Obsługa reguły media query `prefers-reduced-motion` (wyłączenie animacji pływających linii i przejść dla osób z nadwrażliwością).
+
+---
+
+## 9. Filar 9: Analityka i Pomiar Lejka (Bez Cookies)
+
+*Decyzje oparte na liczbach, bez zgadywania i bez potrzeby stosowania banera cookie consent.*
+
+- [x] **Wdrożenie lekkiego systemu analityki bez ciasteczek:**
+  - [x] Dedykowany, lekki endpoint telemetryczny `api/track.php` zapisujący zdarzenia do bazy SQLite (`api/data/analytics.db`) z jednodniową anonimizacją RODO.
+- [x] **Pomiary 7 kluczowych kroków konwersji:**
+  - [x] **Krok 1 (Odwiedziny):** Wizyta na stronie + źródło ruchu (`page_view`).
+  - [x] **Krok 2 (Start):** Kliknięcie przycisku „Rozpocznij test” (`quiz_start`).
+  - [x] **Krok 3 (Zaangażowanie w quizie):** Ukończenie pytania 10 oraz pytania 20 (`checkpoint_10`, `checkpoint_20`).
+  - [x] **Krok 4 (Ukończenie):** Osiągnięcie ekranu wyniku (`quiz_complete`).
+  - [x] **Krok 5 (Widoczność paywalla):** Wykrycie przewinięcia do sekcji oferty (`paywall_view` przez Intersection Observer).
+  - [x] **Krok 6 (Intencja zakupu):** Kliknięcie w przycisk przejścia do płatności Stripe (`paywall_click`).
+  - [x] **Krok 7 (Płatność):** Zdarzenie zakupu potwierdzone przez webhook serwerowy (docelowy benchmark: 3–8% przejść z wyniku do zakupu) zapisywane w `orders.db` i `analytics.db`.
+- [ ] **Metodologia testowania zmian:**
+  - [ ] Zasada: jedna zmiana na 2 tygodnie (testowanie kolejno: cena 19 vs 29 zł, próbka zawodu vs rozmycie, nagłówek strony głównej).
+  - [ ] Prowadzenie prostego dziennika zmian (Changelog testów z datami).
+
+---
+
+## 10. Filar 10: Dystrybucja, SEO i Pozyskiwanie Ruchu
+
+*Darmowy ruch organiczny, wiralowość, współpraca z instytucjami, dopiero na końcu płatne reklamy.*
+
+- [ ] **Viral Social Loop (Udostępnienia):**
+  - [ ] Link udostępniany w sieci prowadzi do dedykowanej podstrony danego typu, np. `checkyourself.pl/typ/kreatywny-rzemieslnik` (z opisem typu i CTA: *„Sprawdź, czy też nim jesteś”*), a nie do generycznej strony głównej.
+  - [ ] Mechanizm porównania ze znajomym: *„Wyślij test znajomemu i sprawdźcie, czy pasujecie do tej samej pracy”*.
+- [ ] **Architektura podstron SEO (Content Hub):**
+  - [ ] **15 stron typów osobowości:** dedykowane strony dla każdego profilu RIASEC z opisem talentów i pasujących ról.
+  - [ ] **Baza artykułów o zawodach bez studiów (30–80 stron):** np. *„Jak zostać elektrykiem bez studiów w 2026 – zarobki, uprawnienia SEP, kursy”*. Treści te są jednocześnie bazą wiedzy do płatnego raportu.
+  - [ ] **Podstrony intencji życiowych:** np. *„Test predyspozycji zawodowych dla dorosłych”*, *„Jaki kierunek studiów wybrać po maturze”*, *„Co robić po technikum”*.
+- [ ] **Krótkie formy wideo (TikTok / Instagram Reels / YouTube Shorts):**
+  - [ ] Cykl: *„Którym typem jesteś?”* (15 filmów po 20 sekund omawiających cechy każdego profilu).
+  - [ ] Cykl: *„Zawód bez studiów w 60 sekund”* (zarobki, czas trwania kursu, koszt certyfikacji, gdzie szukać zleceń).
+  - [ ] Kampania przedmaturalna (luty–maj): *„Nie wiesz, co studiować? Sprawdź predyspozycje w 5 minut”*.
+- [ ] **Współpraca ze szkołami i doradcami zawodowymi:**
+  - [ ] Opracowanie darmowego „Trybu Klasy” dla doradców szkolnych (jeden link dla uczniów, doradca widzi zbiorczy wykres predyspozycji klasy bez danych osobowych).
+  - [ ] Outreach do 20–30 szkolnych doradców kariery na grupach branżowych.
+- [ ] **Programy partnerskie i afiliacja (Dodatkowy przychód):**
+  - [ ] Weryfikacja programów partnerskich sprawdzonych szkół policealnych, platform kursowych i certyfikujących.
+  - [ ] Transparentne oznaczenie linków afiliacyjnych w raportach.
+
+---
+
+## 11. Harmonogram Wdrożenia
+
+### 🔴 FAZA 1: Dni 1–30 — Naprawa Fundamentów i Szczelność
+> **Priorytet bezwzględny:** Dopóki raport można odblokować za darmo, inwestowanie w ruch i marketing jest marnowaniem zasobów.
+
+1. Usunięcie przycisku testerskiego, funkcji `toggleTestUnlock()` i backdoora URL `?paid=true`.
+2. Usunięcie płatnych treści z frontendu (`results-data.js`) i likwidacja warstwy CSS blur.
+3. Utworzenie bezpiecznego endpointu wydawania raportu i integracja webhooka Stripe.
+4. Ujednolicenie marki do **CheckYourself** (usunięcie kolizyjnej nazwy KierunekKariera).
+5. Podniesienie ceny do **19 zł**, dodanie 14-dniowej gwarancji i prawnych checkboxów w Stripe.
+6. Usunięcie inwazyjnego banera cookies i wdrożenie analityki 7 kroków bez cookies.
+7. Optymalizacja mobilna strony głównej (przycisk startu nad linią zgięcia).
+8. **Test Bramki 1:** Sprawdzenie szczelności paywalla, przejście pełnej ścieżki zakupu BLIK-iem w środowisku testowym.
+
+### 🟡 FAZA 2: Dni 31–60 — Przełomowa Wartość Produktu (Produkt wart 29 zł)
+> **Priorytet:** Zbudowanie raportu, który rozwiązuje realny problem i zachwyca klienta.
+
+1. Wdrożenie pytań o sytuację życiową oraz 3-literowego silnika scoringowego Hollanda.
+2. Rozbudowa bazy do 150 zawodów z polskimi zarobkami, czasem/kosztem wejścia i Barometrem Zawodów.
+3. Przygotowanie 12-tygodniowych planów działania dla zawodów.
+4. Opracowanie próbki zawodu nr 1 za darmo na ekranie wyniku (zamiast rozmytego bloku).
+5. Generator profesjonalnego pliku PDF wysyłanego automatycznie na e-mail kupującego.
+6. Galeria 15 postaci na stronie głównej i generator kart Stories 1080×1920 px.
+7. Dodanie sekcji „O mnie”, podstrony „Jak działa test” oraz formularza opinii po zakupie.
+8. Uruchomienie pakietu testowego z konsultacją 1:1 za 99–149 zł.
+9. **Test Bramki 2:** Pierwsze 50 realnych sprzedaży, wskaźnik zwrotów z gwarancji < 5%, zbieranie opinii od kupujących.
+
+### 🟢 FAZA 3: Dni 61–90 — Skalowanie Ruchu i Dystrybucja
+> **Priorytet:** Przekształcenie przetestowanego i dochodowego mechanizmu w powtarzalny biznes.
+
+1. Wdrożenie dedykowanych 15 podstron typów osobowości (`/typ/...`).
+2. Publikacja pierwszych 20–30 podstron zawodów bez studiów pod kątem SEO.
+3. Start publikacji krótkich form wideo (TikTok / Reels / Shorts) z postaciami.
+4. Przygotowanie narzędzia „Tryb Klasy” i kontakt ze szkolnymi doradcami kariery.
+5. Test płatnych kampanii reklamowych Meta Ads (budżet testowy ~300 zł) przy znanym współczynniku konwersji i wyliczonym maksymalnym CAC.
+6. A/B test ceny raportu: 19 zł vs 29 zł.

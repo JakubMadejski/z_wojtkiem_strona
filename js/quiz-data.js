@@ -15,10 +15,67 @@ const CATEGORIES = {
 };
 
 const QUESTIONS = [
-  // Runda 1
+  // Wprowadzenie RIASEC (Kroki 1–3)
   { id: "R1", category: "R", text: "Lubię pracować rękami - składać, naprawiać albo budować rzeczy." },
   { id: "I1", category: "I", text: "Lubię rozwiązywać zagadki, łamigłówki i problemy logiczne." },
   { id: "A1", category: "A", text: "Lubię tworzyć rzeczy od zera - grafiki, muzykę, teksty, filmy, cokolwiek własnego." },
+
+  // Pytania Sytuacyjne (Kroki 4–7: Filtry preferencji, wykształcenia i rynku)
+  {
+    id: "SIT_STAGE",
+    type: "situation",
+    situationKey: "stage",
+    category: "SITUATION",
+    eyebrow: "Krok 4 z 34 · Twoja sytuacja",
+    text: "Na jakim jesteś obecnie etapie życiowym?",
+    options: [
+      "Szkoła średnia / technikum (przed maturą lub wyborem kierunku)",
+      "Student lub niedawny absolwent uczelni",
+      "Pracuję na etacie, ale szukam zmiany lub przebranżowienia",
+      "Szukam pracy / obecnie bezrobotny",
+    ],
+  },
+  {
+    id: "SIT_EDU",
+    type: "situation",
+    situationKey: "education",
+    category: "SITUATION",
+    eyebrow: "Krok 5 z 34 · Twoja edukacja",
+    text: "Czy w Twoich planach zawodowych wchodzą w grę studia wyższe?",
+    options: [
+      "Tylko bez studiów — interesują mnie kursy, uprawnienia państwowe i praktyka",
+      "Dopuszczam studia zaoczne lub podyplomowe w trakcie pracy",
+      "Tak — planuję lub chcę ukończyć stacjonarne studia wyższe",
+    ],
+  },
+  {
+    id: "SIT_BUDGET",
+    type: "situation",
+    situationKey: "resources",
+    category: "SITUATION",
+    eyebrow: "Krok 6 z 34 · Czas i budżet",
+    text: "Ile czasu i budżetu możesz przeznaczyć na naukę nowego zawodu?",
+    options: [
+      "Do 5 godz./tydz., budżet 0 zł (tylko darmowe materiały i samouczki)",
+      "10–20 godz./tydz., budżet do 1 500 – 2 500 zł na kursy z certyfikatem",
+      "Pełny etat na naukę / budżet 5 000 zł+ lub bon z Urzędu Pracy (PUP / BUR)",
+    ],
+  },
+  {
+    id: "SIT_MODE",
+    type: "situation",
+    situationKey: "mode",
+    category: "SITUATION",
+    eyebrow: "Krok 7 z 34 · Środowisko pracy",
+    text: "Jaki tryb i środowisko pracy są dla Ciebie priorytetem?",
+    options: [
+      "100% praca zdalna / przed komputerem",
+      "Hybrydowo lub w biurze (kontakt z zespołem i ludźmi)",
+      "W terenie / z narzędziami / praca mobilna lub techniczna",
+    ],
+  },
+
+  // Dalsza część diagnozy RIASEC (Kroki 8–34)
   { id: "S1", category: "S", text: "Sprawia mi satysfakcję, gdy mogę komuś realnie pomóc." },
   { id: "E1", category: "E", text: "Lubię przekonywać innych do swoich pomysłów." },
   { id: "C1", category: "C", text: "Lubię porządek - w rzeczach, plikach, planach dnia." },
