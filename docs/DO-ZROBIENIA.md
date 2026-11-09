@@ -21,6 +21,97 @@
 
 - [x] **BRAMKA 1 (Gotowość do sprzedaży):** Zero możliwości odblokowania raportu za darmo (brak przycisków testowych, brak treści w JS/DOM, tokenizowany dostęp), wdrożona analityka 7 kroków lejka bez cookies, nowa cena 19 zł, legalna formuła w Stripe z 14-dniową gwarancją.
 - [x] **BRAMKA 2 (Wartość produktu):** Płatny raport zawiera 15–25 zawodów z polskimi realiami i zarobkami, 12-tygodniowy plan wdrożenia, generator PDF na e-mail, darmowa próbka zawodu nr 1 na ekranie wyniku (decyzja o likwidacji konsultacji 1:1 na rzecz skupienia się na skalowalnym raporcie PDF).
+- [ ] **BRAMKA 3 (Weryfikacja Audytu z 9 listopada 2026):** Pełne wdrożenie zaleceń niezależnego audytu (K1–K5, W1–W5, Ś1–Ś3, N) — szczegóły w [`docs/AUDYT-I-PLAN-POPRAWEK-9-LISTOPADA.md`](./AUDYT-I-PLAN-POPRAWEK-9-LISTOPADA.md).
+
+---
+
+## 🎯 AKTUALNY SPRINT: Wdrożenie Zaleceń Niezależnego Audytu (9.11.2026)
+
+> Szczegółowa specyfikacja techniczna i analiza błędów znajduje się w dokumencie:  
+> 📄 [`docs/AUDYT-I-PLAN-POPRAWEK-9-LISTOPADA.md`](./AUDYT-I-PLAN-POPRAWEK-9-LISTOPADA.md)
+
+### 🔴 Blok 1: Płatności i Bezpieczeństwo (K1–K5)
+- [ ] **[K1] Zabezpieczenie generatora PDF przed darmowym pobieraniem:**
+  - [ ] W `api/generate-pdf.php`: gałąź `preview=1` generuje wyłącznie 2-stronicową darmową próbkę (Okładka + Profil + Zawód nr 1) z półprzezroczystym znakiem wodnym *„PRÓBKA / DEMO”*.
+  - [ ] Weryfikacja podpisanego tokenu HMAC przed wydaniem pełnego 18-zawodowego PDF-a (sprawdzenie tokenu ma bezwzględne pierwszeństwo przed `preview`).
+  - [ ] Usunięcie na sztywno wpisanych danych testowych („Użytkownik Testowy”, 88/74/62%).
+- [ ] **[K2] Całkowite odcięcie płatnych treści z klienta:**
+  - [ ] Usunięcie z publicznego `js/results-data.js` pól `zawody`, `pierwszeKroki`, `kursyDarmowe` (pozostaje wyłącznie nazwa, opis, mocne strony, avatar i próbka zawodu nr 1).
+  - [ ] Zmiana logiki w `js/app.js`: likwidacja decydowania o dostępie w przeglądarce (`isReportUnlocked` bazujące na długości ciągu w sessionStorage).
+  - [ ] Płatne treści serwowane wyłącznie przez `api/report.php` po weryfikacji tokenu z serwera.
+- [ ] **[K3] Naprawa pustego ekranu po Stripe i przywracania `?restore=`:**
+  - [ ] Zapisywanie pełnej analizy (`sorted`, `scores`, `answers`, `situation`) w `localStorage` przed przejściem do płatności Stripe i odtwarzanie jej po powrocie.
+  - [ ] Wdrożenie bezpiecznej funkcji `analysisFromCode(c3, scores)` z normalizacją liter i odrzucaniem duplikatów (np. `RRR`).
+  - [ ] Zabezpieczenie `buildChart`: brak błędu `Cannot read properties of undefined (reading 'slice')` i brak fałszywych słupków przy braku surowych ocen (`noScores: true`).
+  - [ ] Przeniesienie tokenu autoryzacyjnego z `sessionStorage` do `localStorage` (trwałość po zamknięciu karty).
+  - [ ] Usuwanie `session_id` z adresu URL dopiero po pomyślnym wyrenderowaniu raportu.
+- [ ] **[K4] Czysta oferta 1-produktowa (19 zł):**
+  - [ ] Weryfikacja: wycięcie wszelkich pozostałości po pakiecie konsultacji (129 zł) ze wszystkich skryptów i szablonów.
+  - [ ] Pojedynczy, skupiony Payment Link Stripe na kwotę 19,00 PLN z parametrem `client_reference_id={KOD}`.
+- [ ] **[K5] Weryfikacja podpisu webhooka Stripe:**
+  - [ ] Weryfikacja nagłówka `Stripe-Signature` jako pierwsza instrukcja w `api/webhook.php`.
+  - [ ] Natychmiastowe zwracanie `HTTP 400 Bad Request` w przypadku braku lub niepoprawności sygnatury (odrzucenie przed odczytem typu zdarzenia).
+
+---
+
+### 🟡 Blok 2: Prawdziwość Oferty i Spójność Danych (W1–W3)
+- [ ] **[W1] Usunięcie niepopartych liczb i nieuprawnionych tytułów:**
+  - [ ] Usunięcie sztucznego dopisku `(85%)` przy etykiecie „Najczęściej wybierany” na paywallu.
+  - [ ] Usunięcie sztucznej sekwencji procentów dopasowania w PDF (97%, 96%... 80%).
+  - [ ] Zmiana „Certyfikat psychometryczny” na rzetelne: *„Raport predyspozycji zawodowych oparty na modelu RIASEC Johna Hollanda”*.
+  - [ ] Usunięcie hasła „Najwyższy współczynnik dopasowania” przy zawodzi nr 1.
+- [ ] **[W2] Spójność obietnic z zawartością:**
+  - [ ] Odblokowany widok na www wyświetla pełne 18 zawodów pobranych z `api/report.php` (spójność z PDF).
+  - [ ] Ujednolicenie informacji o objętości raportu PDF.
+  - [ ] Usunięcie Barometru Zawodów jako rzekomego źródła stawek płacowych; wskazanie GUS / OBW (Sedlak & Sedlak).
+  - [ ] Korekta nierealistycznych stawek płacowych w bazie 150 zawodów (np. florysta).
+  - [ ] Zróżnicowanie 12-tygodniowych planów działania pod specyfikę zawodów.
+  - [ ] Ujednolicenie kwoty bonu PUP na spójną wartość (*do ok. 8 500 zł*).
+  - [ ] Zagwarantowanie identyczności zawodu nr 1 w próbce na stronie i w PDF.
+  - [ ] Poprawienie literówek w kodach (np. `SCC`/`ICC`) oraz formatowania surowych kluczy w PDF.
+- [ ] **[W3] Realny wpływ pytań sytuacyjnych na dobór zawodów:**
+  - [ ] Sortowanie i filtrowanie zawodów według preferencji edukacyjnych (`bez_studiow: true`).
+  - [ ] Wybór „Tylko bez studiów” bezwzględnie wymusza, by próbka zawodu nr 1 oraz priorytety nie wymagały ukończenia studiów wyższych.
+  - [ ] Przekazywanie odpowiedzi sytuacyjnych do backendu i generatora PDF.
+
+---
+
+### 🟢 Blok 3: Zgodność Prawna (W4–W5)
+- [ ] **[W4] Aktualizacja Polityki Prywatności (`docs/polityka-prywatnosci.html`):**
+  - [ ] Usunięcie deklaracji „nie zbieramy Twoich danych” i „100% zgodna z RODO”.
+  - [ ] Opisanie telemetrii bez cookies (`api/track.php`, art. 6 ust. 1 lit. f RODO).
+  - [ ] Opisanie formularza lead magnet / newsletter (`api/subscribe.php`, art. 6 ust. 1 lit. a RODO).
+  - [ ] Wskazanie przetwarzania płatności przez Stripe oraz hostingu na home.pl.
+  - [ ] Klauzula informacyjna bezpośrednio przy formularzu e-mail na stronie.
+- [ ] **[W5] Aktualizacja Regulaminu (`docs/regulamin.html`):**
+  - [ ] Prawidłowe powołanie art. 38 ust. 1 pkt 13 Ustawy o prawach konsumenta.
+  - [ ] Wyraźna klauzula utraty prawa do odstąpienia z chwilą dostarczenia raportu cyfrowego PDF.
+  - [ ] Usunięcie nieczynnej platformy ODR (zamkniętej w 2025 r.); dodanie WIIH i Rzeczników Konsumentów.
+  - [ ] Wymienienie aktualnych metod płatności Stripe (BLIK, karty, Apple Pay, Google Pay).
+  - [ ] Zapisy o zgodności treści cyfrowej z umową (art. 43k–43m).
+
+---
+
+### 🔵 Blok 4: Jakość Kodu, UX i Poprawki Średnie/Niskie (Ś1–Ś3, N)
+- [ ] **[Ś1] Wersjonowanie postępu quizu:**
+  - [ ] Zapisywanie `kk_progress` ze strukturą `{ v: QUIZ_VERSION, index, answers }`.
+  - [ ] Wznawianie precyzyjnie od `answers.length`, reset przy niezgodności wersji.
+- [ ] **[Ś2] Bezpieczeństwo i obsługa błędów sieci w `report.php`:**
+  - [ ] Walidacja `is_string($_GET['session_id'])` w `api/report.php` (ochrona przed 500 przy tablicy).
+  - [ ] Zwracanie jednoznacznych kodów HTTP (400, 402, 403).
+  - [ ] Czytelny komunikat błędu z kontaktem pomocy w przypadku problemów sieciowych.
+- [ ] **[Ś3] Poprawki tekstów, FAQ i widoku mobilnego:**
+  - [ ] Aktualizacja liczby pytań w meta, OG, Twitter i FAQ na 34 pytania.
+  - [ ] Usunięcie słowa „precyzyjnie” z `index.html`.
+  - [ ] Dynamiczne podpowiedzi klawiszy przy pytaniach sytuacyjnych.
+  - [ ] Sticky Bottom Bar: ograniczenie do mobile (`max-width: 640px`) i dodanie `padding-bottom` chroniącego stopkę.
+  - [ ] Responsywny nagłówek h1 na małych ekranach (iPhone SE / 375 px).
+- [ ] **[N1–N7] Higiena kodu i konfiguracja serwerowa:**
+  - [ ] Twarda blokada bezpośredniego dostępu do `api/config.php` w `.htaccess`.
+  - [ ] Zabezpieczenie przed podwójnym kliknięciem `goBack` podczas animacji.
+  - [ ] Ujednolicenie przesyłania 3-literowego kodu w telemetrii (`quiz_complete`, `paywall_view`).
+  - [ ] Usunięcie martwego kodu (nieużywane selektory CSS, stare komentarze).
+  - [ ] Dodanie plików `favicon.ico` i `apple-touch-icon.png` (eliminacja 404).
 
 ---
 
