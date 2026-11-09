@@ -11,30 +11,23 @@ sendCorsHeaders();
 
 $code = isset($_GET['code']) ? strtoupper(trim($_GET['code'])) : 'RIA';
 $code = preg_replace('/[^RIASEC]/', '', $code) ?: 'RIA';
-$package = isset($_GET['package']) && $_GET['package'] === 'consultation' ? 'consultation' : 'report';
 
 // Bazowy URL aplikacji (wykrywany dynamicznie)
 $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "https://";
 $host = $_SERVER['HTTP_HOST'] ?? 'checkyourself.pl';
 $baseUrl = $protocol . $host;
 
-// Konfiguracja pakietu
-if ($package === 'consultation') {
-    $unitAmount = 12900; // 129.00 PLN w groszach
-    $productName = 'Pakiet: Raport Kariery PDF + Konsultacja 1:1 (45 min)';
-    $productDesc = 'Pełny 12-stronicowy raport PDF + 45 minut indywidualnej wideorozmowy z doradcą kariery i audyt CV';
-} else {
-    $unitAmount = 1900; // 19.00 PLN w groszach
-    $productName = 'Pełny Raport Kariery CheckYourself (12 stron A4 PDF)';
-    $productDesc = 'Diagnoza psychometryczna RIASEC, 18 zawodów z zarobkami 2026 i 12-tygodniowa roadmapa';
-}
+// Konfiguracja produktu cyfrowego (Raport PDF 19 zł)
+$unitAmount = 1900; // 19.00 PLN w groszach
+$productName = 'Pełny Raport Kariery CheckYourself (12 stron A4 PDF)';
+$productDesc = 'Diagnoza psychometryczna RIASEC, 18 zawodów z zarobkami 2026 i 12-tygodniowa roadmapa';
 
 // Fallback do Payment Linka gdy brak właściwego klucza Stripe Secret w środowisku
 $isPlaceholder = (strpos(STRIPE_SECRET_KEY, 'replace_with_real') !== false);
 
 if ($isPlaceholder) {
     // Przekieruj na istniejący Payment Link z parametrem client_reference_id
-    $fallbackUrl = "https://buy.stripe.com/dRm5kw9Qs3OR2KG48k48000?client_reference_id=" . urlencode($code . '_' . $package);
+    $fallbackUrl = "https://buy.stripe.com/dRm5kw9Qs3OR2KG48k48000?client_reference_id=" . urlencode($code);
     header("Location: " . $fallbackUrl);
     exit;
 }
@@ -44,12 +37,12 @@ $postData = [
     'mode' => 'payment',
     'success_url' => $baseUrl . '/?session_id={CHECKOUT_SESSION_ID}',
     'cancel_url' => $baseUrl . '/',
-    'client_reference_id' => $code . '_' . $package,
+    'client_reference_id' => $code,
     'payment_method_types[0]' => 'card',
     'payment_method_types[1]' => 'blik',
     'payment_method_types[2]' => 'p24',
     'metadata[code]' => $code,
-    'metadata[package]' => $package,
+    'metadata[package]' => 'report',
     'line_items[0][price_data][currency]' => 'pln',
     'line_items[0][price_data][unit_amount]' => $unitAmount,
     'line_items[0][price_data][product_data][name]' => $productName,

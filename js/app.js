@@ -410,89 +410,53 @@ function renderResult(analysis) {
   const codeParam = encodeURIComponent(analysis.code3 || analysis.code);
   const paywallCardHtml = `
     <div class="paywall-card" id="paywall-card">
-      <div class="paywall-ribbon">WYBIERZ SWÓJ PAKIET</div>
+      <div class="paywall-ribbon">PEŁNY DOSTĘP</div>
       <div class="paywall-icon">🎯</div>
       <h2 class="paywall-title">Odblokuj Swój Pełny Raport Kariery</h2>
       <p class="paywall-subtitle">
         Poznaj pozostałe 17 zawodów dopasowanych do Twojego profilu <strong>${profile.nazwa}</strong> (${analysis.code3 || analysis.code}), polskie widełki płacowe 2026 oraz 12-tygodniowy plan wdrożeniowy.
       </p>
 
-      <div class="pricing-tiers-grid">
-        <!-- Pakiet 1: Samodzielny Raport PDF (19 zł) -->
-        <div class="pricing-tier-card pricing-tier-popular">
-          <div class="pricing-tier-badge">NAJCZĘŚCIEJ WYBIERANY (85%)</div>
-          <h3 class="pricing-tier-title">Pełny Raport Kariery PDF</h3>
-          <p class="pricing-tier-subtitle">Kompleksowa diagnoza i plan działania do samodzielnego wdrożenia</p>
-          
-          <div class="pricing-tier-price">
-            <span class="price-val">19 zł</span>
-            <span class="price-sub">jednorazowo · dostęp natychmiast</span>
-          </div>
+      <ul class="paywall-checklist">
+        <li><span>✓</span> <div><strong>18 zawodów dopasowanych</strong> do kodu ${analysis.code3 || analysis.code} i sytuacji życiowej</div></li>
+        <li><span>✓</span> <div><strong>Polskie zarobki 2026</strong> (Junior / Mid / Senior wg GUS i Barometru Zawodów)</div></li>
+        <li><span>✓</span> <div><strong>12-tygodniowa roadmapa</strong> krok po kroku dla TOP 3 zawodów</div></li>
+        <li><span>✓</span> <div><strong>Przewodnik po dofinansowaniach</strong> (bon szkoleniowy PUP do 8 500 zł, BUR do 80%)</div></li>
+        <li><span>✓</span> <div><strong>Oficjalny Raport PDF (12 stron A4)</strong> z certyfikatem wysyłany na e-mail</div></li>
+        <li><span>✓</span> <div><strong>14 dni gwarancji satysfakcji</strong> (100% zwrotu bez zbędnych pytań)</div></li>
+      </ul>
 
-          <ul class="pricing-tier-list">
-            <li><span class="tier-check">✓</span> <div><strong>18 zawodów dopasowanych</strong> do kodu ${analysis.code3 || analysis.code}</div></li>
-            <li><span class="tier-check">✓</span> <div><strong>Polskie zarobki 2026</strong> (Junior / Mid / Senior)</div></li>
-            <li><span class="tier-check">✓</span> <div><strong>12-tygodniowa roadmapa</strong> dla TOP 3 zawodów</div></li>
-            <li><span class="tier-check">✓</span> <div><strong>Przewodnik po dofinansowaniach</strong> (bon PUP do 8 500 zł, BUR 80%)</div></li>
-            <li><span class="tier-check">✓</span> <div><strong>Oficjalny PDF (12 stron A4)</strong> wysyłany na e-mail</div></li>
-            <li><span class="tier-check">✓</span> <div><strong>14 dni gwarancji satysfakcji</strong> (100% zwrotu)</div></li>
-          </ul>
-
-          <a
-            id="stripe-payment-link"
-            href="api/create-checkout.php?package=report&code=${codeParam}"
-            class="btn-stripe-pay btn-tier-cta"
-          >
-            Odblokuj raport – 19 zł →
-          </a>
-
-          <div class="paywall-badges-row">
-            <span class="paywall-badge-pill">BLIK</span>
-            <span class="paywall-badge-pill">Apple Pay</span>
-            <span class="paywall-badge-pill">Google Pay</span>
-            <span class="paywall-badge-pill">Karta</span>
-          </div>
-        </div>
-
-        <!-- Pakiet 2: Raport + Konsultacja 1:1 (129 zł) - Price Anchor & VIP Upsell -->
-        <div class="pricing-tier-card pricing-tier-vip">
-          <div class="pricing-tier-badge badge-vip">KOMPLEKSOWE WSPARCIE 1:1</div>
-          <h3 class="pricing-tier-title">Raport + Konsultacja 1:1</h3>
-          <p class="pricing-tier-subtitle">Wszystko z Raportu PDF + 45 minut indywidualnej pracy z doradcą</p>
-
-          <div class="pricing-tier-price">
-            <span class="price-val">129 zł</span>
-            <span class="price-sub">jednorazowo · limit: 5 miejsc / tydz.</span>
-          </div>
-
-          <ul class="pricing-tier-list">
-            <li><span class="tier-check">✓</span> <div><strong>Wszystko z Pełnego Raportu PDF (12 stron)</strong></div></li>
-            <li><span class="tier-check star">⭐</span> <div><strong>45 min wideorozmowy 1:1</strong> (Google Meet) z doradcą kariery</div></li>
-            <li><span class="tier-check star">⭐</span> <div><strong>Osobisty audyt Twojego CV i profilu LinkedIn</strong> pod kątem branży</div></li>
-            <li><span class="tier-check star">⭐</span> <div><strong>Dobór optymalnej dotacji (PUP / BUR)</strong> w Twoim powiecie</div></li>
-            <li><span class="tier-check star">⭐</span> <div><strong>Przełamanie blokad</strong> i ułożenie realnego harmonogramu</div></li>
-            <li><span class="tier-check">✓</span> <div><strong>14 dni gwarancji satysfakcji</strong> na całą usługę</div></li>
-          </ul>
-
-          <a
-            id="stripe-consultation-link"
-            href="api/create-checkout.php?package=consultation&code=${codeParam}"
-            class="btn-stripe-pay btn-tier-cta btn-tier-vip"
-          >
-            Wybierz pakiet z konsultacją – 129 zł →
-          </a>
-
-          <p class="vip-booking-note">📅 Rezerwacja terminu w kalendarzu od razu po zakupie</p>
-        </div>
+      <div class="paywall-price-wrap">
+        <span class="paywall-price-num">19 zł</span>
+        <span class="paywall-price-period">/ opłata jednorazowa</span>
       </div>
 
-      <div class="paywall-guarantee-box" style="margin-top: 24px;">
-        🛡️ <strong>14 dni bezwarunkowej gwarancji satysfakcji:</strong> Jeśli którykolwiek pakiet nie przyniesie Ci pełnej jasności co do dalszej drogi zawodowej, napisz do nas maila — zwracamy 100% środków bez zadawania zbędnych pytań.
+      <a
+        id="stripe-payment-link"
+        href="api/create-checkout.php?code=${codeParam}"
+        class="btn-stripe-pay"
+      >
+        Odblokuj raport – 19 zł →
+      </a>
+
+      <div class="paywall-badges-row">
+        <span class="paywall-badge-pill">BLIK</span>
+        <span class="paywall-badge-pill">Apple Pay</span>
+        <span class="paywall-badge-pill">Google Pay</span>
+        <span class="paywall-badge-pill">Karta</span>
+      </div>
+
+      <div class="paywall-security-note">
+        🔒 Bezpieczna płatność szyfrowana SSL przez Stripe · Dostęp natychmiastowy
+      </div>
+
+      <div class="paywall-guarantee-box">
+        🛡️ <strong>14 dni bezwarunkowej gwarancji satysfakcji:</strong> Jeśli raport nie przyniesie Ci pełnej jasności co do dalszej drogi zawodowej, napisz do nas maila — zwracamy 100% środków bez zadawania pytań.
       </div>
       <p style="font-size: 11px; color: var(--color-text-muted); margin-top: 10px; line-height: 1.4; text-align: center;">
         Wybierając płatność, wyrażasz zgodę na natychmiastowe rozpoczęcie świadczenia i dostarczenie raportu PDF na podany e-mail przed upływem terminu odstąpienia od umowy (art. 38 pkt 13 Ustawy o prawach konsumenta).
       </p>
-    </div>
+    </div>`;
   `;
 
   // Karta Lead Magnet: Zapisz wynik na e-mail (Bezpłatnie)
@@ -739,14 +703,7 @@ function renderResult(analysis) {
   const stripePayBtn = document.getElementById("stripe-payment-link");
   if (stripePayBtn) {
     stripePayBtn.addEventListener("click", () => {
-      trackFunnel("paywall_click", 6, { code: analysis.code, package: "report" });
-    });
-  }
-
-  const stripeConsultationBtn = document.getElementById("stripe-consultation-link");
-  if (stripeConsultationBtn) {
-    stripeConsultationBtn.addEventListener("click", () => {
-      trackFunnel("paywall_click", 6, { code: analysis.code, package: "consultation" });
+      trackFunnel("paywall_click", 6, { code: analysis.code });
     });
   }
 

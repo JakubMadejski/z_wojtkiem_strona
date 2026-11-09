@@ -85,30 +85,11 @@ function sendOrderConfirmationEmail(array $orderData, string $pdfFilePath): arra
         $mailAttachmentName = 'Raport-Kariery-CheckYourself-' . $certId . '.pdf';
         $mail->addAttachment($pdfFilePath, $mailAttachmentName);
 
-        $isConsultation = (($orderData['package'] ?? '') === 'consultation');
-        $productTitle = $isConsultation ? "Pakietu: Raport Kariery PDF + Konsultacja 1:1" : "Pełnego Raportu Kariery CheckYourself";
+        $productTitle = "Pełnego Raportu Kariery CheckYourself";
 
         // Treść wiadomości
         $mail->isHTML(true);
-        $mail->Subject = $isConsultation 
-            ? "Twój Raport Kariery CheckYourself + Konsultacja 1:1 [Certyfikat {$certId}]"
-            : "Twój Osobisty Raport Kariery CheckYourself [Kod: {$code}] — Certyfikat {$certId}";
-
-        $consultationCardHtml = $isConsultation ? <<<HTML
-    <div style="background: #eef2ff; border: 2px solid #6366f1; border-radius: 8px; padding: 18px; margin: 20px 0;">
-      <span style="background: #4f46e5; color: #ffffff; font-size: 11px; font-weight: bold; padding: 3px 8px; border-radius: 4px; text-transform: uppercase;">Twój Pakiet Konsultacyjny 1:1</span>
-      <h3 style="color: #1e1b4b; margin: 8px 0 6px 0; font-size: 16px;">Indywidualna wideorozmowa z doradcą kariery (45 minut)</h3>
-      <p style="margin: 0 0 12px 0; font-size: 14px; color: #312e81; line-height: 1.45;">
-        Twój pakiet obejmuje 45-minutową wideorozmowę 1:1 przez Google Meet, audyt Twojego obecnego CV/LinkedIn oraz dobór ścieżki finansowania kursów w Twoim powiecie.
-      </p>
-      <a href="https://calendly.com/checkyourself/konsultacja-kariery" style="display: inline-block; background: #4f46e5; color: #ffffff !important; text-decoration: none; padding: 12px 20px; border-radius: 6px; font-weight: bold; font-size: 14px;">
-        📅 Wybierz termin w kalendarzu online →
-      </a>
-      <p style="font-size: 12px; color: #4338ca; margin: 10px 0 0 0;">
-        Możesz również po prostu odpowiedzieć na tę wiadomość, podając preferowane dni i godziny spotkania oraz załączając swoje CV.
-      </p>
-    </div>
-HTML : '';
+        $mail->Subject = "Twój Osobisty Raport Kariery CheckYourself [Kod: {$code}] — Certyfikat {$certId}";
 
         // Szablon wiadomości HTML
         $htmlBody = <<<HTML
@@ -138,8 +119,6 @@ HTML : '';
   <div class="content">
     <p>Cześć <strong>{$recipientName}</strong>,</p>
     <p>Dziękujemy za zakup <strong>{$productTitle}</strong>. Twój oficjalny, 12-stronicowy dokument w formacie PDF został wygenerowany i znajduje się w załączniku do tej wiadomości.</p>
-    
-    {$consultationCardHtml}
     
     <div class="order-card">
       <div style="font-weight: bold; margin-bottom: 8px; color: #0f172a;">Szczegóły transakcji:</div>

@@ -3,7 +3,7 @@
 > **Dokument strategiczny i operacyjny** opracowany na podstawie audytu z 8 listopada 2026 r. (@Wojtek) oraz pełnej analizy technicznej repozytorium.
 > Zastępuje poprzedni backlog „na skróty”. 
 > 
-> **Cel główny:** Przekształcenie darmowego quizu RIASEC w dochodowy, zaufany produkt cyfrowy o wysokiej konwersji (sprzedaż płatnego raportu za 19–29 zł oraz pakietu konsultacji 99–149 zł).
+> **Cel główny:** Przekształcenie darmowego quizu RIASEC w dochodowy, zaufany produkt cyfrowy o wysokiej konwersji (sprzedaż w 100% zautomatyzowanego, płatnego raportu za 19–29 zł; rezygnacja z manualnych konsultacji 1:1).
 > 
 > **Zasada wdrożenia:** Najpierw uszczelnienie i pomiar → potem podniesienie wartości produktu → na końcu pozyskiwanie ruchu. Przejście do kolejnej fazy wymaga zaliczenia **Bramki Jakościowej**.
 
@@ -20,7 +20,7 @@
 ```
 
 - [x] **BRAMKA 1 (Gotowość do sprzedaży):** Zero możliwości odblokowania raportu za darmo (brak przycisków testowych, brak treści w JS/DOM, tokenizowany dostęp), wdrożona analityka 7 kroków lejka bez cookies, nowa cena 19 zł, legalna formuła w Stripe z 14-dniową gwarancją.
-- [x] **BRAMKA 2 (Wartość produktu):** Płatny raport zawiera 15–25 zawodów z polskimi realiami i zarobkami, 12-tygodniowy plan wdrożenia, generator PDF na e-mail, darmowa próbka zawodu nr 1 na ekranie wyniku, wdrożony pakiet 129 zł (konsultacja 1:1) jako kotwica cenowa.
+- [x] **BRAMKA 2 (Wartość produktu):** Płatny raport zawiera 15–25 zawodów z polskimi realiami i zarobkami, 12-tygodniowy plan wdrożenia, generator PDF na e-mail, darmowa próbka zawodu nr 1 na ekranie wyniku (decyzja o likwidacji konsultacji 1:1 na rzecz skupienia się na skalowalnym raporcie PDF).
 
 ---
 
@@ -135,10 +135,16 @@
 
 *Podniesienie ceny do poziomu rynkowego, wyeliminowanie prowizji Stripe zjadającej zysk, wprowadzenie drabinki cenowej.*
 
-- [x] **Nowa struktura cenowa (3 pakiety):**
+- [x] **Nowa struktura cenowa (100% zautomatyzowany produkt cyfrowy):**
   - [x] **Pakiet Podstawowy (0 zł):** Dominujący typ, kod 3-literowy, wykres 6 wymiarów, opis profilu + **Darmowa próbka raportu: zawód nr 1 z pełnymi zarobkami i 1. tygodniem planu**.
   - [x] **Pełny Raport Kariery (19 zł brutto na start, po 300 wizytach test 29 zł):** Wszystkie 18 zawodów, polskie zarobki, czas i koszt uprawnień, pełny 12-tygodniowy plan dla top 3 zawodów, przewodnik po bonach UP/BUR + **Raport PDF na e-mail**.
-  - [x] **Pakiet Raport + Rozmowa 1:1 (129 zł brutto):** Pełny raport + 45 minut wideorozmowy online z doradcą kariery + audyt CV/LinkedIn. Pełni rolę kotwicy cenowej (*price decoying*) i daje wysoką marżę.
+- [x] **Całkowite wycofanie pakietu konsultacji 1:1 (129 zł):**
+  - [x] Usunięcie karty pakietu konsultacji z siatki cenowej na paywallu w `index.html` / `js/app.js` (powrót do 1 prostego, przejrzystego boksu: Pełny Raport Kariery za 19 zł).
+  - [x] Uproszczenie `js/app.js`: usunięcie przełącznika pakietu i obsługi `package=consultation`.
+  - [x] Uproszczenie `api/create-checkout.php`: usunięcie obsługi pakietu `consultation` i powiązanego linku Stripe, stałe bezpośrednie kierowanie na płatność za raport (19 zł).
+  - [x] Wyczyszczenie zapisów o konsultacjach i umawianiu wideorozmów z `docs/regulamin.html`.
+  - [x] Usunięcie wzmianek o konsultacjach z testów w `scripts/verify_all.js`.
+  - [x] *Uzasadnienie biznesowe:* Model w 100% zautomatyzowanego produktu cyfrowego (zero obsługi klienta, zero umawiania terminów w kalendarzu, czysty pasywny cashflow bez wymieniania czasu na pieniądze).
 - [x] **Wdrożenie 14-dniowej gwarancji satysfakcji:**
   - [x] Komunikat na paywallu i w mailu: *„14 dni na bezwarunkowy zwrot pieniędzy. Jeśli raport nie da Ci wartości, napisz na maila — zwracamy 100% kwoty bez zbędnych pytań.”*
   - [x] Usunięcie strachu przed zakupem („zapłacę i dostanę nic niewarty zrzut ekranu”).
@@ -279,7 +285,7 @@
 5. Generator profesjonalnego pliku PDF wysyłanego automatycznie na e-mail kupującego.
 6. Galeria 15 postaci na stronie głównej i generator kart Stories 1080×1920 px.
 7. Dodanie sekcji „O mnie”, podstrony „Jak działa test” oraz formularza opinii po zakupie.
-8. Uruchomienie pakietu testowego z konsultacją 1:1 za 99–149 zł.
+8. [ZREALIZOWANO] Likwidacja pakietu konsultacji 1:1 na rzecz 100% zautomatyzowanego produktu cyfrowego (PDF 19 zł).
 9. **Test Bramki 2:** Pierwsze 50 realnych sprzedaży, wskaźnik zwrotów z gwarancji < 5%, zbieranie opinii od kupujących.
 
 ### 🟢 FAZA 3: Dni 61–90 — Skalowanie Ruchu i Dystrybucja

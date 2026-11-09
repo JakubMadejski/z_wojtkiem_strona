@@ -175,7 +175,7 @@ const gitignoreContent = fs.readFileSync(".gitignore", "utf8");
 assert(gitignoreContent.includes("api/data/*.db") && gitignoreContent.includes("api/data/reports/"), ".gitignore chroni bazy danych i wygenerowane raporty przed commitem");
 
 const regulaminContent = fs.readFileSync("docs/regulamin.html", "utf8");
-assert(regulaminContent.includes("19 PLN") && regulaminContent.includes("129 PLN"), "Regulamin zawiera aktualne ceny pakietów (19 zł i 129 zł)");
+assert(regulaminContent.includes("19 PLN"), "Regulamin określa cenę produktu cyfrowego (19 zł brutto)");
 assert(regulaminContent.includes("14-dniowej gwarancji satysfakcji"), "Regulamin formalizuje 14-dniową gwarancję satysfakcji");
 assert(regulaminContent.includes("Dyrektywa Omnibus"), "Regulamin zawiera klauzulę weryfikacji opinii konsumenckich (Omnibus)");
 
