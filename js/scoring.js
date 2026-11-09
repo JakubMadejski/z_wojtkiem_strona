@@ -120,3 +120,69 @@ function analyzeAnswers(answers) {
     top3: sorted.slice(0, 3).map((s) => s.cat),
   };
 }
+
+// Rekonstrukcja obiektu analizy na podstawie 2- lub 3-literowego kodu (np. powrót ze Stripe, link restore)
+function analysisFromCode(codeStr, customScores = null, situation = {}) {
+  const clean = String(codeStr || "RIA").toUpperCase().replace(/[^RIASEC]/g, "");
+  const unique = [];
+  for (let i = 0; i < clean.length; i++) {
+    if (!unique.includes(clean[i])) unique.push(clean[i]);
+    if (unique.length === 3) break;
+  }
+  const riasecOrder = ["R", "I", "A", "S", "E", "C"];
+  for (const c of riasecOrder) {
+    if (unique.length >= 3) break;
+    if (!unique.includes(c)) unique.push(c);
+  }
+  const code3 = unique.slice(0, 3).join("");
+  const code = normalizeCode(code3[0], code3[1]);
+
+  let finalScores = {};
+  if (customScores && typeof customScores === "object" && Object.keys(customScores).length >= 6) {
+    finalScores = customScores;
+  } else {
+    // Domyślne proporcjonalne wagi dla odtworzonego profilu
+    finalScores = {
+      [code3[0]]: 22,
+      [code3[1]]: 18,
+      [code3[2]]: 15,
+    };
+    const remaining = riasecOrder.filter((c) => !unique.includes(c));
+    remaining.forEach((c, idx) => {
+      finalScores[c] = Math.max(6, 12 - idx * 3);
+    });
+  }
+
+  const sorted = riasecOrder
+    .map((cat) => ({
+      cat,
+      score: finalScores[cat] || 0,
+      c5: 0,
+      c4: 0,
+    }))
+    .sort((a, b) => b.score - a.score);
+
+  return {
+    scores: finalScores,
+    sorted,
+    code,
+    code3,
+    altCode: null,
+    borderline: false,
+    neutralWarning: false,
+    versatile: false,
+    situation: situation || {},
+    top3: [code3[0], code3[1], code3[2]],
+  };
+}
+
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = {
+    RIASEC_ORDER,
+    getHexagonalDistance,
+    calculateScores,
+    normalizeCode,
+    analyzeAnswers,
+    analysisFromCode,
+  };
+}

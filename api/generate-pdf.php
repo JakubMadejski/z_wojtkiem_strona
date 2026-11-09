@@ -39,14 +39,26 @@ function buildReportData(string $rawCode, array $scores = [], array $customerDat
         $rawCode = 'RIA';
     }
 
-    // Normalizacja kodu: 2-literowy (profil bazowy) i 3-literowy (kod Hollanda)
+    // Normalizacja kodu: budowa 3 unikalnych liter Hollanda (eliminacja duplikatów np. RRR)
     $cleanLetters = preg_replace('/[^RIASEC]/', '', $rawCode);
-    if (strlen($cleanLetters) < 2) {
-        $cleanLetters = 'RIA';
+    $uniqueLetters = [];
+    for ($i = 0; $i < strlen($cleanLetters); $i++) {
+        $char = $cleanLetters[$i];
+        if (!in_array($char, $uniqueLetters)) {
+            $uniqueLetters[] = $char;
+        }
+        if (count($uniqueLetters) === 3) break;
     }
-    
-    $code2 = substr($cleanLetters, 0, 2);
-    $code3 = (strlen($cleanLetters) >= 3) ? substr($cleanLetters, 0, 3) : ($code2 . 'C');
+    // Uzupełnienie brakujących liter wg porządku RIASEC
+    $riasecOrder = ['R', 'I', 'A', 'S', 'E', 'C'];
+    foreach ($riasecOrder as $rc) {
+        if (count($uniqueLetters) >= 3) break;
+        if (!in_array($rc, $uniqueLetters)) {
+            $uniqueLetters[] = $rc;
+        }
+    }
+    $code3 = implode('', array_slice($uniqueLetters, 0, 3));
+    $code2 = substr($code3, 0, 2);
 
     // Załadowanie profili psychometrycznych
     $profilesPath = __DIR__ . '/data/profiles.json';
@@ -159,7 +171,8 @@ function buildReportData(string $rawCode, array $scores = [], array $customerDat
         'scores' => $finalScores,
         'profile' => $profile,
         'jobs' => $selectedJobs,
-        'avatar_base64' => $avatarBase64
+        'avatar_base64' => $avatarBase64,
+        'is_preview' => !empty($customerData['is_preview'])
     ];
 }
 
@@ -242,18 +255,12 @@ if (basename($_SERVER['SCRIPT_FILENAME'] ?? '') === 'generate-pdf.php') {
     }
 
     $isAuthorized = false;
+    $isPreview = false;
     $customerEmail = 'klient@checkyourself.pl';
     $customerName = 'Klient CheckYourself';
 
-    // 1. Tryb podglądu deweloperskiego (lub testowego)
-    if ($preview) {
-        $isAuthorized = true;
-        $customerName = 'Użytkownik Testowy';
-        $customerEmail = 'test@checkyourself.pl';
-    }
-
-    // 2. Weryfikacja tokenu HMAC
-    if (!$isAuthorized && !empty($token)) {
+    // 1. NAJPIERW weryfikacja podpisanego tokenu HMAC (jedyna droga do pełnego PDF z linku z tokenem)
+    if (!empty($token)) {
         $rawToken = base64_decode($token);
         $parts = explode('|', $rawToken);
         if (count($parts) === 4) {
@@ -264,11 +271,12 @@ if (basename($_SERVER['SCRIPT_FILENAME'] ?? '') === 'generate-pdf.php') {
                 $isAuthorized = true;
                 $customerEmail = $tEmail;
                 $reqCode = $tCode;
+                $isPreview = false;
             }
         }
     }
 
-    // 3. Weryfikacja sesji Stripe (fallback powrotu)
+    // 2. Weryfikacja sesji Stripe (fallback bezpośredniego powrotu z bramki płatności)
     if (!$isAuthorized && !empty($sessionId) && preg_match('/^cs_(test|live)_[a-zA-Z0-9]+$/', $sessionId)) {
         $ch = curl_init();
         curl_setopt_array($ch, [
@@ -294,8 +302,18 @@ if (basename($_SERVER['SCRIPT_FILENAME'] ?? '') === 'generate-pdf.php') {
                 if (!empty($sess['metadata']['code'])) {
                     $reqCode = strtoupper($sess['metadata']['code']);
                 }
+                $isPreview = false;
             }
         }
+    }
+
+    // 3. Tryb podglądu demonstracyjnego (preview=1):
+    // Zezwala WYŁĄCZNIE na wygenerowanie 2-stronicowej próbki ze znakiem wodnym "PRÓBKA / DEMO"
+    if (!$isAuthorized && $preview) {
+        $isAuthorized = true;
+        $isPreview = true;
+        $customerName = 'Wersja Demonstracyjna';
+        $customerEmail = 'kontakt@checkyourself.pl';
     }
 
     if (!$isAuthorized) {
@@ -313,11 +331,14 @@ if (basename($_SERVER['SCRIPT_FILENAME'] ?? '') === 'generate-pdf.php') {
         $reportData = buildReportData($reqCode, [], [
             'customer_name' => $customerName,
             'customer_email' => $customerEmail,
-            'order_id' => $sessionId ?: ('DIR_' . substr(md5($token . time()), 0, 8))
+            'order_id' => $sessionId ?: ($isPreview ? 'DEMO_' . time() : ('DIR_' . substr(md5($token . time()), 0, 8))),
+            'is_preview' => $isPreview
         ]);
 
         $pdfContent = renderReportPdf($reportData);
-        $filename = 'Raport-Kariery-CheckYourself-' . $reportData['certificate_id'] . '.pdf';
+        $filename = $isPreview
+            ? 'Probka-Raportu-CheckYourself-' . $reportData['code3'] . '.pdf'
+            : 'Raport-Kariery-CheckYourself-' . $reportData['certificate_id'] . '.pdf';
 
         header('Content-Type: application/pdf');
         header('Content-Disposition: inline; filename="' . $filename . '"');

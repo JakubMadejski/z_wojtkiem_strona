@@ -38,9 +38,9 @@ function trackFunnel(eventName, stepNumber, metadata = {}) {
   }
 }
 
-// Sprawdzenie czy raport jest odblokowany (bezpieczna weryfikacja tokenem sesji)
+// Sprawdzenie czy raport jest odblokowany (token w localStorage)
 function isReportUnlocked() {
-  const token = sessionStorage.getItem("cy_report_token");
+  const token = localStorage.getItem("cy_report_token") || sessionStorage.getItem("cy_report_token");
   return Boolean(token && token.length > 20);
 }
 
@@ -291,10 +291,12 @@ function finishQuiz() {
   showScreen("result");
 }
 
-// --- Render ekranu wyniku (Freemium + Paywall 5 zł) ---
-function renderResult(analysis) {
+// --- Render ekranu wyniku (Freemium + Paywall 19 zł) ---
+function renderResult(analysis, serverUnlockedData = null) {
   window.lastAnalysis = analysis;
-  const unlocked = isReportUnlocked();
+  try {
+    localStorage.setItem("cy_last_analysis", JSON.stringify(analysis));
+  } catch (e) {}
 
   // Walidacja: zbyt neutralne odpowiedzi
   if (analysis.neutralWarning) {
@@ -308,18 +310,18 @@ function renderResult(analysis) {
     return;
   }
 
-  const profile = PROFILES[analysis.code];
+  const profile = PROFILES[analysis.code] || PROFILES["RI"];
   const alt = analysis.altCode ? PROFILES[analysis.altCode] : null;
 
   const chart = buildChart(analysis);
-  const opisHtml = profile.opis.map((p) => `<p>${p}</p>`).join("");
-  const mocne = profile.mocneStrony
+  const opisHtml = (profile.opis || []).map((p) => `<p>${p}</p>`).join("");
+  const mocne = (profile.mocneStrony || [])
     .map((m) => `<span class="chip">${m}</span>`)
     .join("");
 
   // Lista zasobów
   const renderResources = (list) =>
-    list
+    (list || [])
       .map(
         (r) => `
       <li class="resource">
@@ -329,38 +331,8 @@ function renderResult(analysis) {
       )
       .join("");
 
-  const kursy = renderResources(profile.kursyDarmowe || []);
   const uniwersalne = renderResources(UNIVERSAL_RESOURCES);
-
-  const zawody = profile.zawody
-    .map(
-      (z) => `
-      <li class="job ${z.bezStudiow ? "bez-studiow" : "wymaga-studiow"}">
-        <details class="job-details">
-          <summary class="job-summary">
-            <div class="job-summary-header">
-              <span class="job-name">${z.nazwa}</span>
-              ${
-                z.bezStudiow
-                  ? '<span class="badge badge-green">bez studiów</span>'
-                  : '<span class="badge">wymaga studiów</span>'
-              }
-            </div>
-            <span class="job-chevron">▼</span>
-          </summary>
-          <div class="job-expanded">
-            <p class="job-desc">${z.opis}</p>
-            <div class="job-path-box">
-              <span class="path-label">Typowa ścieżka:</span>
-              <span class="job-path">${z.sciezka}</span>
-            </div>
-          </div>
-        </details>
-      </li>`
-    )
-    .join("");
-
-  const kroki = profile.pierwszeKroki.map((k) => `<li>${k}</li>`).join("");
+  const isUnlocked = Boolean(serverUnlockedData && serverUnlockedData.ok && serverUnlockedData.jobs);
 
   // 1. Darmowa próbka zawodu nr 1 (Value Hook zamiast rozmytej atrapy)
   const sampleJob =
@@ -454,9 +426,9 @@ function renderResult(analysis) {
         🛡️ <strong>14 dni bezwarunkowej gwarancji satysfakcji:</strong> Jeśli raport nie przyniesie Ci pełnej jasności co do dalszej drogi zawodowej, napisz do nas maila — zwracamy 100% środków bez zadawania pytań.
       </div>
       <p style="font-size: 11px; color: var(--color-text-muted); margin-top: 10px; line-height: 1.4; text-align: center;">
-        Wybierając płatność, wyrażasz zgodę na natychmiastowe rozpoczęcie świadczenia i dostarczenie raportu PDF na podany e-mail przed upływem terminu odstąpienia od umowy (art. 38 pkt 13 Ustawy o prawach konsumenta).
+        Wybierając płatność, wyrażasz zgodę na natychmiastowe rozpoczęcie świadczenia i dostarczenie raportu PDF na podany e-mail przed upływem terminu odstąpienia od umowy (art. 38 ust. 1 pkt 13 Ustawy o prawach konsumenta).
       </p>
-    </div>`;
+    </div>
   `;
 
   // Karta Lead Magnet: Zapisz wynik na e-mail (Bezpłatnie)
@@ -494,69 +466,105 @@ function renderResult(analysis) {
     </div>
   `;
 
-  // Banner o odblokowanym raporcie (gdy opłacony)
-  const token = sessionStorage.getItem("cy_report_token") || "";
-  const pdfDownloadUrl = token
-    ? `api/generate-pdf.php?token=${encodeURIComponent(token)}`
-    : `api/generate-pdf.php?preview=1&code=${encodeURIComponent(analysis.code3 || analysis.code)}`;
+  let unlockedBannerHtml = "";
+  let detailedContentHtml = "";
 
-  const unlockedBannerHtml = `
-    <div class="unlocked-success-card" style="background: linear-gradient(135deg, #059669 0%, #047857 100%); color: #ffffff; padding: 22px; border-radius: 12px; margin-bottom: 24px; box-shadow: 0 10px 25px -5px rgba(5, 150, 105, 0.3);">
-      <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 12px;">
-        <span class="unlocked-success-icon" style="font-size: 26px; background: rgba(255,255,255,0.2); width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%;">✓</span>
-        <div class="unlocked-success-text">
-          <strong style="font-size: 17px; display: block;">Twój Pełny Raport Kariery jest odblokowany!</strong>
-          <p style="font-size: 13px; margin: 4px 0 0 0; opacity: 0.95;">Dziękujemy za zakup. Masz pełny dostęp do bazy 18 zawodów, 12-tygodniowej roadmapy oraz przewodnika dofinansowań.</p>
+  if (isUnlocked) {
+    const validToken = serverUnlockedData.token || localStorage.getItem("cy_report_token") || "";
+    const pdfDownloadUrl = validToken
+      ? `api/generate-pdf.php?token=${encodeURIComponent(validToken)}`
+      : `api/generate-pdf.php?preview=1&code=${encodeURIComponent(analysis.code3 || analysis.code)}`;
+
+    unlockedBannerHtml = `
+      <div class="unlocked-success-card" style="background: linear-gradient(135deg, #059669 0%, #047857 100%); color: #ffffff; padding: 22px; border-radius: 12px; margin-bottom: 24px; box-shadow: 0 10px 25px -5px rgba(5, 150, 105, 0.3);">
+        <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 12px;">
+          <span class="unlocked-success-icon" style="font-size: 26px; background: rgba(255,255,255,0.2); width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%;">✓</span>
+          <div class="unlocked-success-text">
+            <strong style="font-size: 17px; display: block;">Twój Pełny Raport Kariery jest odblokowany!</strong>
+            <p style="font-size: 13px; margin: 4px 0 0 0; opacity: 0.95;">Dziękujemy za zakup. Masz pełny dostęp do bazy 18 zawodów, 12-tygodniowej roadmapy oraz przewodnika dofinansowań.</p>
+          </div>
+        </div>
+        <div style="margin-top: 14px; display: flex; flex-wrap: wrap; gap: 10px;">
+          <a href="${pdfDownloadUrl}" target="_blank" class="btn" style="background: #ffffff; color: #047857; font-weight: bold; padding: 12px 20px; border-radius: 8px; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+            📄 Pobierz Oficjalny Raport PDF (12 stron A4)
+          </a>
         </div>
       </div>
-      <div style="margin-top: 14px; display: flex; flex-wrap: wrap; gap: 10px;">
-        <a href="${pdfDownloadUrl}" target="_blank" class="btn" style="background: #ffffff; color: #047857; font-weight: bold; padding: 12px 20px; border-radius: 8px; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
-          📄 Pobierz Oficjalny Raport PDF (12 stron A4)
-        </a>
+    `;
+
+    const jobsHtml = (serverUnlockedData.jobs || []).map((z) => {
+      const isBezStudiow = Boolean(z.bezStudiow || z.bez_studiow);
+      const sal = z.zarobki_polska_2026
+        ? ` · Stawki 2026: Mid ${z.zarobki_polska_2026.mid || ''}, Senior ${z.zarobki_polska_2026.senior || ''}`
+        : "";
+      return `
+        <li class="job ${isBezStudiow ? "bez-studiow" : "wymaga-studiow"}">
+          <details class="job-details">
+            <summary class="job-summary">
+              <div class="job-summary-header">
+                <span class="job-name">${z.nazwa}</span>
+                ${
+                  isBezStudiow
+                    ? '<span class="badge badge-green">bez studiów</span>'
+                    : '<span class="badge">wymaga studiów</span>'
+                }
+              </div>
+              <span class="job-chevron">▼</span>
+            </summary>
+            <div class="job-expanded">
+              <p class="job-desc">${z.opis || ""}</p>
+              <div class="job-path-box">
+                <span class="path-label">Typowa ścieżka i zarobki:</span>
+                <span class="job-path">${z.sciezka || ""}${sal}</span>
+              </div>
+            </div>
+          </details>
+        </li>`;
+    }).join("");
+
+    const krokiHtml = (serverUnlockedData.pierwszeKroki || []).map((k) => `<li>${k}</li>`).join("");
+    const kursyHtml = renderResources(serverUnlockedData.kursyDarmowe || []);
+
+    detailedContentHtml = `
+      <div class="card" id="jobs-section">
+        <div class="card-header-flex">
+          <h2>Zawody, w których się odnajdziesz (18 dopasowanych ścieżek)</h2>
+          <label class="toggle-switch">
+            <input type="checkbox" id="filter-no-degree">
+            <span class="slider"></span>
+            <span class="label-text">Tylko bez studiów</span>
+          </label>
+        </div>
+        <ul class="jobs" id="jobs-list">${jobsHtml}</ul>
       </div>
-    </div>
-  `;
 
-  // Sekcja zawartości szczegółowej (zawody, kroki, kursy)
-  const detailedContentHtml = `
-    <div class="card" id="jobs-section">
-      <div class="card-header-flex">
-        <h2>Zawody, w których się odnajdziesz</h2>
-        <label class="toggle-switch">
-          <input type="checkbox" id="filter-no-degree">
-          <span class="slider"></span>
-          <span class="label-text">Tylko bez studiów</span>
-        </label>
+      <div class="card">
+        <h2>Plan działania i pierwsze kroki (12-tygodniowa roadmapa)</h2>
+        <ol class="steps">${krokiHtml}</ol>
       </div>
-      <ul class="jobs" id="jobs-list">${zawody}</ul>
-    </div>
 
-    <div class="card">
-      <h2>Plan działania i pierwsze kroki</h2>
-      <ol class="steps">${kroki}</ol>
-    </div>
-
-    <div class="card">
-      <h2>Darmowe kursy i certyfikaty dla Ciebie</h2>
-      <ul class="resources">${kursy}</ul>
-    </div>
-
-    <div class="card">
-      <h2>Gdzie szukać finansowania i kierunku</h2>
-      <ul class="resources">${uniwersalne}</ul>
-    </div>
-
-    <div class="card">
-      <h2>Chcesz drążyć temat dalej z AI? 🔎</h2>
-      <p>Wygeneruj gotowy prompt do ChatGPT / Claude / Gemini. Wklej go do czatu, a sztuczna inteligencja przygotuje dla Ciebie spersonalizowane oferty pracy i lokalne szkolenia.</p>
-      <button class="btn btn-primary" id="ai-prompt-btn">📋 Wygeneruj prompt do AI</button>
-      <div id="ai-prompt-box" class="ai-prompt-box hidden" style="margin-top: 14px;">
-        <textarea id="ai-prompt-text" readonly rows="12" style="width: 100%; padding: 12px; font-family: monospace; font-size: 0.85rem; border: 1px solid var(--border-light); border-radius: 8px; margin-bottom: 8px;"></textarea>
-        <button class="btn btn-secondary" id="ai-copy-btn">Skopiuj ponownie</button>
-        <span id="ai-copy-status" style="font-size: 0.85rem; color: var(--primary); margin-left: 10px;"></span>
+      <div class="card">
+        <h2>Dedykowane kursy i certyfikaty dla Twojego profilu</h2>
+        <ul class="resources">${kursyHtml}</ul>
       </div>
-    </div>
-  `;
+
+      <div class="card">
+        <h2>Gdzie szukać finansowania i kierunku</h2>
+        <ul class="resources">${uniwersalne}</ul>
+      </div>
+
+      <div class="card">
+        <h2>Chcesz drążyć temat dalej z AI? 🔎</h2>
+        <p>Wygeneruj gotowy prompt do ChatGPT / Claude / Gemini. Wklej go do czatu, a sztuczna inteligencja przygotuje dla Ciebie spersonalizowane oferty pracy i lokalne szkolenia.</p>
+        <button class="btn btn-primary" id="ai-prompt-btn">📋 Wygeneruj prompt do AI</button>
+        <div id="ai-prompt-box" class="ai-prompt-box hidden" style="margin-top: 14px;">
+          <textarea id="ai-prompt-text" readonly rows="12" style="width: 100%; padding: 12px; font-family: monospace; font-size: 0.85rem; border: 1px solid var(--border-light); border-radius: 8px; margin-bottom: 8px;"></textarea>
+          <button class="btn btn-secondary" id="ai-copy-btn">Skopiuj ponownie</button>
+          <span id="ai-copy-status" style="font-size: 0.85rem; color: var(--primary); margin-left: 10px;"></span>
+        </div>
+      </div>
+    `;
+  }
 
   el.resultContent.innerHTML = `
     <div id="export-target">
@@ -606,11 +614,13 @@ function renderResult(analysis) {
     <div id="sticky-trigger-sentinel" class="sticky-sentinel"></div>
 
     <!-- 4. Paywall lub Odblokowany Pełny Raport -->
-    ${
-      unlocked
-        ? unlockedBannerHtml + detailedContentHtml
-        : sampleJobHtml + paywallCardHtml + emailCaptureCardHtml
-    }
+    <div id="paywall-container">
+      ${
+        isUnlocked
+          ? unlockedBannerHtml + detailedContentHtml
+          : sampleJobHtml + paywallCardHtml + emailCaptureCardHtml
+      }
+    </div>
 
     <!-- 5. Przyciski akcji na dole -->
     <div class="result-actions">
@@ -619,6 +629,49 @@ function renderResult(analysis) {
       <button class="btn btn-secondary" id="export-btn">📸 Pobierz grafikę z wynikiem</button>
     </div>
   `;
+
+  // Jeśli raport nie jest jeszcze odblokowany w widoku, ale użytkownik ma zapisany token HMAC — zweryfikuj z backendem
+  const storedToken = localStorage.getItem("cy_report_token") || sessionStorage.getItem("cy_report_token");
+  if (!isUnlocked && storedToken && storedToken.length > 20) {
+    const paywallContainer = document.getElementById("paywall-container");
+    if (paywallContainer) {
+      paywallContainer.innerHTML = `
+        <div class="card" style="text-align: center; padding: 36px 20px;">
+          <div style="font-size: 32px; margin-bottom: 12px;">⏳</div>
+          <h3>Weryfikujemy Twój dostęp do raportu...</h3>
+          <p style="color: var(--color-text-muted);">Trwa pobieranie odblokowanej bazy 18 zawodów i 12-tygodniowego planu.</p>
+        </div>
+      `;
+    }
+    fetch("api/report.php?token=" + encodeURIComponent(storedToken))
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.ok && data.verified && data.jobs) {
+          localStorage.setItem("cy_report_token", data.token);
+          renderResult(analysis, data);
+        } else {
+          localStorage.removeItem("cy_report_token");
+          sessionStorage.removeItem("cy_report_token");
+          renderResult(analysis, null);
+        }
+      })
+      .catch(() => {
+        renderResult(analysis, null);
+      });
+    return;
+  }
+
+  // Zapisz stan analizy przy kliknięciu linku płatności Stripe
+  const stripeLink = document.getElementById("stripe-payment-link");
+  if (stripeLink) {
+    stripeLink.addEventListener("click", () => {
+      try {
+        localStorage.setItem("cy_last_analysis", JSON.stringify(analysis));
+      } catch (e) {}
+    });
+  }
+
+
 
   // Obsługa przycisków
   const storiesCardBtn = document.getElementById("stories-card-btn");
@@ -708,7 +761,7 @@ function renderResult(analysis) {
   }
 
   // Sticky Bottom Bar w strefie kciuka (tylko gdy raport jest zablokowany)
-  if (!unlocked) {
+  if (!isUnlocked) {
     setupStickyBar(analysis);
   } else {
     hideStickyBar();
@@ -735,6 +788,14 @@ function setupStickyBar(analysis) {
   if (!bar || isReportUnlocked()) {
     hideStickyBar();
     return;
+  }
+
+  if (buyBtn) {
+    buyBtn.onclick = () => {
+      try {
+        localStorage.setItem("cy_last_analysis", JSON.stringify(analysis));
+      } catch (e) {}
+    };
   }
 
   if (!sentinel || !paywallCard) {
@@ -919,6 +980,9 @@ Na podstawie mojego profilu RIASEC przygotuj dla mnie:
 
 // --- Wykres 6 kategorii (Czysty CSS) ---
 function buildChart(analysis) {
+  if (!analysis || !analysis.sorted || !Array.isArray(analysis.sorted) || analysis.noScores) {
+    return "";
+  }
   const MAX = 25;
   const topTwo = analysis.sorted.slice(0, 2).map((s) => s.cat);
 
@@ -1284,22 +1348,45 @@ function init() {
   const urlParams = new URLSearchParams(window.location.search);
   const sessionId = urlParams.get("session_id");
   if (sessionId && sessionId.startsWith("cs_")) {
+    showScreen("result");
+    if (el.resultContent) {
+      el.resultContent.innerHTML = `
+        <div class="card" style="text-align: center; padding: 48px 24px;">
+          <div style="font-size: 36px; margin-bottom: 16px;">⏳</div>
+          <h2>Weryfikujemy Twoją płatność...</h2>
+          <p style="color: var(--color-text-muted);">Trwa bezpieczna autoryzacja sesji Stripe i przygotowywanie Twojego raportu.</p>
+        </div>
+      `;
+    }
+
     fetch("api/report.php?session_id=" + encodeURIComponent(sessionId))
       .then((res) => res.json())
       .then((data) => {
         if (data.ok && data.token) {
+          localStorage.setItem("cy_report_token", data.token);
           sessionStorage.setItem("cy_report_token", data.token);
           trackFunnel("purchase_success", 7, { code: data.profile_code });
-          window.history.replaceState({}, document.title, window.location.pathname);
+
+          let savedAnalysis = null;
+          try {
+            const raw = localStorage.getItem("cy_last_analysis");
+            if (raw) savedAnalysis = JSON.parse(raw);
+          } catch (e) {}
+
           const profileCode = data.profile_code || "RIA";
-          const mockAnalysis = {
+          const finalAnalysis = savedAnalysis || (typeof analysisFromCode === "function" ? analysisFromCode(profileCode) : {
             code: profileCode.slice(0, 2),
             code3: profileCode,
-            scores: { R: 85, I: 70, A: 60, S: 35, E: 50, C: 30 },
+            sorted: [{ cat: profileCode[0], score: 22 }, { cat: profileCode[1] || 'I', score: 18 }],
+            scores: { R: 22, I: 18, A: 14, S: 10, E: 8, C: 6 },
             situation: {}
-          };
-          showScreen("result");
-          renderResult(window.lastAnalysis || mockAnalysis);
+          });
+
+          renderResult(finalAnalysis, data);
+          window.history.replaceState({}, document.title, window.location.pathname);
+        } else {
+          alert("Nie udało się potwierdzić płatności: " + (data.error || "Nieznany błąd"));
+          showScreen("landing");
         }
       })
       .catch((err) => {
@@ -1312,14 +1399,17 @@ function init() {
   const restoreCode = urlParams.get("restore");
   if (restoreCode && /^[RIASEC]{2,3}$/i.test(restoreCode)) {
     const cleanCode = restoreCode.toUpperCase();
-    const mockAnalysis = {
-      code: cleanCode.slice(0, 2),
-      code3: cleanCode,
-      scores: { R: 85, I: 70, A: 60, S: 35, E: 50, C: 30 },
-      situation: {}
-    };
+    const restoredAnalysis = (typeof analysisFromCode === "function")
+      ? analysisFromCode(cleanCode)
+      : {
+          code: cleanCode.slice(0, 2),
+          code3: cleanCode,
+          sorted: [{ cat: cleanCode[0], score: 22 }, { cat: cleanCode[1] || 'I', score: 18 }],
+          scores: { R: 22, I: 18, A: 14, S: 10, E: 8, C: 6 },
+          situation: {}
+        };
     showScreen("result");
-    renderResult(mockAnalysis);
+    renderResult(restoredAnalysis);
     return;
   }
 

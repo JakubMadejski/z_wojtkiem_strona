@@ -31,26 +31,26 @@
 > 📄 [`docs/AUDYT-I-PLAN-POPRAWEK-9-LISTOPADA.md`](./AUDYT-I-PLAN-POPRAWEK-9-LISTOPADA.md)
 
 ### 🔴 Blok 1: Płatności i Bezpieczeństwo (K1–K5)
-- [ ] **[K1] Zabezpieczenie generatora PDF przed darmowym pobieraniem:**
-  - [ ] W `api/generate-pdf.php`: gałąź `preview=1` generuje wyłącznie 2-stronicową darmową próbkę (Okładka + Profil + Zawód nr 1) z półprzezroczystym znakiem wodnym *„PRÓBKA / DEMO”*.
-  - [ ] Weryfikacja podpisanego tokenu HMAC przed wydaniem pełnego 18-zawodowego PDF-a (sprawdzenie tokenu ma bezwzględne pierwszeństwo przed `preview`).
-  - [ ] Usunięcie na sztywno wpisanych danych testowych („Użytkownik Testowy”, 88/74/62%).
-- [ ] **[K2] Całkowite odcięcie płatnych treści z klienta:**
-  - [ ] Usunięcie z publicznego `js/results-data.js` pól `zawody`, `pierwszeKroki`, `kursyDarmowe` (pozostaje wyłącznie nazwa, opis, mocne strony, avatar i próbka zawodu nr 1).
-  - [ ] Zmiana logiki w `js/app.js`: likwidacja decydowania o dostępie w przeglądarce (`isReportUnlocked` bazujące na długości ciągu w sessionStorage).
-  - [ ] Płatne treści serwowane wyłącznie przez `api/report.php` po weryfikacji tokenu z serwera.
-- [ ] **[K3] Naprawa pustego ekranu po Stripe i przywracania `?restore=`:**
-  - [ ] Zapisywanie pełnej analizy (`sorted`, `scores`, `answers`, `situation`) w `localStorage` przed przejściem do płatności Stripe i odtwarzanie jej po powrocie.
-  - [ ] Wdrożenie bezpiecznej funkcji `analysisFromCode(c3, scores)` z normalizacją liter i odrzucaniem duplikatów (np. `RRR`).
-  - [ ] Zabezpieczenie `buildChart`: brak błędu `Cannot read properties of undefined (reading 'slice')` i brak fałszywych słupków przy braku surowych ocen (`noScores: true`).
-  - [ ] Przeniesienie tokenu autoryzacyjnego z `sessionStorage` do `localStorage` (trwałość po zamknięciu karty).
-  - [ ] Usuwanie `session_id` z adresu URL dopiero po pomyślnym wyrenderowaniu raportu.
-- [ ] **[K4] Czysta oferta 1-produktowa (19 zł):**
-  - [ ] Weryfikacja: wycięcie wszelkich pozostałości po pakiecie konsultacji (129 zł) ze wszystkich skryptów i szablonów.
-  - [ ] Pojedynczy, skupiony Payment Link Stripe na kwotę 19,00 PLN z parametrem `client_reference_id={KOD}`.
-- [ ] **[K5] Weryfikacja podpisu webhooka Stripe:**
-  - [ ] Weryfikacja nagłówka `Stripe-Signature` jako pierwsza instrukcja w `api/webhook.php`.
-  - [ ] Natychmiastowe zwracanie `HTTP 400 Bad Request` w przypadku braku lub niepoprawności sygnatury (odrzucenie przed odczytem typu zdarzenia).
+- [x] **[K1] Zabezpieczenie generatora PDF przed darmowym pobieraniem:**
+  - [x] W `api/generate-pdf.php`: gałąź `preview=1` generuje wyłącznie 2-stronicową darmową próbkę (Okładka + Profil + Zawód nr 1) z półprzezroczystym znakiem wodnym *„PRÓBKA / DEMO”*.
+  - [x] Weryfikacja podpisanego tokenu HMAC przed wydaniem pełnego 18-zawodowego PDF-a (sprawdzenie tokenu ma bezwzględne pierwszeństwo przed `preview`).
+  - [x] Usunięcie na sztywno wpisanych danych testowych („Użytkownik Testowy”, 88/74/62%).
+- [x] **[K2] Całkowite odcięcie płatnych treści z klienta:**
+  - [x] Usunięcie z publicznego `js/results-data.js` pól `zawody`, `pierwszeKroki`, `kursyDarmowe` (pozostaje wyłącznie nazwa, opis, mocne strony, avatar i próbka zawodu nr 1).
+  - [x] Zmiana logiki w `js/app.js`: likwidacja decydowania o dostępie w przeglądarce (`isReportUnlocked` bazujące na długości ciągu w sessionStorage).
+  - [x] Płatne treści serwowane wyłącznie przez `api/report.php` po weryfikacji tokenu z serwera.
+- [x] **[K3] Naprawa pustego ekranu po Stripe i przywracania `?restore=`:**
+  - [x] Zapisywanie pełnej analizy (`sorted`, `scores`, `answers`, `situation`) w `localStorage` przed przejściem do płatności Stripe i odtwarzanie jej po powrocie.
+  - [x] Wdrożenie bezpiecznej funkcji `analysisFromCode(c3, scores)` z normalizacją liter i odrzucaniem duplikatów (np. `RRR`).
+  - [x] Zabezpieczenie `buildChart`: brak błędu `Cannot read properties of undefined (reading 'slice')` i brak fałszywych słupków przy braku surowych ocen (`noScores: true`).
+  - [x] Przeniesienie tokenu autoryzacyjnego z `sessionStorage` do `localStorage` (trwałość po zamknięciu karty).
+  - [x] Usuwanie `session_id` z adresu URL dopiero po pomyślnym wyrenderowaniu raportu.
+- [x] **[K4] Czysta oferta 1-produktowa (19 zł):**
+  - [x] Weryfikacja: wycięcie wszelkich pozostałości po pakiecie konsultacji (129 zł) ze wszystkich skryptów i szablonów.
+  - [x] Pojedynczy, skupiony Payment Link Stripe na kwotę 19,00 PLN z parametrem `client_reference_id={KOD}`.
+- [x] **[K5] Weryfikacja podpisu webhooka Stripe:**
+  - [x] Weryfikacja nagłówka `Stripe-Signature` jako pierwsza instrukcja w `api/webhook.php`.
+  - [x] Natychmiastowe zwracanie `HTTP 400 Bad Request` w przypadku braku lub niepoprawności sygnatury (odrzucenie przed odczytem typu zdarzenia).
 
 ---
 

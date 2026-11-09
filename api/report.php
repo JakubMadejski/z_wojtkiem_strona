@@ -89,36 +89,89 @@ if (!$isVerified) {
     exit;
 }
 
-// 4. Załaduj bazę zawodów z chronionego pliku JSON
-if (!file_exists(JOBS_DATA_PATH)) {
+// 4. Załadowanie baz danych: zawody i profile psychometryczne
+if (!file_exists(JOBS_DATA_PATH) || !file_exists(PROFILES_DATA_PATH)) {
     http_response_code(500);
-    echo json_encode(['ok' => false, 'error' => 'Baza zawodów jest chwilowo niedostępna']);
+    echo json_encode(['ok' => false, 'error' => 'Baza danych jest chwilowo niedostępna']);
     exit;
 }
 
 $allJobs = json_decode(file_get_contents(JOBS_DATA_PATH), true) ?: [];
+$allProfiles = json_decode(file_get_contents(PROFILES_DATA_PATH), true) ?: [];
 
-// 5. Dopasuj zawody do profilu (dopasowanie wg liter RIASEC)
-$matchedJobs = [];
-$primaryLetter = !empty($profileCode) ? $profileCode[0] : '';
-$secondaryLetter = (strlen($profileCode) >= 2) ? $profileCode[1] : '';
-
-foreach ($allJobs as $job) {
-    $jobCode = $job['profil_kod'] ?? '';
-    // Jeśli zawód bezpośrednio odpowiada profilowi (np. RI) lub zawiera literę dominującą
-    if ($jobCode === $profileCode || (strlen($jobCode) >= 2 && $jobCode[0] === $primaryLetter)) {
-        $matchedJobs[] = $job;
+// Normalizacja kodu: 3 unikalne litery Hollanda i 2-literowy profil bazowy
+$cleanLetters = preg_replace('/[^RIASEC]/', '', $profileCode ?: 'RIA');
+$uniqueLetters = [];
+for ($i = 0; $i < strlen($cleanLetters); $i++) {
+    $char = $cleanLetters[$i];
+    if (!in_array($char, $uniqueLetters)) {
+        $uniqueLetters[] = $char;
+    }
+    if (count($uniqueLetters) === 3) break;
+}
+$riasecOrder = ['R', 'I', 'A', 'S', 'E', 'C'];
+foreach ($riasecOrder as $rc) {
+    if (count($uniqueLetters) >= 3) break;
+    if (!in_array($rc, $uniqueLetters)) {
+        $uniqueLetters[] = $rc;
     }
 }
+$code3 = implode('', array_slice($uniqueLetters, 0, 3));
+$code2 = substr($code3, 0, 2);
 
-// Jeśli mało zawodów, dobierz pokrewne z tą samą literą główną
-if (count($matchedJobs) < 15) {
-    foreach ($allJobs as $job) {
-        if (!in_array($job, $matchedJobs) && isset($job['profil_kod']) && strpos($job['profil_kod'], $primaryLetter) !== false) {
-            $matchedJobs[] = $job;
-            if (count($matchedJobs) >= 18) break;
-        }
+// Pobranie profilu bazowego
+$profileKey = $code2;
+if (!isset($allProfiles[$profileKey])) {
+    $reversed = strrev($code2);
+    if (isset($allProfiles[$reversed])) {
+        $profileKey = $reversed;
+    } else {
+        $profileKey = 'RI';
     }
+}
+$profileData = $allProfiles[$profileKey] ?? [];
+
+// 5. Dopasowanie 18 zawodów wg unikalnego algorytmu scoringowego RIASEC
+$scoredJobs = [];
+$p1 = $code3[0];
+$p2 = $code3[1] ?? '';
+$p3 = $code3[2] ?? '';
+
+foreach ($allJobs as $job) {
+    $jCode = $job['profil_kod'] ?? '';
+    $jRiasec = $job['riasec_code'] ?? $jCode;
+    $score = 0;
+
+    // Dopasowanie 1. litery dominującej (+50 pkt)
+    if (strlen($jCode) >= 1 && $jCode[0] === $p1) {
+        $score += 50;
+    }
+    // Pełna zgodność profilu bazowego (np. RI == RI, +40 pkt)
+    if ($jCode === $code2 || $jCode === strrev($code2)) {
+        $score += 40;
+    }
+    // Zgodność z 2. literą kodu (+25 pkt)
+    if ($p2 && strpos($jRiasec, $p2) !== false) {
+        $score += 25;
+    }
+    // Zgodność z 3. literą kodu (+15 pkt)
+    if ($p3 && strpos($jRiasec, $p3) !== false) {
+        $score += 15;
+    }
+
+    $scoredJobs[] = [
+        'job' => $job,
+        'match_score' => $score
+    ];
+}
+
+usort($scoredJobs, function($a, $b) {
+    return $b['match_score'] <=> $a['match_score'];
+});
+
+$matchedJobs = [];
+foreach (array_slice($scoredJobs, 0, 18) as $item) {
+    $matchedJobs[] = $item['job'];
 }
 
 echo json_encode([
@@ -126,9 +179,14 @@ echo json_encode([
     'verified' => true,
     'token' => $token,
     'customer_email' => $customerEmail,
-    'profile_code' => $profileCode,
+    'profile_code' => $code3,
+    'base_code' => $code2,
     'total_jobs' => count($matchedJobs),
     'pdf_url' => 'api/generate-pdf.php?token=' . urlencode($token),
-    'jobs' => $matchedJobs
+    'jobs' => $matchedJobs,
+    'pierwszeKroki' => $profileData['pierwszeKroki'] ?? [],
+    'kursyDarmowe' => $profileData['kursyDarmowe'] ?? [],
+    'srodowisko_idealne' => $profileData['srodowisko_idealne'] ?? [],
+    'srodowisko_toksyczne' => $profileData['srodowisko_toksyczne'] ?? []
 ], JSON_UNESCAPED_UNICODE);
 

@@ -188,6 +188,31 @@ const deployContent = fs.readFileSync("deploy.sh", "utf8");
 assert(deployContent.includes("lftp") && deployContent.includes("serwer2644365.hosting-home.pl"), "deploy.sh jest skonfigurowany pod serwer home.pl");
 
 // -----------------------------------------------------------------------------
+// 10. WERYFIKACJA POPRAWEK BEZPIECZEŃSTWA BLOK 1 (K1–K5)
+// -----------------------------------------------------------------------------
+console.log("\n10. Weryfikacja zabezpieczeń audytu z 9 listopada (K1–K5):");
+
+// K1: generate-pdf.php wymaga autoryzacji i preview=1 daje tylko próbkę
+const genPdfContent = fs.readFileSync("api/generate-pdf.php", "utf8");
+assert(genPdfContent.includes("\$isPreview = true") && genPdfContent.includes("Probka-Raportu-CheckYourself"), "K1: generate-pdf.php posiada ścisłe rozróżnienie trybu próbki demonstracyjnej");
+
+// K2: js/results-data.js nie wycieka danych płatnych
+const resultsDataContent = fs.readFileSync("js/results-data.js", "utf8");
+assert(!resultsDataContent.includes("pierwszeKroki") && !resultsDataContent.includes("kursyDarmowe"), "K2: js/results-data.js nie zawiera płatnych pól pierwszeKroki ani kursyDarmowe");
+
+// K3: scoring.js eksportuje analysisFromCode z deduplikacją
+const { analysisFromCode } = require("../js/scoring.js");
+assert(typeof analysisFromCode === "function", "K3: scoring.js eksportuje funkcję analysisFromCode");
+const restored = analysisFromCode("RIA");
+assert(restored && Array.isArray(restored.sorted) && restored.sorted.length === 6, "K3: analysisFromCode('RIA') generuje kompletny obiekt z 6 kategoriami w sorted");
+const deduplicated = analysisFromCode("RRR");
+assert(deduplicated.code3.length === 3 && deduplicated.code3 !== "RRR" && new Set(deduplicated.code3).size === 3, "K3: analysisFromCode('RRR') deduplikuje litery do 3 unikalnych cech RIASEC");
+
+// K5: webhook.php bez bypassu placeholder
+const webhookContent = fs.readFileSync("api/webhook.php", "utf8");
+assert(!webhookContent.includes("\$isPlaceholderSecret") && webhookContent.includes("Brak nagłówka Stripe-Signature"), "K5: webhook.php bezwzględnie weryfikuje podpis Stripe-Signature bez obejścia placeholder");
+
+// -----------------------------------------------------------------------------
 // PODSUMOWANIE WYNIKÓW
 // -----------------------------------------------------------------------------
 console.log("\n===============================================================");

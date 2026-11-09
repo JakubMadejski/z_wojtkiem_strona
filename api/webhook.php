@@ -28,43 +28,46 @@ if (empty($rawPayload)) {
     exit;
 }
 
-// 1. WERYFIKACJA SYGNATURY STRIPE (HMAC-SHA256)
+// 1. BEZWZGLĘDNA WERYFIKACJA SYGNATURY STRIPE (HMAC-SHA256, ZERO-BYPASS)
 $endpointSecret = STRIPE_WEBHOOK_SECRET;
-$isSignatureValid = false;
 
-// Jeśli w środowisku jest jeszcze domyślny placeholder, zezwól na testy lokalne z ostrzeżeniem w logu
-$isPlaceholderSecret = (strpos($endpointSecret, 'replace_with_real') !== false);
+if (empty($sigHeader)) {
+    http_response_code(400);
+    echo json_encode(['ok' => false, 'error' => 'Brak nagłówka Stripe-Signature']);
+    exit;
+}
 
-if ($isPlaceholderSecret) {
-    error_log("[CheckYourself Webhook] Uruchomiono z domyślnym kluczem STRIPE_WEBHOOK_SECRET. W trybie produkcyjnym podaj prawdziwy klucz whsec_ w .env!");
-    $isSignatureValid = true;
-} else {
-    if (!empty($sigHeader)) {
-        $timestamp = null;
-        $v1Signatures = [];
+if (empty($endpointSecret) || strpos($endpointSecret, 'replace_with_real') !== false) {
+    http_response_code(500);
+    error_log("[CheckYourself Webhook] BŁĄD KONFIGURACJI: STRIPE_WEBHOOK_SECRET nie jest skonfigurowany w środowisku!");
+    echo json_encode(['ok' => false, 'error' => 'Serwer nie posiada skonfigurowanego klucza webhooka Stripe']);
+    exit;
+}
 
-        foreach (explode(',', $sigHeader) as $part) {
-            $pair = explode('=', trim($part), 2);
-            if (count($pair) === 2) {
-                if ($pair[0] === 't') {
-                    $timestamp = $pair[1];
-                } elseif ($pair[0] === 'v1') {
-                    $v1Signatures[] = $pair[1];
-                }
-            }
+$timestamp = null;
+$v1Signatures = [];
+
+foreach (explode(',', $sigHeader) as $part) {
+    $pair = explode('=', trim($part), 2);
+    if (count($pair) === 2) {
+        if ($pair[0] === 't') {
+            $timestamp = $pair[1];
+        } elseif ($pair[0] === 'v1') {
+            $v1Signatures[] = $pair[1];
         }
+    }
+}
 
-        // Sprawdzenie tolerancji czasowej (maks. 5 minut = 300 sekund)
-        if ($timestamp && abs(time() - (int)$timestamp) <= 300) {
-            $signedPayload = $timestamp . '.' . $rawPayload;
-            $computedSignature = hash_hmac('sha256', $signedPayload, $endpointSecret);
+// Sprawdzenie obecności t i v1 oraz tolerancji czasowej (maks. 5 minut = 300 sekund)
+$isSignatureValid = false;
+if ($timestamp && !empty($v1Signatures) && abs(time() - (int)$timestamp) <= 300) {
+    $signedPayload = $timestamp . '.' . $rawPayload;
+    $computedSignature = hash_hmac('sha256', $signedPayload, $endpointSecret);
 
-            foreach ($v1Signatures as $sig) {
-                if (hash_equals($computedSignature, $sig)) {
-                    $isSignatureValid = true;
-                    break;
-                }
-            }
+    foreach ($v1Signatures as $sig) {
+        if (hash_equals($computedSignature, $sig)) {
+            $isSignatureValid = true;
+            break;
         }
     }
 }

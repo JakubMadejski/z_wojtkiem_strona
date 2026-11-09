@@ -136,3 +136,4 @@ Prace podzielono na 4 logiczne, sekwencyjne etapy o ściśle określonych kryter
 - Unifikacja telemetrii: zdarzenia `quiz_complete` i `paywall_view` przesyłają spójny 3-literowy kod `code3`.
 - Usunięcie martwego kodu: nieużywane zmienne, stare komentarze, nieużywane klasy CSS.
 - Dodanie plików `favicon.ico` oraz `apple-touch-icon.png` (eliminacja błędów 404 w logach serwera).
+

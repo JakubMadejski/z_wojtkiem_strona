@@ -21,10 +21,11 @@
  * }
  */
 $d = $data;
+$isPreview = !empty($d['is_preview']);
 $c3 = htmlspecialchars($d['code3'] ?? 'RIA');
 $c2 = htmlspecialchars($d['code2'] ?? 'RI');
 $certId = htmlspecialchars($d['certificate_id'] ?? ('CY-2026-' . $c3 . '-X89A'));
-$custName = htmlspecialchars($d['customer_name'] ?? 'Klient CheckYourself');
+$custName = htmlspecialchars($d['customer_name'] ?? ($isPreview ? 'Wersja Demonstracyjna' : 'Klient CheckYourself'));
 $custEmail = htmlspecialchars($d['customer_email'] ?? 'kontakt@checkyourself.pl');
 $genDate = htmlspecialchars($d['generation_date'] ?? date('d.m.Y'));
 $prof = $d['profile'] ?? [];
@@ -38,7 +39,7 @@ $avatarSrc = $d['avatar_base64'] ?? '';
 <html lang="pl">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<title>Raport Kariery CheckYourself — <?php echo $certId; ?></title>
+<title><?php echo $isPreview ? 'Próbka Raportu Kariery CheckYourself — ' . $c3 : 'Raport Kariery CheckYourself — ' . $certId; ?></title>
 <style>
   @page {
     size: A4 portrait;
@@ -175,22 +176,36 @@ $avatarSrc = $d['avatar_base64'] ?? '';
 </head>
 <body>
 
+<?php if ($isPreview): ?>
+<!-- Znak wodny próbki (Method 1: Fixed CSS overlay) -->
+<div style="position: fixed; top: 38%; left: 0; right: 0; text-align: center; font-size: 70pt; font-weight: bold; color: rgba(220, 38, 38, 0.12); transform: rotate(-35deg); z-index: 9999; pointer-events: none; letter-spacing: 6pt; font-family: 'DejaVu Sans', sans-serif;">
+  PRÓBKA / DEMO
+</div>
+<?php endif; ?>
+
 <!-- Dynamiczny skrypt numeracji stron i nagłówka powtarzanego (Dompdf Native PHP) -->
 <script type="text/php">
 if (isset($pdf)) {
     $font = $fontMetrics->getFont("DejaVu Sans", "normal");
     $fontBold = $fontMetrics->getFont("DejaVu Sans", "bold");
-    $headerTitle = "CheckYourself.pl — Raport Kariery: <?php echo addslashes($profTitle); ?> [<?php echo addslashes($c3); ?>]";
-    $headerId = "ID: <?php echo addslashes($certId); ?>";
+    $headerTitle = "CheckYourself.pl — <?php echo $isPreview ? 'Próbka Raportu Kariery' : 'Raport Kariery'; ?>: <?php echo addslashes($profTitle); ?> [<?php echo addslashes($c3); ?>]";
+    $headerId = "<?php echo $isPreview ? 'WERSJA PRÓBNA (DEMO)' : ('ID: ' . addslashes($certId)); ?>";
+    $footerNote = "<?php echo $isPreview ? 'CheckYourself.pl — Wersja demonstracyjna (Próbka bezpłatna) · Pełny raport za 19 zł na checkyourself.pl' : 'CheckYourself.pl — Trwały Nośnik (Art. 2 pkt 17 Ustawy o prawach konsumenta)'; ?>";
     
-    $pdf->page_script(function ($pageNumber, $pageCount, $canvas, $fontMetrics) use ($font, $fontBold, $headerTitle, $headerId) {
+    $isPreviewMode = $isPreview ? true : false;
+    $pdf->page_script(function ($pageNumber, $pageCount, $canvas, $fontMetrics) use ($font, $fontBold, $headerTitle, $headerId, $footerNote, $isPreviewMode) {
+        if ($isPreviewMode) {
+            $canvas->set_opacity(0.14);
+            $canvas->text(80, 520, "PRÓBKA / DEMO", $fontBold, 48, array(0.85, 0.15, 0.15), 0.0, 0.0, 38.0);
+            $canvas->set_opacity(1.0);
+        }
         if ($pageNumber > 1) {
             $canvas->text(34, 18, $headerTitle, $font, 7.5, array(0.4, 0.45, 0.5));
             $canvas->text(440, 18, $headerId, $font, 7.5, array(0.4, 0.45, 0.5));
             $canvas->line(34, 27, 561, 27, array(0.85, 0.88, 0.92), 0.5);
         }
         $canvas->line(34, 804, 561, 804, array(0.85, 0.88, 0.92), 0.5);
-        $canvas->text(34, 811, "CheckYourself.pl — Trwały Nośnik (Art. 2 pkt 17 Ustawy o prawach konsumenta)", $font, 7, array(0.45, 0.5, 0.55));
+        $canvas->text(34, 811, $footerNote, $font, 7, array(0.45, 0.5, 0.55));
         $canvas->text(495, 811, "Strona " . $pageNumber . " z " . $pageCount, $fontBold, 7, array(0.3, 0.35, 0.4));
     });
 }
@@ -201,16 +216,20 @@ if (isset($pdf)) {
 <!-- ========================================================================= -->
 <div style="height: 750pt; position: relative;">
   <!-- Górny Branding -->
-  <table style="margin-top: 15pt; margin-bottom: 30pt;">
+  <table style="margin-top: 15pt; margin-bottom: 25pt;">
     <tr>
       <td style="width: 60%;">
         <div style="font-size: 16pt; font-weight: bold; color: #4f46e5; letter-spacing: -0.5pt;">
           Check<span style="color: #0f172a;">Yourself</span><span style="color: #10b981;">.pl</span>
         </div>
-        <div style="font-size: 8pt; color: #64748b; margin-top: 2pt;">System Psychometrycznej Diagnozy Zawodowej 2026</div>
+        <div style="font-size: 8pt; color: #64748b; margin-top: 2pt;">Raport Predyspozycji Zawodowych RIASEC 2026</div>
       </td>
       <td style="width: 40%; text-align: right;">
-        <span class="badge badge-primary">CERTYFIKAT PSYCHOMETRYCZNY</span>
+        <?php if ($isPreview): ?>
+          <span class="badge" style="background: #fee2e2; color: #b91c1c; border: 1pt solid #ef4444;">PRÓBKA DEMONSTRACYJNA</span>
+        <?php else: ?>
+          <span class="badge badge-primary">CERTYFIKAT ANALIZY RIASEC</span>
+        <?php endif; ?>
         <div style="font-size: 8pt; color: #64748b; margin-top: 4pt; font-family: monospace;"><?php echo $certId; ?></div>
       </td>
     </tr>
@@ -272,12 +291,12 @@ if (isset($pdf)) {
         <div style="font-size: 9.5pt; color: #0f172a; margin-top: 1pt;"><?php echo $genDate; ?> r.</div>
       </td>
       <td style="width: 50%; padding-left: 14pt;">
-        <div style="font-size: 8pt; font-weight: bold; color: #64748b; text-transform: uppercase;">Standard Psychometryczny</div>
-        <div style="font-size: 9pt; color: #0f172a; margin-top: 2pt;">Model RIASEC Johna L. Hollanda + Barometr Zawodów 2026</div>
+        <div style="font-size: 8pt; font-weight: bold; color: #64748b; text-transform: uppercase;">Metodologia Badania</div>
+        <div style="font-size: 9pt; color: #0f172a; margin-top: 2pt;">Model RIASEC Johna L. Hollanda + Badania Rynku Pracy 2026</div>
 
         <div style="font-size: 8pt; font-weight: bold; color: #64748b; text-transform: uppercase; margin-top: 10pt;">Trwały Nośnik Prawny</div>
         <div style="font-size: 8pt; color: #64748b; margin-top: 2pt; line-height: 1.35;">
-          Dokument stanowi trwały nośnik w rozumieniu art. 2 pkt 17 Ustawy o prawach konsumenta. Plik nie podlega zmianie po wygenerowaniu.
+          <?php echo $isPreview ? 'Dokument stanowi bezpłatną próbkę demonstracyjną raportu CheckYourself.pl.' : 'Dokument stanowi trwały nośnik w rozumieniu art. 2 pkt 17 Ustawy o prawach konsumenta. Plik nie podlega modyfikacji po wygenerowaniu.'; ?>
         </div>
       </td>
     </tr>
@@ -290,12 +309,135 @@ if (isset($pdf)) {
 </div>
 <div class="page-break"></div>
 
+<?php if ($isPreview): 
+  $sJob = !empty($jobs[0]) ? $jobs[0] : null;
+  $sSal = $sJob ? ($sJob['zarobki_polska_2026'] ?? []) : [];
+  $sBez = $sJob ? !empty($sJob['bez_studiow']) : true;
+?>
 <!-- ========================================================================= -->
-<!-- STRONA 2: DIAGNOZA PSYCHOMETRYCZNA RIASEC                                 -->
+<!-- STRONA 2 DLA WERSJI PREVIEW (DOKŁADNIE 2 STRONY CAŁKOWITEJ OBJĘTOŚCI)     -->
+<!-- ========================================================================= -->
+<div class="section-header" style="margin-bottom: 8pt;">
+  <div class="section-num">Próbka Raportu — Podsumowanie Diagnozy</div>
+  <div class="section-title"><?php echo htmlspecialchars($profTitle); ?> [<?php echo $c3; ?>]</div>
+  <div class="section-subtitle">Twój profil osobowości zawodowej wg modelu RIASEC Johna L. Hollanda</div>
+</div>
+
+<p style="font-size: 8.5pt; color: #334155; margin-bottom: 8pt; line-height: 1.35;">
+  Twój 3-literowy kod dominujący to <strong><?php echo $c3; ?></strong>. Poniżej znajduje się bezpłatna próbka diagnozy Twoich predyspozycji oraz rekomendacja pierwszego dopasowanego zawodu z polskimi stawkami rynkowymi.
+</p>
+
+<!-- Tabela kompaktowa: Supermoce + Środowisko -->
+<table style="width: 100%; margin-bottom: 8pt;">
+  <tr>
+    <td style="width: 50%; padding-right: 5pt; vertical-align: top;">
+      <div style="border: 1pt solid #c7d2fe; background-color: #f5f3ff; border-radius: 4pt; padding: 6pt 8pt;">
+        <div style="font-size: 7.5pt; font-weight: bold; color: #4338ca; text-transform: uppercase;">
+          ★ Twoje 3 Kluczowe Supermoce
+        </div>
+        <ul style="margin: 3pt 0 0 0; padding-left: 12pt; font-size: 7.5pt; color: #1e293b; line-height: 1.35;">
+          <?php foreach (array_slice($prof['mocneStrony'] ?? ['Analityczne myślenie', 'Samodzielność', 'Praktyczne działanie'], 0, 3) as $st): ?>
+            <li><strong><?php echo htmlspecialchars($st); ?></strong></li>
+          <?php endforeach; ?>
+        </ul>
+      </div>
+    </td>
+    <td style="width: 50%; padding-left: 5pt; vertical-align: top;">
+      <div style="border: 1pt solid #a7f3d0; background-color: #f0fdf4; border-radius: 4pt; padding: 6pt 8pt;">
+        <div style="font-size: 7.5pt; font-weight: bold; color: #065f46; text-transform: uppercase;">
+          🌿 Optymalne Środowisko Pracy
+        </div>
+        <div style="font-size: 7.5pt; color: #1e293b; margin-top: 3pt; line-height: 1.3;">
+          <?php echo htmlspecialchars($prof['srodowisko_idealne'] ?? 'Autonomia, mierzalne rezultaty i przejrzyste zasady współpracy.'); ?>
+        </div>
+      </div>
+    </td>
+  </tr>
+</table>
+
+<?php if ($sJob): ?>
+<!-- Karta Zawodu nr 1 w próbce -->
+<table class="job-card" style="margin-bottom: 8pt;">
+  <tr>
+    <td colspan="2" class="job-header">
+      <table style="width: 100%;">
+        <tr>
+          <td style="width: 70%;">
+            <span style="font-size: 9.5pt; font-weight: bold; color: #0f172a;">
+              #1. <?php echo htmlspecialchars($sJob['nazwa']); ?>
+            </span>
+            <span class="badge badge-primary" style="margin-left: 4pt; font-size: 7pt;">
+              Kod: <?php echo htmlspecialchars($sJob['riasec_code'] ?? ($sJob['profil_kod'] ?? $c2)); ?>
+            </span>
+          </td>
+          <td style="width: 30%; text-align: right;">
+            <span class="badge <?php echo $sBez ? 'badge-amber' : 'badge-primary'; ?>" style="font-size: 7pt;">
+              <?php echo $sBez ? 'BEZ STUDIÓW' : 'STUDIA / LICENCJAT'; ?>
+            </span>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="job-body" style="padding: 5pt 7pt;">
+      <!-- Płace -->
+      <table style="margin-bottom: 4pt; background-color: #f8fafc; border: 0.5pt solid #e2e8f0; border-radius: 3pt; padding: 3pt 5pt;">
+        <tr>
+          <td style="width: 33%;">
+            <div class="metric-label" style="font-size: 6.5pt;">Junior / Start</div>
+            <div class="metric-val" style="color: #047857; font-size: 7.5pt; font-weight: bold;"><?php echo htmlspecialchars($sSal['junior'] ?? '5 500 – 7 500 zł'); ?></div>
+          </td>
+          <td style="width: 33%;">
+            <div class="metric-label" style="font-size: 6.5pt;">Mid / Samodzielny</div>
+            <div class="metric-val" style="color: #0f172a; font-size: 7.5pt; font-weight: bold;"><?php echo htmlspecialchars($sSal['mid'] ?? '8 500 – 13 000 zł'); ?></div>
+          </td>
+          <td style="width: 34%;">
+            <div class="metric-label" style="font-size: 6.5pt;">Senior / Ekspert</div>
+            <div class="metric-val" style="color: #4338ca; font-size: 7.5pt; font-weight: bold;"><?php echo htmlspecialchars($sSal['senior'] ?? '14 000 – 22 000 zł'); ?></div>
+          </td>
+        </tr>
+      </table>
+      <div style="font-size: 7.2pt; color: #334155; line-height: 1.3; margin-bottom: 4pt;">
+        <strong>Na czym polega praca:</strong> <?php echo htmlspecialchars($sJob['opis'] ?? ''); ?>
+      </div>
+      <?php if (!empty($sJob['pierwszy_tydzien']['zadanie'])): ?>
+      <div style="background-color: #eef2ff; border-left: 2pt solid #4f46e5; padding: 3pt 5pt; font-size: 7pt; color: #312e81;">
+        <strong>Krok na Tydzień 1:</strong> <?php echo htmlspecialchars($sJob['pierwszy_tydzien']['zadanie']); ?>
+      </div>
+      <?php endif; ?>
+    </td>
+  </tr>
+</table>
+<?php endif; ?>
+
+<!-- BOKS KONWERSJI DO PEŁNEGO RAPORTU -->
+<div style="border: 1.5pt solid #7c3aed; border-radius: 5pt; background-color: #faf5ff; padding: 8pt 10pt; text-align: center;">
+  <div style="font-size: 9pt; font-weight: bold; color: #6d28d9; margin-bottom: 2pt;">
+    🔒 Odblokuj Pełny Raport Kariery (Pozostałe 17 Zawodów + 12-Tygodniowy Plan)
+  </div>
+  <div style="font-size: 7.5pt; color: #4b5563; line-height: 1.35;">
+    To jest bezpłatna próbka 2-stronicowa. Pełna wersja raportu zawiera:<br/>
+    • <strong>Komplet 18 dopasowanych zawodów</strong> z realnymi widełkami płacowymi 2026 (Junior / Mid / Senior)<br/>
+    • <strong>12-tygodniowe roadmapy wdrożeniowe</strong> krok po kroku dla TOP 3 najwyżej dopasowanych ścieżek<br/>
+    • <strong>Oficjalny przewodnik po dofinansowaniach państwowych</strong> (bony szkoleniowe PUP do 8 500 zł, BUR do 80%)<br/>
+    <div style="margin-top: 4pt; font-weight: bold; color: #0f172a; font-size: 8pt;">
+      Wejdź na stronę: <span style="color: #4f46e5;">https://checkyourself.pl</span> i odblokuj pełny raport za 19 zł.
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
+<?php return; ?>
+<?php endif; ?>
+
+<!-- ========================================================================= -->
+<!-- STRONA 2: DIAGNOZA PREDYSPOZYCJI ZAWODOWYCH RIASEC (PEŁNA WERSJA)         -->
 <!-- ========================================================================= -->
 <div class="section-header">
   <div class="section-num">Część 1 z 4</div>
-  <div class="section-title">Twoja Diagnoza Psychometryczna RIASEC</div>
+  <div class="section-title">Twoja Diagnoza Predyspozycji Zawodowych RIASEC</div>
   <div class="section-subtitle">Wyniki w 6 wymiarach zainteresowań zawodowych wg metodologii J.L. Hollanda</div>
 </div>
 
@@ -402,6 +544,76 @@ if (isset($pdf)) {
   </tr>
 </table>
 
+<?php if ($isPreview && !empty($jobs[0])): 
+  $sJob = $jobs[0];
+  $sSal = $sJob['zarobki_polska_2026'] ?? [];
+  $sBez = !empty($sJob['bez_studiow']);
+?>
+<!-- PRÓBKA ZAWODU #1 DLA WERSJI DEMO -->
+<div style="margin-top: 10pt; border: 1.5pt solid #4f46e5; border-radius: 6pt; background-color: #faf5ff; padding: 8pt 10pt;">
+  <div style="margin-bottom: 4pt;">
+    <span style="font-size: 8pt; font-weight: bold; color: #4338ca; text-transform: uppercase;">
+      ★ Próbka Rekomendacji Zawodowej (#1 z 18 dopasowanych ścieżek)
+    </span>
+    <span class="badge <?php echo $sBez ? 'badge-amber' : 'badge-primary'; ?>" style="float: right;">
+      <?php echo $sBez ? 'BEZ STUDIÓW' : 'WYMAGA STUDIÓW'; ?>
+    </span>
+  </div>
+  
+  <div style="font-size: 10.5pt; font-weight: bold; color: #0f172a; margin-bottom: 4pt;">
+    #1. <?php echo htmlspecialchars($sJob['nazwa'] ?? 'Specjalista'); ?>
+    <span class="badge badge-primary" style="margin-left: 4pt; font-size: 7.5pt;">Kod: <?php echo htmlspecialchars($sJob['riasec_code'] ?? ($sJob['profil_kod'] ?? $c2)); ?></span>
+  </div>
+
+  <table style="width: 100%; margin-bottom: 5pt; background-color: #ffffff; border: 0.5pt solid #cbd5e1; border-radius: 3pt; padding: 3pt 6pt;">
+    <tr>
+      <td style="width: 33%;">
+        <div class="metric-label">Junior / Start</div>
+        <div class="metric-val" style="color: #047857; font-size: 8pt; font-weight: bold;"><?php echo htmlspecialchars($sSal['junior'] ?? '5 500 – 7 500 zł'); ?></div>
+      </td>
+      <td style="width: 33%;">
+        <div class="metric-label">Mid / Samodzielny</div>
+        <div class="metric-val" style="color: #0f172a; font-size: 8pt; font-weight: bold;"><?php echo htmlspecialchars($sSal['mid'] ?? '8 500 – 13 000 zł'); ?></div>
+      </td>
+      <td style="width: 34%;">
+        <div class="metric-label">Senior / Ekspert</div>
+        <div class="metric-val" style="color: #4338ca; font-size: 8pt; font-weight: bold;"><?php echo htmlspecialchars($sSal['senior'] ?? '14 000 – 22 000 zł'); ?></div>
+      </td>
+    </tr>
+  </table>
+
+  <div style="font-size: 7.5pt; color: #334155; line-height: 1.35; margin-bottom: 5pt;">
+    <strong>Na czym polega praca:</strong> <?php echo htmlspecialchars($sJob['opis'] ?? ''); ?>
+  </div>
+
+  <?php if (!empty($sJob['pierwszy_tydzien']['zadanie'])): ?>
+  <div style="background-color: #eef2ff; border-left: 2pt solid #4f46e5; padding: 3pt 6pt; font-size: 7pt; color: #312e81; margin-bottom: 6pt;">
+    <strong>Krok na Tydzień 1:</strong> <?php echo htmlspecialchars($sJob['pierwszy_tydzien']['zadanie']); ?>
+  </div>
+  <?php endif; ?>
+
+  <!-- Boks odblokowania pełnego raportu -->
+  <div style="border-top: 1pt dashed #c7d2fe; padding-top: 6pt; text-align: center;">
+    <div style="font-size: 9pt; font-weight: bold; color: #4338ca; margin-bottom: 2pt;">
+      🔒 Chcesz poznać pozostałe 17 zawodów i pełny 12-tygodniowy plan wdrożenia?
+    </div>
+    <div style="font-size: 7.5pt; color: #475569; line-height: 1.35;">
+      To jest bezpłatna wersja demonstracyjna (2 strony). Pełna wersja raportu zawiera:<br/>
+      • <strong>18 szczegółowo dopasowanych zawodów</strong> z realnymi widełkami płacowymi w Polsce na 2026 rok<br/>
+      • <strong>12-tygodniowe roadmapy wdrożeniowe</strong> krok po kroku dla TOP 3 najwyżej dopasowanych ścieżek<br/>
+      • <strong>Oficjalny przewodnik po dofinansowaniach państwowych</strong> (bony szkoleniowe PUP do 8 500 zł, BUR do 80%)<br/>
+      <div style="margin-top: 4pt; font-weight: bold; color: #0f172a; font-size: 8pt;">
+        Wejdź na: <span style="color: #4f46e5;">https://checkyourself.pl</span> i odblokuj pełny raport za jednorazową opłatą 19 zł.
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
+<?php return; ?>
+<?php endif; ?>
+
 <div class="page-break"></div>
 
 <!-- ========================================================================= -->
@@ -417,15 +629,27 @@ foreach ($jobChunks as $pageIndex => $chunk):
 <div class="section-header">
   <div class="section-num">Część 2 z 4 — Katalog Rekomendowanych Zawodów</div>
   <div class="section-title">Dopasowane Ścieżki Kariery (Pozycje <?php echo $startNum; ?>–<?php echo $endNum; ?> z 18)</div>
-  <div class="section-subtitle">Realistyczne stawki rynkowe 2026, wymagania wejścia i weryfikacja Barometru Zawodów</div>
+  <div class="section-subtitle">Realistyczne stawki rynkowe 2026, wymagania wejścia i zapotrzebowanie rynkowe</div>
 </div>
 
 <?php 
 foreach ($chunk as $subIdx => $job): 
   $jobNum = $startNum + $subIdx;
-  $matchPct = max(70, 98 - ($jobNum * 1)); // malejący wskaźnik dopasowania
   $sal = $job['zarobki_polska_2026'] ?? [];
   $bezStudiow = !empty($job['bez_studiow']);
+
+  // Status Barometru Zawodów (formatowanie czytelnej etykiety)
+  $barometrRaw = $job['popyt_rynkowy']['status'] ?? 'deficytowy';
+  $statusMap = [
+    'duzy_deficyt' => 'Duży deficyt pracowników',
+    'deficytowy' => 'Zawód deficytowy',
+    'zrownowazony' => 'Równowaga popytu i podaży',
+    'nadwyzkowy' => 'Zawód nadwyżkowy'
+  ];
+  $barometrLabel = $statusMap[$barometrRaw] ?? ($barometrRaw ?: 'Deficytowy (dużo ofert)');
+
+  // Rzetelna kategoria dopasowania
+  $matchLevel = ($jobNum <= 3) ? 'Bardzo wysokie' : (($jobNum <= 9) ? 'Wysokie' : 'Dobre');
 ?>
 <table class="job-card avoid-break">
   <!-- Nagłówek zawodu -->
@@ -442,7 +666,7 @@ foreach ($chunk as $subIdx => $job):
             </span>
           </td>
           <td style="width: 30%; text-align: right;">
-            <span class="badge badge-success">Dopasowanie: <?php echo $matchPct; ?>%</span>
+            <span class="badge badge-success">Dopasowanie: <?php echo $matchLevel; ?></span>
             <span class="badge <?php echo $bezStudiow ? 'badge-amber' : 'badge-primary'; ?>">
               <?php echo $bezStudiow ? 'BEZ STUDIÓW' : 'STUDIA / LICENCJAT'; ?>
             </span>
@@ -487,7 +711,7 @@ foreach ($chunk as $subIdx => $job):
           <td style="width: 34%;">
             <span class="metric-label">Popyt wg Barometru:</span>
             <div style="font-size: 8pt; color: #059669; font-weight: bold;">
-              <?php echo htmlspecialchars($job['popyt_rynkowy']['status'] ?? 'Deficytowy (dużo ofert)'); ?>
+              <?php echo htmlspecialchars($barometrLabel); ?>
             </div>
           </td>
         </tr>

@@ -18,6 +18,7 @@ define('ANALYTICS_DB_PATH', __DIR__ . '/data/analytics.db');
 define('ORDERS_DB_PATH', __DIR__ . '/data/orders.db');
 define('LEADS_DB_PATH', __DIR__ . '/data/leads.db');
 define('JOBS_DATA_PATH', __DIR__ . '/data/jobs.json');
+define('PROFILES_DATA_PATH', __DIR__ . '/data/profiles.json');
 define('REPORTS_DIR', __DIR__ . '/data/reports');
 
 // Konfiguracja serwera pocztowego SMTP (home.pl)
