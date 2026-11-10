@@ -131,7 +131,33 @@ if (!isset($allProfiles[$profileKey])) {
 }
 $profileData = $allProfiles[$profileKey] ?? [];
 
-// 5. Dopasowanie 18 zawodów wg unikalnego algorytmu scoringowego RIASEC
+// 5. Dopasowanie 18 zawodów wg unikalnego algorytmu scoringowego RIASEC z uwzględnieniem preferencji sytuacyjnych
+$edu = isset($_GET['edu']) ? trim($_GET['edu']) : '';
+if (empty($edu) && !empty($sessionData['metadata']['edu'])) {
+    $edu = trim($sessionData['metadata']['edu']);
+}
+$prefNoDegree = ($edu === '1' || $edu === 'no');
+
+// Mapa flagowych zawodów dla każdego archetypu (gwarancja identyczności zawodu nr 1 na www i w PDF)
+$flagshipMap = [
+    'RI' => ['def' => 'job_ri_1',  'noEdu' => 'job_ri_1'],
+    'RA' => ['def' => 'job_ra_7',  'noEdu' => 'job_ra_7'],
+    'RS' => ['def' => 'job_rs_13', 'noEdu' => 'job_rs_14'],
+    'RE' => ['def' => 'job_re_19', 'noEdu' => 'job_re_19'],
+    'RC' => ['def' => 'job_rc_24', 'noEdu' => 'job_rc_24'],
+    'IA' => ['def' => 'job_ia_30', 'noEdu' => 'job_ia_30'],
+    'IS' => ['def' => 'job_is_35', 'noEdu' => 'job_is_37'],
+    'IE' => ['def' => 'job_ie_41', 'noEdu' => 'job_ie_41'],
+    'IC' => ['def' => 'job_ic_46', 'noEdu' => 'job_ic_46'],
+    'AS' => ['def' => 'job_as_51', 'noEdu' => 'job_as_51'],
+    'AE' => ['def' => 'job_ae_56', 'noEdu' => 'job_ae_56'],
+    'AC' => ['def' => 'job_ac_61', 'noEdu' => 'job_ac_61'],
+    'SE' => ['def' => 'job_se_66', 'noEdu' => 'job_se_66'],
+    'SC' => ['def' => 'job_sc_71', 'noEdu' => 'job_sc_71'],
+    'EC' => ['def' => 'job_ec_76', 'noEdu' => 'job_ec_76']
+];
+$targetFlagship = $prefNoDegree ? ($flagshipMap[$code2]['noEdu'] ?? null) : ($flagshipMap[$code2]['def'] ?? null);
+
 $scoredJobs = [];
 $p1 = $code3[0];
 $p2 = $code3[1] ?? '';
@@ -159,6 +185,18 @@ foreach ($allJobs as $job) {
         $score += 15;
     }
 
+    // Dostosowanie sytuacyjne: preferencja braku studiów
+    if ($prefNoDegree && empty($job['bez_studiow'])) {
+        $score -= 60;
+    } elseif ($prefNoDegree && !empty($job['bez_studiow'])) {
+        $score += 25;
+    }
+
+    // Priorytet dla flagowego zawodu archetypu (gwarantuje spójność próbki www z raportem PDF)
+    if ($targetFlagship && ($job['id'] ?? '') === $targetFlagship) {
+        $score += 25;
+    }
+
     $scoredJobs[] = [
         'job' => $job,
         'match_score' => $score
@@ -182,7 +220,7 @@ echo json_encode([
     'profile_code' => $code3,
     'base_code' => $code2,
     'total_jobs' => count($matchedJobs),
-    'pdf_url' => 'api/generate-pdf.php?token=' . urlencode($token),
+    'pdf_url' => 'api/generate-pdf.php?token=' . urlencode($token) . ($prefNoDegree ? '&edu=1' : ''),
     'jobs' => $matchedJobs,
     'pierwszeKroki' => $profileData['pierwszeKroki'] ?? [],
     'kursyDarmowe' => $profileData['kursyDarmowe'] ?? [],

@@ -334,9 +334,27 @@ function renderResult(analysis, serverUnlockedData = null) {
   const uniwersalne = renderResources(UNIVERSAL_RESOURCES);
   const isUnlocked = Boolean(serverUnlockedData && serverUnlockedData.ok && serverUnlockedData.jobs);
 
-  // 1. Darmowa próbka zawodu nr 1 (Value Hook zamiast rozmytej atrapy)
-  const sampleJob =
-    profile.zawody && profile.zawody.length > 0 ? profile.zawody[0] : null;
+  // 1. Wybór darmowej próbki zawodu nr 1 z uwzględnieniem pytań sytuacyjnych (SIT_EDU: tylko bez studiów)
+  const wantsNoDegree = Boolean(analysis.situation && (analysis.situation.education === 1 || analysis.situation.SIT_EDU === 1));
+  let sampleJob = null;
+  if (wantsNoDegree && profile.zawody) {
+    sampleJob = profile.zawody.find((z) => z.bezStudiow) || profile.zawody[0];
+  } else {
+    sampleJob = profile.zawody && profile.zawody.length > 0 ? profile.zawody[0] : null;
+  }
+
+  // Dynamiczne formatowanie widełek płacowych na 2026 r. i zapotrzebowania rynku
+  const sampleSal = (sampleJob && sampleJob.zarobki_polska_2026) || {};
+  const sampleSalaryText = sampleSal.mid
+    ? `Mid: ${sampleSal.mid} · Junior: ${sampleSal.junior || 'od 5 500 zł'}`
+    : "5 500 – 12 500 zł brutto (GUS / Barometr)";
+  const sampleDemandText = (sampleJob && sampleJob.popyt_rynkowy && sampleJob.popyt_rynkowy.opis)
+    ? sampleJob.popyt_rynkowy.opis
+    : "Zawód deficytowy wg Barometru Zawodów 2026";
+  const sampleWeekOneText = (sampleJob && sampleJob.pierwszy_tydzien && sampleJob.pierwszy_tydzien.zadanie)
+    ? sampleJob.pierwszy_tydzien.zadanie
+    : "Rozpocznij od darmowych materiałów wprowadzających online i sprawdź zapotrzebowanie na lokalnym rynku pracy (Barometr Zawodów).";
+
   const sampleJobHtml = sampleJob
     ? `
     <div class="card sample-job-card">
@@ -344,7 +362,7 @@ function renderResult(analysis, serverUnlockedData = null) {
       <div class="sample-job-header">
         <div>
           <h2 class="sample-job-title">${sampleJob.nazwa}</h2>
-          <span class="sample-job-subtitle">Najwyższy współczynnik dopasowania do Twojego profilu</span>
+          <span class="sample-job-subtitle">Najwyższy współczynnik dopasowania do Twojego profilu${wantsNoDegree ? " (ścieżka bez studiów)" : ""}</span>
         </div>
         <span class="badge ${sampleJob.bezStudiow ? "badge-green" : ""}">${
         sampleJob.bezStudiow ? "bez studiów" : "wymaga studiów"
@@ -358,18 +376,18 @@ function renderResult(analysis, serverUnlockedData = null) {
           <span class="sample-job-val">${sampleJob.sciezka}</span>
         </div>
         <div class="sample-job-item">
-          <span class="sample-job-label">Widełki płacowe w Polsce (2026):</span>
-          <span class="sample-job-val sample-job-salary">5 500 – 12 500 zł brutto (GUS / Barometr)</span>
+          <span class="sample-job-label">Realne zarobki w Polsce (2026):</span>
+          <span class="sample-job-val sample-job-salary">${sampleSalaryText}</span>
         </div>
         <div class="sample-job-item">
-          <span class="sample-job-label">Finansowanie:</span>
-          <span class="sample-job-val">Możliwy bon z PUP lub refundacja BUR do 80–100%</span>
+          <span class="sample-job-label">Zapotrzebowanie rynkowe:</span>
+          <span class="sample-job-val">${sampleDemandText}</span>
         </div>
       </div>
 
       <div class="sample-job-step-box">
         <strong>Tydzień 1 Twojego planu działania:</strong>
-        <p>Rozpocznij od darmowych materiałów wprowadzających online i sprawdź zapotrzebowanie na lokalnym rynku pracy (Barometr Zawodów).</p>
+        <p>${sampleWeekOneText}</p>
       </div>
 
       <div class="sample-job-more-hint">
@@ -380,6 +398,7 @@ function renderResult(analysis, serverUnlockedData = null) {
 
   // Karta Paywalla (gdy raport jest zablokowany)
   const codeParam = encodeURIComponent(analysis.code3 || analysis.code);
+  const eduParam = wantsNoDegree ? "&edu=1" : "";
   const paywallCardHtml = `
     <div class="paywall-card" id="paywall-card">
       <div class="paywall-ribbon">PEŁNY DOSTĘP</div>
@@ -390,7 +409,7 @@ function renderResult(analysis, serverUnlockedData = null) {
       </p>
 
       <ul class="paywall-checklist">
-        <li><span>✓</span> <div><strong>18 zawodów dopasowanych</strong> do kodu ${analysis.code3 || analysis.code} i sytuacji życiowej</div></li>
+        <li><span>✓</span> <div><strong>18 zawodów dopasowanych</strong> do kodu ${analysis.code3 || analysis.code} i sytuacji życiowej${wantsNoDegree ? " (priorytet bez studiów)" : ""}</div></li>
         <li><span>✓</span> <div><strong>Polskie zarobki 2026</strong> (Junior / Mid / Senior wg GUS i Barometru Zawodów)</div></li>
         <li><span>✓</span> <div><strong>12-tygodniowa roadmapa</strong> krok po kroku dla TOP 3 zawodów</div></li>
         <li><span>✓</span> <div><strong>Przewodnik po dofinansowaniach</strong> (bon szkoleniowy PUP do 8 500 zł, BUR do 80%)</div></li>
@@ -405,7 +424,7 @@ function renderResult(analysis, serverUnlockedData = null) {
 
       <a
         id="stripe-payment-link"
-        href="api/create-checkout.php?code=${codeParam}"
+        href="api/create-checkout.php?code=${codeParam}${eduParam}"
         class="btn-stripe-pay"
       >
         Odblokuj raport – 19 zł →
@@ -795,6 +814,10 @@ function setupStickyBar(analysis) {
       try {
         localStorage.setItem("cy_last_analysis", JSON.stringify(analysis));
       } catch (e) {}
+      const wantsNoDegree = Boolean(analysis.situation && (analysis.situation.education === 1 || analysis.situation.SIT_EDU === 1));
+      const eduParam = wantsNoDegree ? "&edu=1" : "";
+      const codeParam = encodeURIComponent(analysis.code3 || analysis.code);
+      window.location.href = `api/create-checkout.php?code=${codeParam}${eduParam}`;
     };
   }
 

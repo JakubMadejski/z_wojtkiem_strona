@@ -228,7 +228,7 @@ if (isset($pdf)) {
         <?php if ($isPreview): ?>
           <span class="badge" style="background: #fee2e2; color: #b91c1c; border: 1pt solid #ef4444;">PRÓBKA DEMONSTRACYJNA</span>
         <?php else: ?>
-          <span class="badge badge-primary">CERTYFIKAT ANALIZY RIASEC</span>
+          <span class="badge badge-primary">RAPORT DIAGNOZY RIASEC</span>
         <?php endif; ?>
         <div style="font-size: 8pt; color: #64748b; margin-top: 4pt; font-family: monospace;"><?php echo $certId; ?></div>
       </td>
@@ -794,7 +794,7 @@ foreach ($top3 as $rIdx => $rJob):
     <tr>
       <td style="font-weight: bold; color: #4f46e5;">Tydzień 2</td>
       <td>Wniosek o dofinansowanie</td>
-      <td>Złóż wniosek o bon szkoleniowy w PUP (do 8 000 zł) lub zarejestruj profil w Bazie Usług Rozwojowych (BUR PARP).</td>
+      <td>Złóż wniosek o bon szkoleniowy w PUP (do ok. 8 500 zł) lub zarejestruj profil w Bazie Usług Rozwojowych (BUR PARP).</td>
       <td style="text-align: center; color: #94a3b8;">[  ]</td>
     </tr>
     <tr>

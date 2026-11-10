@@ -1,6 +1,7 @@
 // results-data.js
 // 15 profili wynikowych RIASEC (darmowa wersja demonstracyjna)
-// Zawiera wyłącznie podstawowe metadane profilu oraz darmową próbkę zawodu nr 1.
+// Zawiera wyłącznie podstawowe metadane profilu oraz darmową próbkę zawodu nr 1
+// z realnymi widełkami płacowymi w Polsce (2026) i zapotrzebowaniem rynkowym.
 // Pełna baza 18 zawodów, 12-tygodniowy plan wdrożenia i dedykowane kursy
 // są wydawane wyłącznie z backendu (api/report.php) po weryfikacji tokenu HMAC.
 
@@ -40,7 +41,7 @@ const PROFILES = {
 ],
     mocneStrony: ["Myślenie techniczne", "Rozwiązywanie problemów", "Samodzielność", "Logika"],
     zawody: [
-      {"nazwa": "Serwisant / technik IT", "bezStudiow": true, "sciezka": "Kurs 2–4 mies. + certyfikaty", "opis": "Instalujesz oprogramowanie, konfigurujesz sprzęt i na bieżąco rozwiązujesz problemy użytkowników."}
+      {"nazwa": "Serwisant / technik IT", "bezStudiow": true, "sciezka": "Kurs 2–4 mies. + certyfikaty", "opis": "Instalujesz oprogramowanie, konfigurujesz sprzęt i na bieżąco rozwiązujesz problemy użytkowników.", "zarobki_polska_2026": {"junior": "6 500 – 9 000 zł brutto", "mid": "10 000 – 16 500 zł brutto", "senior": "18 000 – 26 000 zł brutto", "source": "No Fluff Jobs / Just Join IT 2026"}, "pierwszy_tydzien": {"temat": "Diagnoza rynku i darmowe fundamenty", "zadanie": "Zapoznaj się z profilami stanowisk na Pracuj.pl oraz obejrzyj 3 praktyczne tutoriale wprowadzające na YouTube."}, "popyt_rynkowy": {"status": "deficytowy", "opis": "Zawód poszukiwany na rynku pracy w większości województw", "link_barometr": "https://barometrzawodow.pl/"}},
     ]
   },
 
@@ -55,7 +56,7 @@ const PROFILES = {
 ],
     mocneStrony: ["Zmysł estetyczny", "Precyzja manualna", "Kreatywność", "Cierpliwość"],
     zawody: [
-      {"nazwa": "Stolarz meblowy", "bezStudiow": true, "sciezka": "Kurs / praktyka w warsztacie", "opis": "Tworzysz wysokiej jakości meble, łącząc sprawność manualną z dobrym wyczuciem materiału."}
+      {"nazwa": "Stolarz meblowy", "bezStudiow": true, "sciezka": "Kurs / praktyka w warsztacie", "opis": "Tworzysz wysokiej jakości meble, łącząc sprawność manualną z dobrym wyczuciem materiału.", "zarobki_polska_2026": {"junior": "4 800 – 6 500 zł brutto", "mid": "6 800 – 9 800 zł brutto", "senior": "10 500 – 16 000 zł brutto", "source": "GUS / Cech Rzemiosł Różnych 2026"}, "pierwszy_tydzien": {"temat": "Diagnoza rynku i darmowe fundamenty", "zadanie": "Zapoznaj się z profilami stanowisk na Pracuj.pl oraz obejrzyj 3 praktyczne tutoriale wprowadzające na YouTube."}, "popyt_rynkowy": {"status": "deficytowy", "opis": "Zawód poszukiwany na rynku pracy w większości województw", "link_barometr": "https://barometrzawodow.pl/"}},
     ]
   },
 
@@ -70,7 +71,8 @@ const PROFILES = {
 ],
     mocneStrony: ["Opanowanie w stresie", "Empatia w działaniu", "Kondycja", "Odpowiedzialność"],
     zawody: [
-      {"nazwa": "Ratownik medyczny", "bezStudiow": false, "sciezka": "Studia / szkoła policealna", "opis": "Udzielasz pierwszej pomocy w nagłych sytuacjach, ratując życie pod ogromną presją czasu."}
+      {"nazwa": "Ratownik medyczny", "bezStudiow": false, "sciezka": "Studia / szkoła policealna", "opis": "Udzielasz pierwszej pomocy w nagłych sytuacjach, ratując życie pod ogromną presją czasu.", "zarobki_polska_2026": {"junior":"4 800 – 5 800 zł brutto","mid":"6 000 – 8 200 zł brutto","senior":"8 500 – 12 000 zł brutto","source":"Porozumienie Zawodów Medycznych / GUS 2026"}, "pierwszy_tydzien": {"temat": "Diagnoza rynku i darmowe fundamenty", "zadanie": "Zapoznaj się z profilami stanowisk na Pracuj.pl oraz obejrzyj 3 praktyczne tutoriale wprowadzające na YouTube."}, "popyt_rynkowy": {"status": "deficytowy", "opis": "Zawód poszukiwany na rynku pracy w większości województw", "link_barometr": "https://barometrzawodow.pl/"}},
+      {"nazwa": "Opiekun medyczny", "bezStudiow": true, "sciezka": "Szkoła policealna 1 rok", "opis": "Pomagasz osobom chorym i starszym w codziennym funkcjonowaniu z empatią i zrozumieniem.", "zarobki_polska_2026": {"junior":"4 800 – 5 800 zł brutto","mid":"6 000 – 8 200 zł brutto","senior":"8 500 – 12 000 zł brutto","source":"Porozumienie Zawodów Medycznych / GUS 2026"}, "pierwszy_tydzien": {"temat": "Diagnoza rynku i darmowe fundamenty", "zadanie": "Zapoznaj się z profilami stanowisk na Pracuj.pl oraz obejrzyj 3 praktyczne tutoriale wprowadzające na YouTube."}, "popyt_rynkowy": {"status": "deficytowy", "opis": "Zawód poszukiwany na rynku pracy w większości województw", "link_barometr": "https://barometrzawodow.pl/"}},
     ]
   },
 
@@ -85,7 +87,7 @@ const PROFILES = {
 ],
     mocneStrony: ["Zaradność", "Organizacja pracy", "Decyzyjność", "Praktyczność"],
     zawody: [
-      {"nazwa": "Właściciel firmy usługowej / remontowej", "bezStudiow": true, "sciezka": "Fach + własna działalność", "opis": "Samodzielnie organizujesz i realizujesz prace remontowo-wykończeniowe."}
+      {"nazwa": "Właściciel firmy usługowej / remontowej", "bezStudiow": true, "sciezka": "Fach + własna działalność", "opis": "Samodzielnie organizujesz i realizujesz prace remontowo-wykończeniowe.", "zarobki_polska_2026": {"junior":"6 000 – 9 000 zł brutto","mid":"10 000 – 18 000 zł brutto","senior":"19 000 – 35 000 zł brutto","source":"GUS 2026 / Raport Płacowy Sedlak & Sedlak (OBW)"}, "pierwszy_tydzien": {"temat": "Diagnoza rynku i darmowe fundamenty", "zadanie": "Zapoznaj się z profilami stanowisk na Pracuj.pl oraz obejrzyj 3 praktyczne tutoriale wprowadzające na YouTube."}, "popyt_rynkowy": {"status": "deficytowy", "opis": "Zawód poszukiwany na rynku pracy w większości województw", "link_barometr": "https://barometrzawodow.pl/"}},
     ]
   },
 
@@ -100,7 +102,7 @@ const PROFILES = {
 ],
     mocneStrony: ["Dokładność", "Systematyczność", "Odpowiedzialność", "Praca według procedur"],
     zawody: [
-      {"nazwa": "Logistyk", "bezStudiow": true, "sciezka": "Kurs / doświadczenie", "opis": "Planujesz i optymalizujesz trasy dostaw oraz zarządzasz magazynowaniem towarów."}
+      {"nazwa": "Logistyk", "bezStudiow": true, "sciezka": "Kurs / doświadczenie", "opis": "Planujesz i optymalizujesz trasy dostaw oraz zarządzasz magazynowaniem towarów.", "zarobki_polska_2026": {"junior":"5 000 – 6 800 zł brutto","mid":"7 000 – 10 500 zł brutto","senior":"11 000 – 16 500 zł brutto","source":"GUS 2026 / Raport Płacowy Sedlak & Sedlak (OBW)"}, "pierwszy_tydzien": {"temat": "Diagnoza rynku i darmowe fundamenty", "zadanie": "Zapoznaj się z profilami stanowisk na Pracuj.pl oraz obejrzyj 3 praktyczne tutoriale wprowadzające na YouTube."}, "popyt_rynkowy": {"status": "deficytowy", "opis": "Zawód poszukiwany na rynku pracy w większości województw", "link_barometr": "https://barometrzawodow.pl/"}},
     ]
   },
 
@@ -115,7 +117,7 @@ const PROFILES = {
 ],
     mocneStrony: ["Myślenie koncepcyjne", "Kreatywność", "Analiza", "Ciekawość"],
     zawody: [
-      {"nazwa": "UX researcher", "bezStudiow": true, "sciezka": "Kurs 3–6 mies. + portfolio", "opis": "Badacz zachowań użytkowników – sprawdzasz, co sprawia im trudność i jak można ulepszyć aplikację."}
+      {"nazwa": "UX researcher", "bezStudiow": true, "sciezka": "Kurs 3–6 mies. + portfolio", "opis": "Badacz zachowań użytkowników – sprawdzasz, co sprawia im trudność i jak można ulepszyć aplikację.", "zarobki_polska_2026": {"junior": "5 000 – 6 800 zł brutto", "mid": "7 500 – 12 000 zł brutto", "senior": "13 000 – 20 000 zł brutto", "source": "STGU / Raport Wynagrodzeń Branży Kreatywnej 2026"}, "pierwszy_tydzien": {"temat": "Diagnoza rynku i darmowe fundamenty", "zadanie": "Zapoznaj się z profilami stanowisk na Pracuj.pl oraz obejrzyj 3 praktyczne tutoriale wprowadzające na YouTube."}, "popyt_rynkowy": {"status": "deficytowy", "opis": "Zawód poszukiwany na rynku pracy w większości województw", "link_barometr": "https://barometrzawodow.pl/"}},
     ]
   },
 
@@ -130,7 +132,8 @@ const PROFILES = {
 ],
     mocneStrony: ["Empatia", "Analiza", "Cierpliwość", "Komunikacja"],
     zawody: [
-      {"nazwa": "Psycholog", "bezStudiow": false, "sciezka": "Studia", "opis": "Wspierasz ludzi w radzeniu sobie z problemami natury psychicznej, oferując profesjonalną terapię i pomoc."}
+      {"nazwa": "Psycholog", "bezStudiow": false, "sciezka": "Studia", "opis": "Wspierasz ludzi w radzeniu sobie z problemami natury psychicznej, oferując profesjonalną terapię i pomoc.", "zarobki_polska_2026": {"junior":"4 800 – 5 800 zł brutto","mid":"6 000 – 8 200 zł brutto","senior":"8 500 – 12 000 zł brutto","source":"Porozumienie Zawodów Medycznych / GUS 2026"}, "pierwszy_tydzien": {"temat": "Diagnoza rynku i darmowe fundamenty", "zadanie": "Zapoznaj się z profilami stanowisk na Pracuj.pl oraz obejrzyj 3 praktyczne tutoriale wprowadzające na YouTube."}, "popyt_rynkowy": {"status": "deficytowy", "opis": "Zawód poszukiwany na rynku pracy w większości województw", "link_barometr": "https://barometrzawodow.pl/"}},
+      {"nazwa": "Dietetyk", "bezStudiow": true, "sciezka": "Kurs / studia", "opis": "Pomagasz ludziom poprawić zdrowie i samopoczucie poprzez odpowiednio dobrany plan żywienia.", "zarobki_polska_2026": {"junior":"4 800 – 6 000 zł brutto","mid":"6 500 – 9 500 zł brutto","senior":"10 000 – 15 500 zł brutto","source":"GUS 2026 / Raport Płacowy Sedlak & Sedlak (OBW)"}, "pierwszy_tydzien": {"temat": "Diagnoza rynku i darmowe fundamenty", "zadanie": "Zapoznaj się z profilami stanowisk na Pracuj.pl oraz obejrzyj 3 praktyczne tutoriale wprowadzające na YouTube."}, "popyt_rynkowy": {"status": "deficytowy", "opis": "Zawód poszukiwany na rynku pracy w większości województw", "link_barometr": "https://barometrzawodow.pl/"}},
     ]
   },
 
@@ -145,7 +148,7 @@ const PROFILES = {
 ],
     mocneStrony: ["Analiza", "Myślenie strategiczne", "Decyzyjność", "Komunikacja"],
     zawody: [
-      {"nazwa": "Analityk biznesowy", "bezStudiow": true, "sciezka": "Kurs 3–6 mies.", "opis": "Optymalizujesz procesy w firmie i łączysz świat IT z potrzebami biznesu."}
+      {"nazwa": "Analityk biznesowy", "bezStudiow": true, "sciezka": "Kurs 3–6 mies.", "opis": "Optymalizujesz procesy w firmie i łączysz świat IT z potrzebami biznesu.", "zarobki_polska_2026": {"junior": "6 500 – 9 000 zł brutto", "mid": "10 000 – 16 500 zł brutto", "senior": "18 000 – 26 000 zł brutto", "source": "No Fluff Jobs / Just Join IT 2026"}, "pierwszy_tydzien": {"temat": "Diagnoza rynku i darmowe fundamenty", "zadanie": "Zapoznaj się z profilami stanowisk na Pracuj.pl oraz obejrzyj 3 praktyczne tutoriale wprowadzające na YouTube."}, "popyt_rynkowy": {"status": "deficytowy", "opis": "Zawód poszukiwany na rynku pracy w większości województw", "link_barometr": "https://barometrzawodow.pl/"}},
     ]
   },
 
@@ -160,7 +163,7 @@ const PROFILES = {
 ],
     mocneStrony: ["Logiczne myślenie", "Dokładność", "Samodzielność", "Cierpliwość"],
     zawody: [
-      {"nazwa": "Tester oprogramowania (QA)", "bezStudiow": true, "sciezka": "Kurs 2–3 mies.", "opis": "Szukasz błędów w aplikacjach przed ich wypuszczeniem na rynek, dbając o ich jakość."}
+      {"nazwa": "Tester oprogramowania (QA)", "bezStudiow": true, "sciezka": "Kurs 2–3 mies.", "opis": "Szukasz błędów w aplikacjach przed ich wypuszczeniem na rynek, dbając o ich jakość.", "zarobki_polska_2026": {"junior": "6 500 – 9 000 zł brutto", "mid": "10 000 – 16 500 zł brutto", "senior": "18 000 – 26 000 zł brutto", "source": "No Fluff Jobs / Just Join IT 2026"}, "pierwszy_tydzien": {"temat": "Diagnoza rynku i darmowe fundamenty", "zadanie": "Zapoznaj się z profilami stanowisk na Pracuj.pl oraz obejrzyj 3 praktyczne tutoriale wprowadzające na YouTube."}, "popyt_rynkowy": {"status": "deficytowy", "opis": "Zawód poszukiwany na rynku pracy w większości województw", "link_barometr": "https://barometrzawodow.pl/"}},
     ]
   },
 
@@ -175,7 +178,7 @@ const PROFILES = {
 ],
     mocneStrony: ["Kreatywność", "Komunikacja", "Empatia", "Energia"],
     zawody: [
-      {"nazwa": "Twórca contentu (TikTok / YT)", "bezStudiow": true, "sciezka": "Praktyka + portfolio", "opis": "Tworzysz angażujące filmy, podcasty lub grafiki do sieci, zarabiając na własnej marce."}
+      {"nazwa": "Twórca contentu (TikTok / YT)", "bezStudiow": true, "sciezka": "Praktyka + portfolio", "opis": "Tworzysz angażujące filmy, podcasty lub grafiki do sieci, zarabiając na własnej marce.", "zarobki_polska_2026": {"junior":"4 800 – 7 000 zł brutto","mid":"7 500 – 14 000 zł brutto","senior":"15 000 – 28 000 zł brutto","source":"GUS 2026 / Raport Płacowy Sedlak & Sedlak (OBW)"}, "pierwszy_tydzien": {"temat": "Diagnoza rynku i darmowe fundamenty", "zadanie": "Zapoznaj się z profilami stanowisk na Pracuj.pl oraz obejrzyj 3 praktyczne tutoriale wprowadzające na YouTube."}, "popyt_rynkowy": {"status": "deficytowy", "opis": "Zawód poszukiwany na rynku pracy w większości województw", "link_barometr": "https://barometrzawodow.pl/"}},
     ]
   },
 
@@ -190,7 +193,7 @@ const PROFILES = {
 ],
     mocneStrony: ["Kreatywność", "Komunikacja", "Inicjatywa", "Wyczucie odbiorcy"],
     zawody: [
-      {"nazwa": "Specjalista marketingu", "bezStudiow": true, "sciezka": "Kurs 3–6 mies.", "opis": "Projektujesz kampanie reklamowe, by produkt lub usługa dotarła do odpowiedniej grupy docelowej."}
+      {"nazwa": "Specjalista marketingu", "bezStudiow": true, "sciezka": "Kurs 3–6 mies.", "opis": "Projektujesz kampanie reklamowe, by produkt lub usługa dotarła do odpowiedniej grupy docelowej.", "zarobki_polska_2026": {"junior": "5 200 – 7 000 zł brutto", "mid": "7 800 – 13 000 zł brutto", "senior": "14 500 – 24 000 zł brutto", "source": "Hays Poland / Pracuj.pl 2026"}, "pierwszy_tydzien": {"temat": "Diagnoza rynku i darmowe fundamenty", "zadanie": "Zapoznaj się z profilami stanowisk na Pracuj.pl oraz obejrzyj 3 praktyczne tutoriale wprowadzające na YouTube."}, "popyt_rynkowy": {"status": "deficytowy", "opis": "Zawód poszukiwany na rynku pracy w większości województw", "link_barometr": "https://barometrzawodow.pl/"}},
     ]
   },
 
@@ -205,7 +208,7 @@ const PROFILES = {
 ],
     mocneStrony: ["Zmysł estetyczny", "Dokładność", "Cierpliwość", "Wyczucie detalu"],
     zawody: [
-      {"nazwa": "Grafik komputerowy", "bezStudiow": true, "sciezka": "Kurs + portfolio", "opis": "Tworzysz materiały wizualne (np. ulotki, banery, grafiki do sieci), dbając o spójność i estetykę."}
+      {"nazwa": "Grafik komputerowy", "bezStudiow": true, "sciezka": "Kurs + portfolio", "opis": "Tworzysz materiały wizualne (np. ulotki, banery, grafiki do sieci), dbając o spójność i estetykę.", "zarobki_polska_2026": {"junior": "5 000 – 6 800 zł brutto", "mid": "7 500 – 12 000 zł brutto", "senior": "13 000 – 20 000 zł brutto", "source": "STGU / Raport Wynagrodzeń Branży Kreatywnej 2026"}, "pierwszy_tydzien": {"temat": "Diagnoza rynku i darmowe fundamenty", "zadanie": "Zapoznaj się z profilami stanowisk na Pracuj.pl oraz obejrzyj 3 praktyczne tutoriale wprowadzające na YouTube."}, "popyt_rynkowy": {"status": "deficytowy", "opis": "Zawód poszukiwany na rynku pracy w większości województw", "link_barometr": "https://barometrzawodow.pl/"}},
     ]
   },
 
@@ -220,7 +223,7 @@ const PROFILES = {
 ],
     mocneStrony: ["Przywództwo", "Komunikacja", "Energia", "Budowanie relacji"],
     zawody: [
-      {"nazwa": "HR / rekruter", "bezStudiow": true, "sciezka": "Kurs + praktyka", "opis": "Szukasz najlepszych talentów na rynku i dbasz o przyjazne środowisko pracy w firmie."}
+      {"nazwa": "HR / rekruter", "bezStudiow": true, "sciezka": "Kurs + praktyka", "opis": "Szukasz najlepszych talentów na rynku i dbasz o przyjazne środowisko pracy w firmie.", "zarobki_polska_2026": {"junior": "5 200 – 7 000 zł brutto", "mid": "7 800 – 13 000 zł brutto", "senior": "14 500 – 24 000 zł brutto", "source": "Hays Poland / Pracuj.pl 2026"}, "pierwszy_tydzien": {"temat": "Diagnoza rynku i darmowe fundamenty", "zadanie": "Zapoznaj się z profilami stanowisk na Pracuj.pl oraz obejrzyj 3 praktyczne tutoriale wprowadzające na YouTube."}, "popyt_rynkowy": {"status": "deficytowy", "opis": "Zawód poszukiwany na rynku pracy w większości województw", "link_barometr": "https://barometrzawodow.pl/"}},
     ]
   },
 
@@ -235,7 +238,7 @@ const PROFILES = {
 ],
     mocneStrony: ["Rzetelność", "Organizacja", "Kontakt z ludźmi", "Dokładność"],
     zawody: [
-      {"nazwa": "Pracownik administracji biurowej", "bezStudiow": true, "sciezka": "Kurs / doświadczenie", "opis": "Dbasz o obieg informacji, rejestry i podstawową papierologię w firmie."}
+      {"nazwa": "Pracownik administracji biurowej", "bezStudiow": true, "sciezka": "Kurs / doświadczenie", "opis": "Dbasz o obieg informacji, rejestry i podstawową papierologię w firmie.", "zarobki_polska_2026": {"junior":"4 600 – 5 400 zł brutto","mid":"5 500 – 7 000 zł brutto","senior":"7 200 – 9 500 zł brutto","source":"GUS 2026 / Raport Płacowy Sedlak & Sedlak (OBW)"}, "pierwszy_tydzien": {"temat": "Diagnoza rynku i darmowe fundamenty", "zadanie": "Zapoznaj się z profilami stanowisk na Pracuj.pl oraz obejrzyj 3 praktyczne tutoriale wprowadzające na YouTube."}, "popyt_rynkowy": {"status": "deficytowy", "opis": "Zawód poszukiwany na rynku pracy w większości województw", "link_barometr": "https://barometrzawodow.pl/"}},
     ]
   },
 
@@ -250,7 +253,7 @@ const PROFILES = {
 ],
     mocneStrony: ["Organizacja", "Planowanie", "Decyzyjność", "Dokładność"],
     zawody: [
-      {"nazwa": "Kierownik projektu", "bezStudiow": true, "sciezka": "Kurs + doświadczenie", "opis": "Spinujesz w całość ludzi, budżety i zadania, dowożąc projekty na czas."}
+      {"nazwa": "Kierownik projektu", "bezStudiow": true, "sciezka": "Kurs + doświadczenie", "opis": "Spinujesz w całość ludzi, budżety i zadania, dowożąc projekty na czas.", "zarobki_polska_2026": {"junior": "5 200 – 7 000 zł brutto", "mid": "7 800 – 13 000 zł brutto", "senior": "14 500 – 24 000 zł brutto", "source": "Hays Poland / Pracuj.pl 2026"}, "pierwszy_tydzien": {"temat": "Diagnoza rynku i darmowe fundamenty", "zadanie": "Zapoznaj się z profilami stanowisk na Pracuj.pl oraz obejrzyj 3 praktyczne tutoriale wprowadzające na YouTube."}, "popyt_rynkowy": {"status": "deficytowy", "opis": "Zawód poszukiwany na rynku pracy w większości województw", "link_barometr": "https://barometrzawodow.pl/"}},
     ]
   },
 

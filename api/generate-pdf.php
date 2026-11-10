@@ -102,6 +102,26 @@ function buildReportData(string $rawCode, array $scores = [], array $customerDat
     $p3 = $code3[2] ?? '';
     $prefNoDegree = ($situation['edu'] ?? null) === 'no' || ($situation['SIT_EDU'] ?? null) == 1;
 
+    // Mapa flagowych zawodów dla każdego archetypu (gwarancja identyczności zawodu nr 1 na www i w PDF)
+    $flagshipMap = [
+        'RI' => ['def' => 'job_ri_1',  'noEdu' => 'job_ri_1'],
+        'RA' => ['def' => 'job_ra_7',  'noEdu' => 'job_ra_7'],
+        'RS' => ['def' => 'job_rs_13', 'noEdu' => 'job_rs_14'],
+        'RE' => ['def' => 'job_re_19', 'noEdu' => 'job_re_19'],
+        'RC' => ['def' => 'job_rc_24', 'noEdu' => 'job_rc_24'],
+        'IA' => ['def' => 'job_ia_30', 'noEdu' => 'job_ia_30'],
+        'IS' => ['def' => 'job_is_35', 'noEdu' => 'job_is_37'],
+        'IE' => ['def' => 'job_ie_41', 'noEdu' => 'job_ie_41'],
+        'IC' => ['def' => 'job_ic_46', 'noEdu' => 'job_ic_46'],
+        'AS' => ['def' => 'job_as_51', 'noEdu' => 'job_as_51'],
+        'AE' => ['def' => 'job_ae_56', 'noEdu' => 'job_ae_56'],
+        'AC' => ['def' => 'job_ac_61', 'noEdu' => 'job_ac_61'],
+        'SE' => ['def' => 'job_se_66', 'noEdu' => 'job_se_66'],
+        'SC' => ['def' => 'job_sc_71', 'noEdu' => 'job_sc_71'],
+        'EC' => ['def' => 'job_ec_76', 'noEdu' => 'job_ec_76']
+    ];
+    $targetFlagship = $prefNoDegree ? ($flagshipMap[$code2]['noEdu'] ?? null) : ($flagshipMap[$code2]['def'] ?? null);
+
     foreach ($allJobs as $job) {
         $jCode = $job['profil_kod'] ?? '';
         $jRiasec = $job['riasec_code'] ?? $jCode;
@@ -129,6 +149,11 @@ function buildReportData(string $rawCode, array $scores = [], array $customerDat
             $score -= 60;
         } elseif ($prefNoDegree && !empty($job['bez_studiow'])) {
             $score += 15;
+        }
+
+        // Priorytet dla flagowego zawodu archetypu (gwarantuje spójność próbki www z raportem PDF)
+        if ($targetFlagship && ($job['id'] ?? '') === $targetFlagship) {
+            $score += 25;
         }
 
         $scoredJobs[] = [
@@ -228,9 +253,9 @@ function renderReportPdf(array $data, ?string $savePath = null): string {
 /**
  * Bezpieczny pomocnik do wywołania z poziomu webhooka Stripe
  */
-function generateReportPdfFile(string $code, array $scores, array $customerData, string $targetPdfPath): bool {
+function generateReportPdfFile(string $code, array $scores, array $customerData, string $targetPdfPath, array $situation = []): bool {
     try {
-        $data = buildReportData($code, $scores, $customerData);
+        $data = buildReportData($code, $scores, $customerData, $situation);
         renderReportPdf($data, $targetPdfPath);
         return file_exists($targetPdfPath) && filesize($targetPdfPath) > 5000;
     } catch (\Throwable $e) {
@@ -247,6 +272,7 @@ if (basename($_SERVER['SCRIPT_FILENAME'] ?? '') === 'generate-pdf.php') {
     $sessionId = isset($_GET['session_id']) ? trim($_GET['session_id']) : '';
     $preview = isset($_GET['preview']) && $_GET['preview'] === '1';
     $reqCode = isset($_GET['code']) ? strtoupper(trim($_GET['code'])) : 'RIA';
+    $edu = isset($_GET['edu']) ? trim($_GET['edu']) : '';
 
     if ($preview) {
         ini_set('display_errors', '1');
@@ -302,6 +328,9 @@ if (basename($_SERVER['SCRIPT_FILENAME'] ?? '') === 'generate-pdf.php') {
                 if (!empty($sess['metadata']['code'])) {
                     $reqCode = strtoupper($sess['metadata']['code']);
                 }
+                if (!empty($sess['metadata']['edu']) && empty($edu)) {
+                    $edu = trim($sess['metadata']['edu']);
+                }
                 $isPreview = false;
             }
         }
@@ -327,13 +356,20 @@ if (basename($_SERVER['SCRIPT_FILENAME'] ?? '') === 'generate-pdf.php') {
     }
 
     try {
+        // Konfiguracja preferencji edukacyjnych z pytań sytuacyjnych
+        $isNoDegree = ($edu === '1' || $edu === 'no');
+        $situation = [
+            'edu' => $isNoDegree ? 'no' : 'any',
+            'SIT_EDU' => $isNoDegree ? 1 : 2
+        ];
+
         // Wygeneruj dane i zwróć plik PDF inline
         $reportData = buildReportData($reqCode, [], [
             'customer_name' => $customerName,
             'customer_email' => $customerEmail,
             'order_id' => $sessionId ?: ($isPreview ? 'DEMO_' . time() : ('DIR_' . substr(md5($token . time()), 0, 8))),
             'is_preview' => $isPreview
-        ]);
+        ], $situation);
 
         $pdfContent = renderReportPdf($reportData);
         $filename = $isPreview

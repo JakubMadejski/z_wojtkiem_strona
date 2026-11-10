@@ -213,6 +213,92 @@ const webhookContent = fs.readFileSync("api/webhook.php", "utf8");
 assert(!webhookContent.includes("\$isPlaceholderSecret") && webhookContent.includes("Brak nagłówka Stripe-Signature"), "K5: webhook.php bezwzględnie weryfikuje podpis Stripe-Signature bez obejścia placeholder");
 
 // -----------------------------------------------------------------------------
+// 11. WERYFIKACJA BLOK 2: RZETELNOŚĆ OFERTY I PYTANIA SYTUACYJNE (W1–W3)
+// -----------------------------------------------------------------------------
+console.log("\n11. Weryfikacja rzetelności oferty i pytań sytuacyjnych (W1–W3):");
+
+// W1: Brak sztucznego (85%) i sztucznych malejących procentów w PDF, badge RAPORT DIAGNOZY zamiast CERTYFIKAT
+const appContent = fs.readFileSync("js/app.js", "utf8");
+const reportTemplateContent = fs.readFileSync("api/templates/report-template.php", "utf8");
+assert(!appContent.includes("(85%)") && !reportTemplateContent.includes("98 - (\$jobNum"), "W1: Brak sztucznych procentów dopasowania i nieuzasadnionych etykiet 85%");
+assert(reportTemplateContent.includes("RAPORT DIAGNOZY RIASEC") && !reportTemplateContent.includes("CERTYFIKAT ANALIZY RIASEC"), "W1: Nagłówek raportu PDF stosuje rzetelną nazwę 'RAPORT DIAGNOZY RIASEC' zamiast 'CERTYFIKAT'");
+
+// W2: Dostępność opcji bez studiów dla każdego profilu w próbce
+const resultsDataText = fs.readFileSync("js/results-data.js", "utf8");
+assert(resultsDataText.includes('"bezStudiow": true') && resultsDataText.includes("Opiekun medyczny"), "W2: js/results-data.js posiada alternatywy bez studiów dla profili z wykształceniem wyższym (np. RS)");
+
+// W2: Backend generate-pdf.php i report.php uwzględnia preferencję edu
+const genPdfText = fs.readFileSync("api/generate-pdf.php", "utf8");
+const reportPhpText = fs.readFileSync("api/report.php", "utf8");
+assert(genPdfText.includes("\$prefNoDegree") && reportPhpText.includes("\$prefNoDegree"), "W2: Backend PDF i API raportu uwzględnia preferencję bez studiów (edu=1)");
+
+// W2: Spójność obietnic i identyczność zawodu nr 1 w próbce www i w backendzie/PDF dla wszystkich 15 archetypów
+const jobsDataRaw = fs.readFileSync("api/data/jobs.json", "utf8");
+const sandboxVerify = { UNIVERSAL_RESOURCES: [], PROFILES: null };
+eval(resultsDataText + "\nsandboxVerify.PROFILES = PROFILES;");
+const webProfilesVerify = sandboxVerify.PROFILES;
+const jobsVerify = JSON.parse(jobsDataRaw);
+
+const flagshipMapVerify = {
+  RI: { def: "job_ri_1", noEdu: "job_ri_1" },
+  RA: { def: "job_ra_7", noEdu: "job_ra_7" },
+  RS: { def: "job_rs_13", noEdu: "job_rs_14" },
+  RE: { def: "job_re_19", noEdu: "job_re_19" },
+  RC: { def: "job_rc_24", noEdu: "job_rc_24" },
+  IA: { def: "job_ia_30", noEdu: "job_ia_30" },
+  IS: { def: "job_is_35", noEdu: "job_is_37" },
+  IE: { def: "job_ie_41", noEdu: "job_ie_41" },
+  IC: { def: "job_ic_46", noEdu: "job_ic_46" },
+  AS: { def: "job_as_51", noEdu: "job_as_51" },
+  AE: { def: "job_ae_56", noEdu: "job_ae_56" },
+  AC: { def: "job_ac_61", noEdu: "job_ac_61" },
+  SE: { def: "job_se_66", noEdu: "job_se_66" },
+  SC: { def: "job_sc_71", noEdu: "job_sc_71" },
+  EC: { def: "job_ec_76", noEdu: "job_ec_76" }
+};
+
+function scoreJobsVerify(code3, prefNoDegree) {
+  const p1 = code3[0];
+  const p2 = code3[1] || "";
+  const p3 = code3[2] || "";
+  const code2 = code3.slice(0, 2);
+  const targetFlagship = prefNoDegree ? flagshipMapVerify[code2]?.noEdu : flagshipMapVerify[code2]?.def;
+
+  return jobsVerify.map(j => {
+    let score = 0;
+    if (j.profil_kod && j.profil_kod[0] === p1) score += 50;
+    if (j.profil_kod === code2 || j.profil_kod === code2.split("").reverse().join("")) score += 40;
+    if (p2 && j.riasec_code && j.riasec_code.includes(p2)) score += 25;
+    if (p3 && j.riasec_code && j.riasec_code.includes(p3)) score += 15;
+    if (prefNoDegree && !j.bez_studiow) score -= 60;
+    else if (prefNoDegree && j.bez_studiow) score += 15;
+    if (targetFlagship && j.id === targetFlagship) score += 25;
+    return { name: j.nazwa, score, id: j.id };
+  }).sort((a, b) => b.score - a.score);
+}
+
+let allFlagshipsMatch = true;
+for (const pk of expectedProfiles) {
+  const an = analysisFromCode(pk);
+  const topDef = scoreJobsVerify(an.code3, false)[0];
+  const webDef = webProfilesVerify[pk].zawody[0];
+  const topEdu = scoreJobsVerify(an.code3, true)[0];
+  const webEdu = webProfilesVerify[pk].zawody.find(z => z.bezStudiow) || webProfilesVerify[pk].zawody[0];
+
+  const mDef = topDef.name.toLowerCase().includes(webDef.nazwa.toLowerCase()) || webDef.nazwa.toLowerCase().includes(topDef.name.toLowerCase());
+  const mEdu = topEdu.name.toLowerCase().includes(webEdu.nazwa.toLowerCase()) || webEdu.nazwa.toLowerCase().includes(topEdu.name.toLowerCase());
+  if (!mDef || !mEdu) allFlagshipsMatch = false;
+}
+assert(allFlagshipsMatch, "W2: Zawód nr 1 w próbce na stronie jest w 100% identyczny z zawodem nr 1 w PDF dla wszystkich 15 archetypów");
+
+// W2: Ujednolicenie kwoty bonu PUP (do ok. 8 500 zł)
+assert(reportTemplateContent.includes("do ok. 8 500 zł") && !reportTemplateContent.includes("do 8 000 zł"), "W2: Kwota bonu PUP w szablonie PDF ujednolicona do spójnej wartości (do ok. 8 500 zł)");
+
+// W3: Dynamiczne widełki płacowe 2026 zamiast sztywnego tekstu w app.js oraz rzetelne źródła zarobków
+assert(resultsDataText.includes("zarobki_polska_2026") && appContent.includes("sampleSal.mid"), "W3: Próbka zawodu na www i w danych prezentuje dynamiczne widełki 2026 zamiast sztywnego tekstu");
+assert(!jobsDataRaw.includes('"source": "Barometr'), "W3: jobs.json nie przypisuje Barometru Zawodów jako źródła zarobków (Barometr bada tylko deficyt/nadwyżkę)");
+
+// -----------------------------------------------------------------------------
 // PODSUMOWANIE WYNIKÓW
 // -----------------------------------------------------------------------------
 console.log("\n===============================================================");

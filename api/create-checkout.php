@@ -11,6 +11,7 @@ sendCorsHeaders();
 
 $code = isset($_GET['code']) ? strtoupper(trim($_GET['code'])) : 'RIA';
 $code = preg_replace('/[^RIASEC]/', '', $code) ?: 'RIA';
+$edu = isset($_GET['edu']) ? trim($_GET['edu']) : '';
 
 // Bazowy URL aplikacji (wykrywany dynamicznie)
 $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "https://";
@@ -27,7 +28,8 @@ $isPlaceholder = (strpos(STRIPE_SECRET_KEY, 'replace_with_real') !== false);
 
 if ($isPlaceholder) {
     // Przekieruj na istniejący Payment Link z parametrem client_reference_id
-    $fallbackUrl = "https://buy.stripe.com/dRm5kw9Qs3OR2KG48k48000?client_reference_id=" . urlencode($code);
+    $clientRef = $code . ($edu ? '_edu' . $edu : '');
+    $fallbackUrl = "https://buy.stripe.com/dRm5kw9Qs3OR2KG48k48000?client_reference_id=" . urlencode($clientRef);
     header("Location: " . $fallbackUrl);
     exit;
 }
@@ -37,11 +39,12 @@ $postData = [
     'mode' => 'payment',
     'success_url' => $baseUrl . '/?session_id={CHECKOUT_SESSION_ID}',
     'cancel_url' => $baseUrl . '/',
-    'client_reference_id' => $code,
+    'client_reference_id' => $code . ($edu ? '_edu' . $edu : ''),
     'payment_method_types[0]' => 'card',
     'payment_method_types[1]' => 'blik',
     'payment_method_types[2]' => 'p24',
     'metadata[code]' => $code,
+    'metadata[edu]' => $edu,
     'metadata[package]' => 'report',
     'line_items[0][price_data][currency]' => 'pln',
     'line_items[0][price_data][unit_amount]' => $unitAmount,

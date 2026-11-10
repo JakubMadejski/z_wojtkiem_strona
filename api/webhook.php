@@ -185,7 +185,15 @@ $customerData = [
     'certificate_id' => $certificateId
 ];
 
-$pdfSuccess = generateReportPdfFile($profileCode, [], $customerData, $targetPdfPath);
+// Preferencje z pytań sytuacyjnych przekazane w metadanych Stripe
+$edu = $event['data']['object']['metadata']['edu'] ?? '';
+$isNoDegree = ($edu === '1' || $edu === 'no');
+$situation = [
+    'edu' => $isNoDegree ? 'no' : 'any',
+    'SIT_EDU' => $isNoDegree ? 1 : 2
+];
+
+$pdfSuccess = generateReportPdfFile($profileCode, [], $customerData, $targetPdfPath, $situation);
 
 // 7. WYSYŁKA E-MAILA Z ZAŁĄCZNIKIEM PRZEZ SMTP
 $emailSentAt = null;
