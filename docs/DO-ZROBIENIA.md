@@ -92,26 +92,26 @@
 
 ---
 
-### 🔵 Blok 4: Jakość Kodu, UX i Poprawki Średnie/Niskie (Ś1–Ś3, N)
-- [ ] **[Ś1] Wersjonowanie postępu quizu:**
-  - [ ] Zapisywanie `kk_progress` ze strukturą `{ v: QUIZ_VERSION, index, answers }`.
-  - [ ] Wznawianie precyzyjnie od `answers.length`, reset przy niezgodności wersji.
-- [ ] **[Ś2] Bezpieczeństwo i obsługa błędów sieci w `report.php`:**
-  - [ ] Walidacja `is_string($_GET['session_id'])` w `api/report.php` (ochrona przed 500 przy tablicy).
-  - [ ] Zwracanie jednoznacznych kodów HTTP (400, 402, 403).
-  - [ ] Czytelny komunikat błędu z kontaktem pomocy w przypadku problemów sieciowych.
-- [ ] **[Ś3] Poprawki tekstów, FAQ i widoku mobilnego:**
-  - [ ] Aktualizacja liczby pytań w meta, OG, Twitter i FAQ na 34 pytania.
-  - [ ] Usunięcie słowa „precyzyjnie” z `index.html`.
-  - [ ] Dynamiczne podpowiedzi klawiszy przy pytaniach sytuacyjnych.
-  - [ ] Sticky Bottom Bar: ograniczenie do mobile (`max-width: 640px`) i dodanie `padding-bottom` chroniącego stopkę.
-  - [ ] Responsywny nagłówek h1 na małych ekranach (iPhone SE / 375 px).
-- [ ] **[N1–N7] Higiena kodu i konfiguracja serwerowa:**
-  - [ ] Twarda blokada bezpośredniego dostępu do `api/config.php` w `.htaccess`.
-  - [ ] Zabezpieczenie przed podwójnym kliknięciem `goBack` podczas animacji.
-  - [ ] Ujednolicenie przesyłania 3-literowego kodu w telemetrii (`quiz_complete`, `paywall_view`).
-  - [ ] Usunięcie martwego kodu (nieużywane selektory CSS, stare komentarze).
-  - [ ] Dodanie plików `favicon.ico` i `apple-touch-icon.png` (eliminacja 404).
+### 🔵 Blok 4: Jakość Kodu, UX i Poprawki Średnie/Niskie (Ś1–Ś3, N) [ZREALIZOWANE I WDROŻONE]
+- [x] **[Ś1] Wersjonowanie postępu quizu:**
+  - [x] Zapisywanie `kk_progress` ze strukturą `{ v: QUIZ_VERSION, index, answers }` (v: 2).
+  - [x] Wznawianie precyzyjnie od `answers.length`, reset przy niezgodności wersji.
+- [x] **[Ś2] Bezpieczeństwo i obsługa błędów sieci w `report.php`:**
+  - [x] Walidacja `is_string($_GET['session_id'])` w `api/report.php` (ochrona przed 500 przy tablicy).
+  - [x] Zwracanie jednoznacznych kodów HTTP (400, 402, 403).
+  - [x] Czytelny komunikat błędu z kontaktem pomocy w przypadku problemów sieciowych.
+- [x] **[Ś3] Poprawki tekstów, FAQ i widoku mobilnego:**
+  - [x] Aktualizacja liczby pytań w meta, OG, Twitter i FAQ na 34 pytania.
+  - [x] Usunięcie słowa „precyzyjnie” z `index.html`.
+  - [x] Dynamiczne podpowiedzi klawiszy przy pytaniach sytuacyjnych.
+  - [x] Sticky Bottom Bar: ograniczenie do mobile (`max-width: 640px`) i dodanie `padding-bottom` chroniącego stopkę.
+  - [x] Responsywny nagłówek h1 na małych ekranach (iPhone SE / 375 px).
+- [x] **[N1–N7] Higiena kodu i konfiguracja serwerowa:**
+  - [x] Twarda blokada bezpośredniego dostępu do `api/config.php` w `.htaccess` i w kodzie PHP.
+  - [x] Zabezpieczenie przed podwójnym kliknięciem `goBack` podczas animacji.
+  - [x] Ujednolicenie przesyłania 3-literowego kodu w telemetrii (`quiz_complete`, `paywall_view`).
+  - [x] Usunięcie martwego kodu (nieużywane selektory CSS, stare komentarze).
+  - [x] Dodanie plików `favicon.ico` i `apple-touch-icon.png` (eliminacja 404).
 
 ---
 
