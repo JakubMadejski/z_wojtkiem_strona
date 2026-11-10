@@ -481,6 +481,10 @@ function renderResult(analysis, serverUnlockedData = null) {
         </label>
 
         <div id="lead-status-msg" class="lead-status-msg" style="display: none;"></div>
+
+        <p style="font-size: 11px; color: var(--color-text-muted); margin-top: 10px; line-height: 1.4; text-align: left;">
+          🔒 <strong>Klauzula informacyjna RODO:</strong> Administratorem Twoich danych jest Wojciech Kłos (CheckYourself). Adres e-mail przetwarzamy w celu przesłania bezpłatnego podsumowania wyniku (art. 6 ust. 1 lit. b RODO) oraz analiz kariery na podstawie Twojej zgody (art. 6 ust. 1 lit. a RODO). Możesz wycofać zgodę w każdej chwili jednym kliknięciem. Szczegóły w <a href="docs/polityka-prywatnosci.html" target="_blank" style="color: var(--color-primary); text-decoration: underline;">Polityce Prywatności</a>.
+        </p>
       </form>
     </div>
   `;

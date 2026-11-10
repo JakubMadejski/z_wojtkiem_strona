@@ -299,6 +299,27 @@ assert(resultsDataText.includes("zarobki_polska_2026") && appContent.includes("s
 assert(!jobsDataRaw.includes('"source": "Barometr'), "W3: jobs.json nie przypisuje Barometru Zawodów jako źródła zarobków (Barometr bada tylko deficyt/nadwyżkę)");
 
 // -----------------------------------------------------------------------------
+// 12. WERYFIKACJA BLOK 3: ZGODNOŚĆ PRAWNA (W4–W5)
+// -----------------------------------------------------------------------------
+console.log("\n12. Weryfikacja zgodności prawnej i dokumentacji (W4–W5):");
+
+// W4: Polityka prywatności
+const privacyContent = fs.readFileSync("docs/polityka-prywatnosci.html", "utf8");
+assert(!privacyContent.includes("Nie zbieramy Twoich danych. Wyniki quizu są przechowywane wyłącznie lokalnie"), "W4: Usunięto nieprawdziwą deklarację 'nie zbieramy Twoich danych' z Polityki Prywatności");
+assert(privacyContent.includes("Cookieless Analytics") && privacyContent.includes("art. 6 ust. 1 lit. f RODO"), "W4: Polityka Prywatności rzetelnie opisuje telemetrię techniczną bez cookies (art. 6 ust. 1 lit. f RODO)");
+assert(privacyContent.includes("home.pl S.A.") && privacyContent.includes("Stripe Payments Europe"), "W4: Polityka Prywatności wymienia home.pl S.A. i Stripe Payments Europe jako podmioty przetwarzające");
+assert(privacyContent.includes("art. 6 ust. 1 lit. a RODO"), "W4: Polityka Prywatności precyzuje podstawę zgody przy zapisie na e-mail / newsletter (art. 6 ust. 1 lit. a)");
+assert(appContent.includes("Klauzula informacyjna RODO") && appContent.includes("Wojciech Kłos"), "W4: Formularz e-mail na stronie posiada bezpośrednią klauzulę informacyjną RODO");
+
+// W5: Regulamin
+const regulaminUpdated = fs.readFileSync("docs/regulamin.html", "utf8");
+assert(regulaminUpdated.includes("art. 38 ust. 1 pkt 13"), "W5: Regulamin poprawnie powołuje art. 38 ust. 1 pkt 13 Ustawy o prawach konsumenta");
+assert(regulaminUpdated.includes("utratą prawa do ustawowego odstąpienia") || regulaminUpdated.includes("utratą prawa do odstąpienia"), "W5: Regulamin zawiera wyraźną klauzulę utraty prawa do odstąpienia z chwilą dostarczenia raportu cyfrowego");
+assert(!regulaminUpdated.includes("ec.europa.eu/consumers/odr"), "W5: Usunięto odesłanie do nieistniejącej platformy ODR (zamkniętej przez KE w 2025 r.)");
+assert(regulaminUpdated.includes("polubowne.uokik.gov.pl") && regulaminUpdated.includes("Wojewódzkiego Inspektoratu Inspekcji Handlowej"), "W5: Regulamin wskazuje aktualne polskie instytucje polubownego rozwiązywania sporów (WIIH, UOKiK)");
+assert(regulaminUpdated.includes("43k–43m"), "W5: Regulamin zawiera regulacje dotyczące zgodności treści cyfrowej z umową (art. 43k–43m)");
+
+// -----------------------------------------------------------------------------
 // PODSUMOWANIE WYNIKÓW
 // -----------------------------------------------------------------------------
 console.log("\n===============================================================");
