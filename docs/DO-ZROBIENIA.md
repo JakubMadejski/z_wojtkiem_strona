@@ -54,25 +54,25 @@
 
 ---
 
-### 🟡 Blok 2: Prawdziwość Oferty i Spójność Danych (W1–W3)
-- [ ] **[W1] Usunięcie niepopartych liczb i nieuprawnionych tytułów:**
-  - [ ] Usunięcie sztucznego dopisku `(85%)` przy etykiecie „Najczęściej wybierany” na paywallu.
-  - [ ] Usunięcie sztucznej sekwencji procentów dopasowania w PDF (97%, 96%... 80%).
-  - [ ] Zmiana „Certyfikat psychometryczny” na rzetelne: *„Raport predyspozycji zawodowych oparty na modelu RIASEC Johna Hollanda”*.
-  - [ ] Usunięcie hasła „Najwyższy współczynnik dopasowania” przy zawodzi nr 1.
-- [ ] **[W2] Spójność obietnic z zawartością:**
-  - [ ] Odblokowany widok na www wyświetla pełne 18 zawodów pobranych z `api/report.php` (spójność z PDF).
-  - [ ] Ujednolicenie informacji o objętości raportu PDF.
-  - [ ] Usunięcie Barometru Zawodów jako rzekomego źródła stawek płacowych; wskazanie GUS / OBW (Sedlak & Sedlak).
-  - [ ] Korekta nierealistycznych stawek płacowych w bazie 150 zawodów (np. florysta).
-  - [ ] Zróżnicowanie 12-tygodniowych planów działania pod specyfikę zawodów.
-  - [ ] Ujednolicenie kwoty bonu PUP na spójną wartość (*do ok. 8 500 zł*).
-  - [ ] Zagwarantowanie identyczności zawodu nr 1 w próbce na stronie i w PDF.
-  - [ ] Poprawienie literówek w kodach (np. `SCC`/`ICC`) oraz formatowania surowych kluczy w PDF.
-- [ ] **[W3] Realny wpływ pytań sytuacyjnych na dobór zawodów:**
-  - [ ] Sortowanie i filtrowanie zawodów według preferencji edukacyjnych (`bez_studiow: true`).
-  - [ ] Wybór „Tylko bez studiów” bezwzględnie wymusza, by próbka zawodu nr 1 oraz priorytety nie wymagały ukończenia studiów wyższych.
-  - [ ] Przekazywanie odpowiedzi sytuacyjnych do backendu i generatora PDF.
+### 🟡 Blok 2: Prawdziwość Oferty i Spójność Danych (W1–W3) [ZREALIZOWANE I WDROŻONE]
+- [x] **[W1] Usunięcie niepopartych liczb i nieuprawnionych tytułów:**
+  - [x] Usunięcie sztucznego dopisku `(85%)` przy etykiecie „Najczęściej wybierany” na paywallu.
+  - [x] Usunięcie sztucznej sekwencji procentów dopasowania w PDF (97%, 96%... 80%).
+  - [x] Zmiana „Certyfikat psychometryczny” na rzetelne: *„Raport predyspozycji zawodowych oparty na modelu RIASEC Johna Hollanda”*.
+  - [x] Usunięcie hasła „Najwyższy współczynnik dopasowania” przy zawodzi nr 1.
+- [x] **[W2] Spójność obietnic z zawartością:**
+  - [x] Odblokowany widok na www wyświetla pełne 18 zawodów pobranych z `api/report.php` (spójność z PDF).
+  - [x] Ujednolicenie informacji o objętości raportu PDF.
+  - [x] Usunięcie Barometru Zawodów jako rzekomego źródła stawek płacowych; wskazanie GUS / OBW (Sedlak & Sedlak).
+  - [x] Korekta nierealistycznych stawek płacowych w bazie 150 zawodów (np. florysta z rynkowymi widełkami 4 600 - 10 500 zł).
+  - [x] Zróżnicowanie 12-tygodniowych planów działania pod specyfikę zawodów.
+  - [x] Ujednolicenie kwoty bonu PUP na spójną wartość (*do ok. 8 500 zł*).
+  - [x] Zagwarantowanie 100% identyczności zawodu nr 1 w próbce na stronie i w PDF dla wszystkich 15 archetypów.
+  - [x] Poprawienie literówek w kodach (np. `SCC`/`ICC`) oraz formatowania surowych kluczy w PDF.
+- [x] **[W3] Realny wpływ pytań sytuacyjnych na dobór zawodów:**
+  - [x] Sortowanie i filtrowanie zawodów według preferencji edukacyjnych (`bez_studiow: true`).
+  - [x] Wybór „Tylko bez studiów” bezwzględnie wymusza, by próbka zawodu nr 1 oraz priorytety nie wymagały ukończenia studiów wyższych.
+  - [x] Przekazywanie odpowiedzi sytuacyjnych do backendu i generatora PDF.
 
 ---
 
