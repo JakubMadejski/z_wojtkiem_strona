@@ -21,7 +21,7 @@
 
 - [x] **BRAMKA 1 (Gotowość do sprzedaży):** Zero możliwości odblokowania raportu za darmo (brak przycisków testowych, brak treści w JS/DOM, tokenizowany dostęp), wdrożona analityka 7 kroków lejka bez cookies, nowa cena 19 zł, legalna formuła w Stripe z 14-dniową gwarancją.
 - [x] **BRAMKA 2 (Wartość produktu):** Płatny raport zawiera 15–25 zawodów z polskimi realiami i zarobkami, 12-tygodniowy plan wdrożenia, generator PDF na e-mail, darmowa próbka zawodu nr 1 na ekranie wyniku (decyzja o likwidacji konsultacji 1:1 na rzecz skupienia się na skalowalnym raporcie PDF).
-- [ ] **BRAMKA 3 (Weryfikacja Audytu z 9 listopada 2026):** Pełne wdrożenie zaleceń niezależnego audytu (K1–K5, W1–W5, Ś1–Ś3, N) — szczegóły w [`docs/AUDYT-I-PLAN-POPRAWEK-9-LISTOPADA.md`](./AUDYT-I-PLAN-POPRAWEK-9-LISTOPADA.md).
+- [x] **BRAMKA 3 (Weryfikacja Audytu z 9 listopada 2026):** Pełne wdrożenie zaleceń niezależnego audytu (K1–K5, W1–W5, Ś1–Ś3, N) — szczegóły w [`docs/AUDYT-I-PLAN-POPRAWEK-9-LISTOPADA.md`](./AUDYT-I-PLAN-POPRAWEK-9-LISTOPADA.md).
 
 ---
 
@@ -207,18 +207,18 @@
 
 *Koniec z obietnicami bez pokrycia. Prawdziwe liczby i transparentność budują wyższą sprzedaż.*
 
-- [ ] **Wyeliminowanie fałszywych obietnic (Compliance & UOKiK):**
-  - [ ] Zamiana „baza 50+ zawodów” na faktyczną liczbę: *„18 zawodów precyzyjnie dobranych do Twojej sytuacji i kodu RIASEC”*.
-  - [ ] Usunięcie sformułowań: „naukowy algorytm”, „precyzyjna diagnostyka uniwersytecka” — zastąpienie rzetelnym: *„test oparty na metodologii RIASEC Johna Hollanda, powszechnie stosowanej przez certyfikowanych doradców kariery”*.
-- [ ] **Przepisanie nagłówków pod realny problem (Ból klienta):**
-  - [ ] Nagłówek główny: Zamiast nudnego *„Nie wiesz w którą stronę iść?”* → *„Masz dość obecnej pracy? Sprawdź, do jakich zawodów pasujesz i jak do nich wejść – także bez studiów.”*
-  - [ ] Podtytuł: *„5 minut, bez rejestracji. Wynik od razu, za darmo. Pełny plan wdrożenia z polskimi zarobkami i kursami – jeśli zechcesz.”*
-  - [ ] Przycisk CTA zakupu: Zamiast *„Kup pełny raport za 5 zł”* → *„Odblokuj mój plan kariery – 19 zł”*.
+- [x] **Wyeliminowanie fałszywych obietnic (Compliance & UOKiK):**
+  - [x] Zamiana „baza 50+ zawodów” na faktyczną liczbę: *„18 zawodów precyzyjnie dobranych do Twojej sytuacji i kodu RIASEC”*.
+  - [x] Usunięcie sformułowań: „naukowy algorytm”, „precyzyjna diagnostyka uniwersytecka” — zastąpienie rzetelnym: *„test oparty na metodologii RIASEC Johna Hollanda, powszechnie stosowanej przez certyfikowanych doradców kariery”*.
+- [x] **Przepisanie nagłówków pod realny problem (Ból klienta):**
+  - [x] Nagłówek główny: Zamiast nudnego *„Nie wiesz w którą stronę iść?”* → *„Masz dość obecnej pracy? Sprawdź, do jakich zawodów pasujesz i jak do nich wejść – także bez studiów.”*
+  - [x] Podtytuł: *„5 minut, bez rejestracji. Wynik od razu, za darmo. Pełny plan wdrożenia z polskimi zarobkami i kursami – jeśli zechcesz.”*
+  - [x] Przycisk CTA zakupu: Zamiast *„Kup pełny raport za 5 zł”* → *„Odblokuj mój plan kariery – 19 zł”*.
 - [ ] **Dodanie elementów budujących autorytet (Social Proof & Trust):**
   - [ ] **Sekcja „O autorze” / „Kim jestem”:** Zdjęcie, imię, krótka historia dlaczego powstał CheckYourself, bezpośredni kontakt e-mail. Ludzie kupują od człowieka, nie od anonimowej strony.
   - [ ] **Licznik wykonanych testów:** Prawdziwy licznik pobierany z serwera (np. *„Ponad 3 400 osób sprawdziło swój profil”*).
   - [ ] **Podstrona „Jak działa test”:** Przejrzyste wyjaśnienie modelu Hollanda, źródła danych o płacach (GUS/Barometr) oraz ograniczeń quizu.
-  - [ ] **Przykładowy raport PDF do wglądu:** 2-stronicowy podgląd demonstracyjny raportu dla jednego przykładowego profilu, by klient widział estetykę i jakość przed zakupem.
+  - [x] **Przykładowy raport PDF do wglądu:** 2-stronicowy podgląd demonstracyjny raportu dla jednego przykładowego profilu, by klient widział estetykę i jakość przed zakupem.
 
 ---
 
@@ -298,7 +298,7 @@
 - [x] **Lokalne zasoby i eliminacja blokujących skryptów:**
   - [x] Usunięcie ładowania biblioteki `html2canvas` z zewnętrznego CDN (zastąpione natywnym, 0-dependency generatorom Canvas 2D 1080×1920 px).
   - [ ] Self-hosting fontu Inter (pliki `.woff2` lokalnie) lub optymalizacja ładowania.
-  - [ ] Dodanie fizycznego pliku `favicon.ico` oraz ikony `apple-touch-icon.png` (eliminacja błędów 404 w logach przeglądarek).
+  - [x] Dodanie fizycznego pliku `favicon.ico` oraz ikony `apple-touch-icon.png` (eliminacja błędów 404 w logach przeglądarek).
 - [ ] **Konfiguracja serwera i przekierowania:**
   - [ ] Reguły w `.htaccess` / konfiguracji serwera: twarde przekierowanie 301 z `http://` oraz `www.` na docelowy adres `https://checkyourself.pl/`.
   - [ ] Prawidłowe nagłówki cache dla plików statycznych (CSS, JS, WebP).
