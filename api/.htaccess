@@ -1,0 +1,17 @@
+# Blokada bezpośredniego wywołania wrażliwych plików konfiguracyjnych i mailera
+<FilesMatch "^(config\.php|mailer\.php)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order Allow,Deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# Blokada bezpośredniego dostępu do bibliotek i szablonów
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^(lib|templates)/ - [F,L]
+</IfModule>
+

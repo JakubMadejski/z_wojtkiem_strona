@@ -76,19 +76,19 @@
 
 ---
 
-### 🟢 Blok 3: Zgodność Prawna (W4–W5)
-- [ ] **[W4] Aktualizacja Polityki Prywatności (`docs/polityka-prywatnosci.html`):**
-  - [ ] Usunięcie deklaracji „nie zbieramy Twoich danych” i „100% zgodna z RODO”.
-  - [ ] Opisanie telemetrii bez cookies (`api/track.php`, art. 6 ust. 1 lit. f RODO).
-  - [ ] Opisanie formularza lead magnet / newsletter (`api/subscribe.php`, art. 6 ust. 1 lit. a RODO).
-  - [ ] Wskazanie przetwarzania płatności przez Stripe oraz hostingu na home.pl.
-  - [ ] Klauzula informacyjna bezpośrednio przy formularzu e-mail na stronie.
-- [ ] **[W5] Aktualizacja Regulaminu (`docs/regulamin.html`):**
-  - [ ] Prawidłowe powołanie art. 38 ust. 1 pkt 13 Ustawy o prawach konsumenta.
-  - [ ] Wyraźna klauzula utraty prawa do odstąpienia z chwilą dostarczenia raportu cyfrowego PDF.
-  - [ ] Usunięcie nieczynnej platformy ODR (zamkniętej w 2025 r.); dodanie WIIH i Rzeczników Konsumentów.
-  - [ ] Wymienienie aktualnych metod płatności Stripe (BLIK, karty, Apple Pay, Google Pay).
-  - [ ] Zapisy o zgodności treści cyfrowej z umową (art. 43k–43m).
+### 🟢 Blok 3: Zgodność Prawna (W4–W5) [ZREALIZOWANE I WDROŻONE]
+- [x] **[W4] Aktualizacja Polityki Prywatności (`docs/polityka-prywatnosci.html`):**
+  - [x] Usunięcie deklaracji „nie zbieramy Twoich danych” i „100% zgodna z RODO”.
+  - [x] Opisanie telemetrii bez cookies (`api/track.php`, art. 6 ust. 1 lit. f RODO).
+  - [x] Opisanie formularza lead magnet / newsletter (`api/subscribe.php`, art. 6 ust. 1 lit. a RODO).
+  - [x] Wskazanie przetwarzania płatności przez Stripe oraz hostingu na home.pl.
+  - [x] Klauzula informacyjna bezpośrednio przy formularzu e-mail na stronie.
+- [x] **[W5] Aktualizacja Regulaminu (`docs/regulamin.html`):**
+  - [x] Prawidłowe powołanie art. 38 ust. 1 pkt 13 Ustawy o prawach konsumenta.
+  - [x] Wyraźna klauzula utraty prawa do odstąpienia z chwilą dostarczenia raportu cyfrowego PDF.
+  - [x] Usunięcie nieczynnej platformy ODR (zamkniętej w 2025 r.); dodanie WIIH i Rzeczników Konsumentów.
+  - [x] Wymienienie aktualnych metod płatności Stripe (BLIK, karty, Apple Pay, Google Pay).
+  - [x] Zapisy o zgodności treści cyfrowej z umową (art. 43k–43m).
 
 ---
 

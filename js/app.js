@@ -178,6 +178,13 @@ function renderQuestion(animate = true) {
   // Przycisk "Wstecz" tylko od 2. pytania
   el.backBtn.classList.toggle("hidden", state.index === 0);
 
+  // Dynamiczna podpowiedź klawiaturowa dopasowana do liczby opcji
+  const kbdHint = document.getElementById("kbd-hint");
+  if (kbdHint) {
+    const maxVal = (q.options && Array.isArray(q.options)) ? q.options.length : 5;
+    kbdHint.innerHTML = `Możesz też używać klawiszy numerycznych <kbd>1</kbd>–<kbd>${maxVal}</kbd>, a klawisz <kbd>←</kbd> cofa pytanie.`;
+  }
+
   // Płynne wejście pytania
   if (animate && el.quizStage) {
     replayAnim(el.quizStage, "stage-in");
@@ -246,6 +253,7 @@ function showCheckpointToast() {
 }
 
 function goBack() {
+  if (state.locked) return;
   if (state.index > 0) {
     state.index -= 1;
     renderQuestion();
@@ -766,7 +774,7 @@ function renderResult(analysis, serverUnlockedData = null) {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            trackFunnel("paywall_view", 5, { code: analysis.code });
+            trackFunnel("paywall_view", 5, { code: analysis.code, code3: analysis.code3 || analysis.code });
             observer.disconnect();
           }
         });
@@ -779,7 +787,7 @@ function renderResult(analysis, serverUnlockedData = null) {
   const stripePayBtn = document.getElementById("stripe-payment-link");
   if (stripePayBtn) {
     stripePayBtn.addEventListener("click", () => {
-      trackFunnel("paywall_click", 6, { code: analysis.code });
+      trackFunnel("paywall_click", 6, { code: analysis.code, code3: analysis.code3 || analysis.code });
     });
   }
 
@@ -800,6 +808,7 @@ function hideStickyBar() {
     bar.classList.remove("visible");
     bar.setAttribute("aria-hidden", "true");
   }
+  document.body.classList.remove("has-sticky-bar");
 }
 
 function setupStickyBar(analysis) {
@@ -837,9 +846,11 @@ function setupStickyBar(analysis) {
     if (passedSentinel && !paywallVisible) {
       bar.classList.add("visible");
       bar.setAttribute("aria-hidden", "false");
+      document.body.classList.add("has-sticky-bar");
     } else {
       bar.classList.remove("visible");
       bar.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("has-sticky-bar");
     }
   }
 
@@ -882,6 +893,7 @@ function setupStickyBar(analysis) {
     buyBtn.onclick = () => {
       trackFunnel("paywall_click", 6, {
         code: analysis.code,
+        code3: analysis.code3 || analysis.code,
         source: "sticky_bottom_bar",
       });
       paywallCard.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -1412,12 +1424,41 @@ function init() {
           renderResult(finalAnalysis, data);
           window.history.replaceState({}, document.title, window.location.pathname);
         } else {
-          alert("Nie udało się potwierdzić płatności: " + (data.error || "Nieznany błąd"));
-          showScreen("landing");
+          if (el.resultContent) {
+            el.resultContent.innerHTML = `
+              <div class="card" style="text-align: center; padding: 48px 24px;">
+                <div style="font-size: 36px; margin-bottom: 14px;">⚠️</div>
+                <h2 style="margin-bottom: 12px;">Weryfikacja płatności nie powiodła się</h2>
+                <p style="color: var(--color-text-muted); max-width: 480px; margin: 0 auto 24px; line-height: 1.6;">
+                  ${data.error || "Nie mogliśmy automatycznie zweryfikować statusu transakcji."}<br>
+                  Jeśli środki zostały pobrane z Twojego konta, raport został wygenerowany i przesłany na podany e-mail lub skontaktuj się z nami bezpośrednio:
+                </p>
+                <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+                  <button class="btn btn-primary" onclick="window.location.reload()">🔄 Spróbuj ponownie</button>
+                  <a href="mailto:kontakt@checkyourself.pl?subject=Pomoc z zamówieniem ${encodeURIComponent(sessionId)}" class="btn btn-secondary">✉️ kontakt@checkyourself.pl</a>
+                </div>
+              </div>
+            `;
+          }
         }
       })
       .catch((err) => {
         console.error("Błąd weryfikacji sesji płatności:", err);
+        if (el.resultContent) {
+          el.resultContent.innerHTML = `
+            <div class="card" style="text-align: center; padding: 48px 24px;">
+              <div style="font-size: 36px; margin-bottom: 14px;">📡</div>
+              <h2 style="margin-bottom: 12px;">Chwilowy problem z połączeniem</h2>
+              <p style="color: var(--color-text-muted); max-width: 480px; margin: 0 auto 24px; line-height: 1.6;">
+                Nie udało się nawiązać połączenia z serwerem weryfikacji. Twoja płatność jest bezpieczna.
+              </p>
+              <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+                <button class="btn btn-primary" onclick="window.location.reload()">🔄 Odśwież i ponów weryfikację</button>
+                <a href="mailto:kontakt@checkyourself.pl?subject=Błąd połączenia ${encodeURIComponent(sessionId)}" class="btn btn-secondary">✉️ Pomoc techniczna</a>
+              </div>
+            </div>
+          `;
+        }
       });
     return;
   }
@@ -1440,11 +1481,11 @@ function init() {
     return;
   }
 
-  // Wznowienie testu
+  // Wznowienie testu z walidacją wersji v: 2 i ciągłości odpowiedzi
   const saved = Storage.loadProgress();
-  if (saved && saved.index > 0 && saved.index < QUESTIONS.length) {
-    state.index = saved.index;
+  if (saved && Array.isArray(saved.answers) && saved.answers.length > 0 && saved.answers.length < QUESTIONS.length) {
     state.answers = saved.answers;
+    state.index = saved.answers.length;
     showScreen("quiz");
     renderQuestion(false);
   } else {

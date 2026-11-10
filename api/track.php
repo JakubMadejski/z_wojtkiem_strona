@@ -27,7 +27,8 @@ if (!$input || empty($input['event'])) {
 // Sanityzacja danych
 $event = mb_substr(preg_replace('/[^a-zA-Z0-9_\-]/', '', $input['event']), 0, 64);
 $step = isset($input['step']) ? (int)$input['step'] : 0;
-$code = isset($input['code']) ? mb_substr(preg_replace('/[^a-zA-Z]/', '', $input['code']), 0, 8) : '';
+$rawCode = !empty($input['code3']) ? $input['code3'] : ($input['code'] ?? '');
+$code = mb_substr(preg_replace('/[^a-zA-Z]/', '', $rawCode), 0, 8);
 $ref = isset($input['ref']) ? mb_substr(strip_tags($input['ref']), 0, 256) : 'direct';
 
 // Warstwa anonimizacji RODO:

@@ -2,6 +2,12 @@
 // api/config.php
 // Główna konfiguracja backendu CheckYourself
 
+// Blokada bezpośredniego wywołania z przeglądarki
+if (basename($_SERVER['SCRIPT_FILENAME'] ?? '') === 'config.php') {
+    http_response_code(403);
+    exit('Dostęp zabroniony');
+}
+
 // Wyłącz wyświetlanie błędów PHP w środowisku produkcyjnym, ale loguj do pliku
 ini_set('display_errors', '0');
 ini_set('log_errors', '1');

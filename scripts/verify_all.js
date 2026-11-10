@@ -320,6 +320,46 @@ assert(regulaminUpdated.includes("polubowne.uokik.gov.pl") && regulaminUpdated.i
 assert(regulaminUpdated.includes("43k–43m"), "W5: Regulamin zawiera regulacje dotyczące zgodności treści cyfrowej z umową (art. 43k–43m)");
 
 // -----------------------------------------------------------------------------
+// 13. WERYFIKACJA BLOK 4: JAKOŚĆ KODU, UX I BEZPIECZEŃSTWO (Ś1–Ś3, N)
+// -----------------------------------------------------------------------------
+console.log("\n13. Weryfikacja jakości kodu, UX i higieny środowiska (Ś1–Ś3, N):");
+
+// Ś1: Wersjonowanie postępu quizu w storage.js
+const { Storage: StorageMod, QUIZ_STORAGE_VERSION } = require("../js/storage.js");
+assert(QUIZ_STORAGE_VERSION === 2, "Ś1: storage.js definiuje wersję struktury QUIZ_STORAGE_VERSION = 2");
+
+// Ś2: Bezpieczeństwo typów i obsługa błędów sieci w report.php
+const reportPhpContent = fs.readFileSync("api/report.php", "utf8");
+assert(reportPhpContent.includes("is_string(\$_GET['session_id'])") && reportPhpContent.includes("http_response_code(402)"), "Ś2: report.php waliduje typ session_id (ochrona przed tablicami) oraz obsługuje status HTTP 402");
+
+// Ś3: Spójność liczby pytań w index.html
+const indexHtmlContent = fs.readFileSync("index.html", "utf8");
+assert(indexHtmlContent.includes("34 pytania") && indexHtmlContent.includes("Pytanie 1 z 34"), "Ś3: index.html prezentuje aktualną liczbę 34 pytań (30 RIASEC + 4 sytuacyjne)");
+assert(!indexHtmlContent.includes("Pytanie 1 z 30"), "Ś3: Wyeliminowano nieaktualne etykiety 'Pytanie 1 z 30'");
+
+// N1: Blokada config.php w api/.htaccess oraz w kodzie PHP
+assert(fs.existsSync("api/.htaccess"), "N1: Plik api/.htaccess istnieje");
+const apiHtaccess = fs.readFileSync("api/.htaccess", "utf8");
+assert(apiHtaccess.includes("config") && apiHtaccess.includes("Require all denied"), "N1: api/.htaccess blokuje bezpośredni dostęp HTTP do config.php");
+const configPhpContent = fs.readFileSync("api/config.php", "utf8");
+assert(configPhpContent.includes("SCRIPT_FILENAME") && configPhpContent.includes("config.php"), "N1: api/config.php posiada bezpiecznik blokujący bezpośrednie wykonanie z przeglądarki");
+
+// N2: Zabezpieczenie przed podwójnym kliknięciem
+const appJsContent = fs.readFileSync("js/app.js", "utf8");
+assert(appJsContent.includes("if (state.locked) return;"), "N2: app.js chroni nawigację quizu przed podwójnym kliknięciem (state.locked)");
+
+// N3: Unifikacja telemetrii (code3 w track.php)
+const trackPhpContent = fs.readFileSync("api/track.php", "utf8");
+assert(trackPhpContent.includes("code3"), "N3: api/track.php obsługuje uniwersalny kod 3-literowy (code3)");
+
+// N5: Ikony favicon.ico i apple-touch-icon.png
+assert(fs.existsSync("favicon.ico") && fs.existsSync("apple-touch-icon.png"), "N5: Ikony favicon.ico i apple-touch-icon.png istnieją w katalogu głównym");
+
+// Mobile UX: style sticky bar i skalowanie h1
+const styleCssContent = fs.readFileSync("css/style.css", "utf8");
+assert(styleCssContent.includes("has-sticky-bar") && styleCssContent.includes("@media (min-width: 641px)"), "UX: CSS ogranicza sticky bar do ekranów mobilnych i chroni stopkę przed zasłanianiem");
+
+// -----------------------------------------------------------------------------
 // PODSUMOWANIE WYNIKÓW
 // -----------------------------------------------------------------------------
 console.log("\n===============================================================");

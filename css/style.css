@@ -287,6 +287,14 @@ body::before {
   margin: 0 0 18px;
 }
 
+@media (max-width: 480px) {
+  .landing h1 {
+    font-size: 1.55rem;
+    line-height: 1.25;
+    margin-bottom: 12px;
+  }
+}
+
 .landing .lead {
   font-size: 1.05rem;
   line-height: 1.65;
@@ -1427,6 +1435,20 @@ body::before {
   transform: translateY(0);
   opacity: 1;
   pointer-events: auto;
+}
+
+/* Ograniczenie sticky bar ściśle do urządzeń mobilnych (na desktopie CTA jest w treści) */
+@media (min-width: 641px) {
+  .sticky-purchase-bar {
+    display: none !important;
+  }
+}
+
+/* Bezpieczny odstęp na dole strony mobilnej, zapobiega zasłanianiu linków w stopce */
+@media (max-width: 640px) {
+  body.has-sticky-bar {
+    padding-bottom: 76px;
+  }
 }
 
 .sticky-bar-inner {

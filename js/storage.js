@@ -2,26 +2,48 @@
 // Prosty zapis/odczyt do localStorage: postęp quizu + historia wyników.
 // Wszystko lokalnie w przeglądarce - brak backendu, brak kont.
 
+const QUIZ_STORAGE_VERSION = 2;
+
 const STORAGE_KEYS = {
   progress: "kk_progress", // bieżące odpowiedzi (na wypadek odświeżenia)
   history: "kk_history", // lista ukończonych wyników
 };
 
 const Storage = {
-  // Zapisuje bieżący postęp (odpowiedzi + numer pytania).
+  // Zapisuje bieżący postęp ze ścisłą wersją struktury (v: 2).
   saveProgress(state) {
     try {
-      localStorage.setItem(STORAGE_KEYS.progress, JSON.stringify(state));
+      if (!state) return;
+      const payload = {
+        v: QUIZ_STORAGE_VERSION,
+        index: typeof state.index === "number" ? state.index : 0,
+        answers: Array.isArray(state.answers) ? state.answers : []
+      };
+      localStorage.setItem(STORAGE_KEYS.progress, JSON.stringify(payload));
     } catch (e) {
       /* localStorage niedostępny (np. tryb prywatny) - ignorujemy */
     }
   },
 
+  // Wczytuje postęp tylko, gdy zgadza się wersja schematu quizu (v: 2).
+  // Zapobiega konfliktom ze starym formatem (30 pytań bez modułu sytuacyjnego).
   loadProgress() {
     try {
       const raw = localStorage.getItem(STORAGE_KEYS.progress);
-      return raw ? JSON.parse(raw) : null;
+      if (!raw) return null;
+      const data = JSON.parse(raw);
+      if (!data || data.v !== QUIZ_STORAGE_VERSION || !Array.isArray(data.answers)) {
+        // Niezgodna wersja lub uszkodzone dane - czyścimy stary stan
+        Storage.clearProgress();
+        return null;
+      }
+      return {
+        v: data.v,
+        index: typeof data.index === "number" ? data.index : data.answers.length,
+        answers: data.answers
+      };
     } catch (e) {
+      Storage.clearProgress();
       return null;
     }
   },
@@ -58,3 +80,7 @@ const Storage = {
     }
   },
 };
+
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = { Storage, QUIZ_STORAGE_VERSION, STORAGE_KEYS };
+}

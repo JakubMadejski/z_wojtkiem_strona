@@ -6,7 +6,7 @@
     <title>CheckYourself - Odkryj swój profil zawodowy i pasujące zawody</title>
     <meta
       name="description"
-      content="Darmowy test predyspozycji zawodowych oparty na modelu RIASEC. 30 pytań, ~5 minut, bez rejestracji. Sprawdź, do jakich zawodów pasujesz i jak do nich wejść – także bez studiów."
+      content="Darmowy test predyspozycji zawodowych oparty na modelu RIASEC. 34 pytania, ~5 minut, bez rejestracji. Sprawdź, do jakich zawodów pasujesz i jak do nich wejść – także bez studiów."
     />
 
     <!-- SEO / Canonical -->
@@ -16,7 +16,7 @@
     <meta property="og:title" content="CheckYourself - Odkryj swój profil zawodowy" />
     <meta
       property="og:description"
-      content="Darmowy test 30 pytań oparty na modelu RIASEC. Poznaj zawody, w których nie będziesz się męczyć - bez rejestracji, w 5 minut."
+      content="Darmowy test 34 pytań oparty na modelu RIASEC. Poznaj zawody, w których nie będziesz się męczyć - bez rejestracji, w 5 minut."
     />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://checkyourself.pl/" />
@@ -28,7 +28,7 @@
     <meta name="twitter:title" content="CheckYourself - Test Predyspozycji Zawodowych" />
     <meta
       name="twitter:description"
-      content="Darmowy test 30 pytań oparty na modelu RIASEC. Odkryj zawody dopasowane do Twojej osobowości z polskimi zarobkami."
+      content="Darmowy test 34 pytań oparty na modelu RIASEC. Odkryj zawody dopasowane do Twojej osobowości z polskimi zarobkami."
     />
 
     <!-- Structured Data: FAQ Schema + Application Schema (JSON-LD) -->
@@ -81,7 +81,9 @@
       }
     </script>
 
-    <!-- Favicon -->
+    <!-- Favicon & App Icons -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
     <link
       rel="icon"
       href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧭</text></svg>"
@@ -338,7 +340,7 @@
               <div class="comp-num">06</div>
               <div class="comp-body">
                 <h3>Szybki wynik w ~5 minut (34 pytania)</h3>
-                <p>Algorytm łączy 30 pytań psychometrycznych RIASEC z 4 pytaniami o Twoją sytuację życiową i edukacyjną, dając precyzyjne dopasowanie bez nudzenia Cię w nieskończoność.</p>
+                <p>Algorytm łączy 30 pytań psychometrycznych RIASEC z 4 pytaniami o Twoją sytuację życiową i edukacyjną, dając rzetelne dopasowanie bez nudzenia Cię w nieskończoność.</p>
               </div>
             </div>
           </div>
@@ -367,7 +369,7 @@
               wyróżniający 6 profili: Realistyczny, Badawczy
               (Investigative), Artystyczny, Społeczny, Przedsiębiorczy
               (Enterprising) i Konwencjonalny. Odpowiedzi na 30 pytań profilujących i 4 preferencje zawodowe pozwalają
-              precyzyjnie określić Twoją unikalną kombinację talentów.
+              rzetelnie określić Twoją unikalną kombinację talentów.
             </p>
           </section>
           <section>
@@ -387,7 +389,7 @@
         <div class="quiz">
           <div class="progress">
             <div class="progress-header">
-              <span id="progress-text" class="progress-label" aria-live="polite">Pytanie 1 z 30</span>
+              <span id="progress-text" class="progress-label" aria-live="polite">Pytanie 1 z 34</span>
               <span id="progress-percent" class="progress-percentage">3%</span>
             </div>
             <div class="progress-track">
@@ -408,7 +410,7 @@
           </div>
 
           <button id="back-btn" class="btn btn-ghost hidden">← Poprzednie pytanie</button>
-          <p class="kbd-hint">
+          <p class="kbd-hint" id="kbd-hint">
             Możesz też używać klawiszy numerycznych <kbd>1</kbd>–<kbd>5</kbd>, a klawisz <kbd>←</kbd> cofa pytanie.
           </p>
         </div>

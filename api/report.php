@@ -11,9 +11,9 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     exit;
 }
 
-$sessionId = isset($_GET['session_id']) ? trim($_GET['session_id']) : '';
-$token = isset($_GET['token']) ? trim($_GET['token']) : '';
-$profileCode = isset($_GET['code']) ? strtoupper(trim($_GET['code'])) : '';
+$sessionId = (isset($_GET['session_id']) && is_string($_GET['session_id'])) ? trim($_GET['session_id']) : '';
+$token = (isset($_GET['token']) && is_string($_GET['token'])) ? trim($_GET['token']) : '';
+$profileCode = (isset($_GET['code']) && is_string($_GET['code'])) ? strtoupper(trim($_GET['code'])) : '';
 
 $isVerified = false;
 $customerEmail = '';
@@ -79,13 +79,27 @@ if (!$isVerified && !empty($sessionId)) {
     }
 }
 
-// 3. Jeśli płatność nie została zweryfikowana — odmów dostępu
+// 3. Jeśli płatność nie została zweryfikowana — odmów dostępu z precyzyjnym kodem HTTP
 if (!$isVerified) {
-    http_response_code(403);
-    echo json_encode([
-        'ok' => false,
-        'error' => 'Brak aktywnej płatności. Odblokuj pełny raport za 19 zł na stronie.'
-    ]);
+    if (empty($sessionId) && empty($token)) {
+        http_response_code(400);
+        echo json_encode([
+            'ok' => false,
+            'error' => 'Brak wymaganego parametru sesji płatności (session_id lub token).'
+        ]);
+    } elseif (!empty($sessionId)) {
+        http_response_code(402);
+        echo json_encode([
+            'ok' => false,
+            'error' => 'Płatność nie została jeszcze opłacona lub transakcja została przerwana.'
+        ]);
+    } else {
+        http_response_code(403);
+        echo json_encode([
+            'ok' => false,
+            'error' => 'Brak ważnych uprawnień lub niepoprawny podpis kryptograficzny tokenu.'
+        ]);
+    }
     exit;
 }
 
