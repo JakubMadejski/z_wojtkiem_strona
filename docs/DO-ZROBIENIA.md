@@ -292,19 +292,19 @@
 
 *Szybka, lekka strona bez zbędnych zależności zewnętrznych.*
 
-- [ ] **Kompresja i formaty grafik:**
+- [x] **Kompresja i formaty grafik:**
   - [x] Konwersja 15 avatarów z ciężkich PNG (~480 KB) do formatu **WebP (3.6–8.5 KB, redukcja o 98.7%)** w rozdzielczości Retina 2×.
-  - [ ] Optymalizacja `og:image` do zoptymalizowanego WebP/JPG 1200×630 px (waga poniżej 150 KB).
+  - [x] Optymalizacja `og:image` do zoptymalizowanego WebP/JPG 1200×630 px (waga poniżej 150 KB).
 - [x] **Lokalne zasoby i eliminacja blokujących skryptów:**
   - [x] Usunięcie ładowania biblioteki `html2canvas` z zewnętrznego CDN (zastąpione natywnym, 0-dependency generatorom Canvas 2D 1080×1920 px).
   - [ ] Self-hosting fontu Inter (pliki `.woff2` lokalnie) lub optymalizacja ładowania.
   - [x] Dodanie fizycznego pliku `favicon.ico` oraz ikony `apple-touch-icon.png` (eliminacja błędów 404 w logach przeglądarek).
-- [ ] **Konfiguracja serwera i przekierowania:**
-  - [ ] Reguły w `.htaccess` / konfiguracji serwera: twarde przekierowanie 301 z `http://` oraz `www.` na docelowy adres `https://checkyourself.pl/`.
-  - [ ] Prawidłowe nagłówki cache dla plików statycznych (CSS, JS, WebP).
-- [ ] **Dostępność cyfrowa (A11y):**
-  - [ ] Dodanie czytelnych stylów fokusu dla nawigacji klawiaturą (`:focus-visible`).
-  - [ ] Obsługa reguły media query `prefers-reduced-motion` (wyłączenie animacji pływających linii i przejść dla osób z nadwrażliwością).
+- [x] **Konfiguracja serwera i przekierowania:**
+  - [x] Reguły w `.htaccess` / konfiguracji serwera: twarde przekierowanie 301 z `http://` oraz `www.` na docelowy adres `https://checkyourself.pl/`.
+  - [x] Prawidłowe nagłówki cache dla plików statycznych (CSS, JS, WebP).
+- [x] **Dostępność cyfrowa (A11y):**
+  - [x] Dodanie czytelnych stylów fokusu dla nawigacji klawiaturą (`:focus-visible`).
+  - [x] Obsługa reguły media query `prefers-reduced-motion` (wyłączenie animacji pływających linii i przejść dla osób z nadwrażliwością).
 
 ---
 

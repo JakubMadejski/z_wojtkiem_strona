@@ -116,6 +116,28 @@ body::before {
   display: none !important;
 }
 
+/* Accessibility: Skip Link (WCAG 2.4.1 Bypass Blocks) */
+.skip-link {
+  position: absolute;
+  top: -120px;
+  left: 20px;
+  background: var(--primary);
+  color: #ffffff !important;
+  padding: 10px 18px;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+  z-index: 10000;
+  box-shadow: var(--shadow-lg);
+  transition: top var(--transition-fast);
+}
+.skip-link:focus-visible {
+  top: 16px;
+  outline: 3px solid #ffffff;
+  outline-offset: 2px;
+}
+
 /* ------------------------------------------------------------- */
 /* 2. Top Navigation Bar                                         */
 /* ------------------------------------------------------------- */
@@ -2245,5 +2267,68 @@ body::before {
   .lead-submit-btn {
     width: 100%;
     justify-content: center;
+  }
+}
+
+/* ------------------------------------------------------------- */
+/* 15. Dostępność cyfrowa (A11y - WCAG 2.1 AA / 2.2)             */
+/* ------------------------------------------------------------- */
+
+/* Focus Visible: czytelny, kontrastowy wskaźnik nawigacji klawiaturą */
+:where(a:any-link, button, input, select, textarea, [tabindex="0"]):focus-visible {
+  outline: 2px solid var(--primary, #7c3aed);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm, 8px);
+}
+
+/* Zaokrąglone przyciski zachowują spójny obrys focusa */
+.btn-primary:focus-visible,
+.btn-start:focus-visible,
+.btn-share:focus-visible,
+.btn-unlock:focus-visible,
+.sticky-btn:focus-visible,
+.lead-submit-btn:focus-visible {
+  border-radius: var(--radius-pill, 9999px);
+}
+
+/* Tryb wysokiego kontrastu (Windows High Contrast / forced-colors) */
+@media (forced-colors: active) {
+  :where(a:any-link, button, input, select, textarea, [tabindex="0"]):focus-visible {
+    outline: 2px solid Highlight;
+    outline-offset: 3px;
+  }
+}
+
+/* Obsługa preferencji ograniczenia ruchu (prefers-reduced-motion) */
+/* Tłumienie animacji przestrzennych i pulsowania z zachowaniem informacji o stanach */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+
+  .btn-pulse-focus {
+    animation: none !important;
+  }
+
+  .character-card:hover,
+  .btn-primary:hover,
+  .btn-start:hover,
+  .btn-share:hover,
+  .answer-btn:hover,
+  .stat-pill:hover,
+  .pricing-card:hover,
+  .action-plan-step:hover,
+  .btn-secondary:hover,
+  .sticky-btn:hover {
+    transform: none !important;
+  }
+
+  .sticky-bottom-bar {
+    transition: opacity 0.2s ease !important;
+  }
+
+  .chart-bar-fill,
+  .progress-bar-fill {
+    transition: width 0.1s linear !important;
   }
 }

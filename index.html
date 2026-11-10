@@ -20,7 +20,10 @@
     />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://checkyourself.pl/" />
-    <meta property="og:image" content="https://checkyourself.pl/img/bg_desktop.png" />
+    <meta property="og:image" content="https://checkyourself.pl/img/og_image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/jpeg" />
     <meta property="og:locale" content="pl_PL" />
 
     <!-- Twitter Cards -->
@@ -30,6 +33,7 @@
       name="twitter:description"
       content="Darmowy test 34 pytań oparty na modelu RIASEC. Odkryj zawody dopasowane do Twojej osobowości z polskimi zarobkami."
     />
+    <meta name="twitter:image" content="https://checkyourself.pl/img/og_image.jpg" />
 
     <!-- Structured Data: FAQ Schema + Application Schema (JSON-LD) -->
     <script type="application/ld+json">
@@ -52,7 +56,7 @@
                 "name": "Ile czasu zajmuje rozwiązanie testu?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Quiz składa się z 30 prostych pytań. Zazwyczaj wypełnienie go zajmuje około 5 minut."
+                  "text": "Quiz składa się z 34 pytań (30 pytań o predyspozycje oraz 4 pytań o sytuację życiową i edukację). Zazwyczaj wypełnienie go zajmuje około 5 minut."
                 }
               },
               {
@@ -100,6 +104,9 @@
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
+    <!-- Dostępność (WCAG 2.4.1): Skip link dla szybkiej nawigacji klawiaturą -->
+    <a href="#app" class="skip-link">Przejdź do treści</a>
+
     <!-- Architektoniczna mapa nawigacyjna i warstwice topograficzne (CheckYourself Topography) -->
     <div class="nav-map-background" aria-hidden="true">
       <svg class="topo-lines" viewBox="0 0 1440 900" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -360,6 +360,31 @@ const styleCssContent = fs.readFileSync("css/style.css", "utf8");
 assert(styleCssContent.includes("has-sticky-bar") && styleCssContent.includes("@media (min-width: 641px)"), "UX: CSS ogranicza sticky bar do ekranów mobilnych i chroni stopkę przed zasłanianiem");
 
 // -----------------------------------------------------------------------------
+// 14. WERYFIKACJA FILAR 8: OPTYMALIZACJA TECHNICZNA, SERWEROWA I A11Y
+// -----------------------------------------------------------------------------
+console.log("\n14. Weryfikacja Filaru 8: Konfiguracja serwera, A11y i Open Graph:");
+
+// Root .htaccess: Przekierowania 301, ochrona i nagłówki cache
+assert(fs.existsSync(".htaccess"), "Filar 8: Główny plik .htaccess istnieje w katalogu nadrzędnym");
+const rootHtaccess = fs.readFileSync(".htaccess", "utf8");
+assert(rootHtaccess.includes("RewriteCond %{HTTPS} off") && rootHtaccess.includes("R=301"), "Filar 8: .htaccess zawiera regułę twardego wymuszenia HTTPS (301)");
+assert(rootHtaccess.includes("RewriteCond %{HTTP_HOST} ^www\\.") && rootHtaccess.includes("checkyourself.pl"), "Filar 8: .htaccess przekierowuje www na kanoniczną domenę bez-www (301)");
+assert(rootHtaccess.includes("ExpiresByType image/webp") && rootHtaccess.includes("Cache-Control"), "Filar 8: .htaccess konfiguruje nagłówki cache dla plików statycznych");
+assert(rootHtaccess.includes("Options -Indexes"), "Filar 8: .htaccess wyłącza listowanie katalogów (Options -Indexes)");
+
+// Dostępność cyfrowa (A11y) w css/style.css
+assert(styleCssContent.includes(":focus-visible"), "Filar 8: css/style.css definiuje widoczne wskaźniki nawigacji klawiaturą (:focus-visible)");
+assert(styleCssContent.includes("prefers-reduced-motion: reduce"), "Filar 8: css/style.css obsługuje regułę prefers-reduced-motion dla osób z nadwrażliwością");
+assert(styleCssContent.includes(".skip-link"), "Filar 8: css/style.css definiuje style dla skip linku (WCAG 2.4.1)");
+
+// Open Graph: obraz 1200x630 < 150 KB i powiązania w index.html
+assert(fs.existsSync("img/og_image.jpg"), "Filar 8: Dedykowana grafika Open Graph img/og_image.jpg istnieje");
+const ogStat = fs.statSync("img/og_image.jpg");
+assert(ogStat.size > 10000 && ogStat.size <= 150 * 1024, `Filar 8: img/og_image.jpg ma prawidłową zoptymalizowaną wagę (${(ogStat.size / 1024).toFixed(1)} KB <= 150 KB)`);
+assert(indexHtmlContent.includes("img/og_image.jpg") && indexHtmlContent.includes('content="1200"') && indexHtmlContent.includes('content="630"'), "Filar 8: index.html posiada zaktualizowany tag og:image z wymiarami 1200x630");
+assert(indexHtmlContent.includes('class="skip-link"'), "Filar 8: index.html zawiera link omijający nawigację (skip link)");
+
+// -----------------------------------------------------------------------------
 // PODSUMOWANIE WYNIKÓW
 // -----------------------------------------------------------------------------
 console.log("\n===============================================================");
